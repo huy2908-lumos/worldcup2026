@@ -2,7 +2,14 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2343c9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="VSTEP B4">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 <title>VSTEP Bậc 4 – Phòng luyện</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,11 +28,42 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;overflow-x:clip}
 h1,h2,h3{line-height:1.15;margin:0 0 .5em;text-wrap:balance}h1{font-size:clamp(26px,4vw,40px);font-weight:800}h2{font-size:22px;font-weight:700}h3{font-size:17px;font-weight:700}
 p{margin:.4em 0 .8em}a{color:var(--blue)}
-.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
-.nav{display:flex;gap:2px;overflow-x:auto;max-width:1180px;margin:auto;padding:0 max(3vw,12px)}
-.nav a{flex:none;padding:14px 14px;text-decoration:none;color:var(--mute);font-weight:600;font-size:15px;border-bottom:3px solid transparent}
-.nav a.on{color:var(--ink);border-color:var(--red)}
-main{max-width:1180px;margin:auto;padding:24px max(3vw,14px) 80px}
+/* ===== 2 giao diện: desktop = thanh bên trái; mobile = thanh tab đáy ===== */
+.top{position:fixed;z-index:20;background:var(--card)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);text-decoration:none}
+.brand i{width:36px;height:36px;border-radius:10px;background:var(--blue);color:#fff;display:grid;place-items:center;font-style:normal;font-size:15px}
+.nav a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--mute);font-weight:600}
+.nav a svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav a.on{color:var(--blue)}
+.count{font-size:13px;color:var(--mute)}.count b{color:var(--red);font-size:22px;display:block;line-height:1.1}
+@media(min-width:900px){
+ .top{left:0;top:0;bottom:0;width:236px;border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:22px}
+ .nav{display:flex;flex-direction:column;gap:4px}
+ .nav a{padding:11px 14px;border-radius:10px;font-size:15px}.nav a:hover{background:var(--bg)}
+ .nav a.on{background:var(--blue-soft)}
+ .side-foot{margin-top:auto;padding:14px;border-radius:12px;background:var(--bg)}
+ main{margin-left:236px;max-width:1240px;padding:28px clamp(20px,3vw,48px) 60px}
+ .mob{display:none!important}
+}
+@media(max-width:899px){
+ .top{left:0;right:0;bottom:0;border-top:1px solid var(--line);padding:0 0 env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgb(0 0 0/.06)}
+ .top .brand,.side-foot{display:none}
+ .nav{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+ .nav a{flex-direction:column;gap:3px;padding:8px 0 7px;font-size:11px;justify-content:center;min-height:58px;text-align:center}
+ .nav a.on{background:linear-gradient(var(--blue),var(--blue)) top/40% 3px no-repeat}
+ .mbar{position:sticky;top:0;z-index:15;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:var(--card);border-bottom:1px solid var(--line)}
+ main{padding:16px 12px calc(96px + env(safe-area-inset-bottom))}
+ .card{padding:14px 14px;border-radius:12px}
+ h1{font-size:24px}h2{font-size:19px}
+ textarea{font-size:16px;min-height:260px}
+ .opt{padding:10px}
+ .timer{font-size:22px}
+ .nav a span{white-space:nowrap;font-size:10.5px;letter-spacing:-.2px}
+ .card>.row:first-child>.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;width:100%}
+ .card>.row:first-child>.row>*{width:100%}
+ .card>.row:first-child>.row>label{grid-column:1/-1}
+}
+@media(min-width:900px){.mbar{display:none}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 16px}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
@@ -75,7 +113,8 @@ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 </style>
 </head>
 <body>
-<div class="top"><nav class="nav" id="nav"></nav></div>
+<div class="mbar mob"><a class="brand" href="#home"><i>B4</i>VSTEP Bậc 4</a><span class="count" id="mcount"></span></div>
+<div class="top"><a class="brand" href="#home"><i>B4</i>VSTEP Bậc 4</a><nav class="nav" id="nav"></nav><div class="side-foot"><div class="count" id="scount"></div><div class="small mute" style="margin-top:6px">Mục tiêu: tổng ≥ 23.0 → 6.0</div></div></div>
 <main id="app"><p class="loading">Đang tải bộ đề…</p></main>
 <script>
 {
@@ -166,6 +205,7 @@ const PLAN=[
 const todayStr=()=>new Date(Date.now()+7*3600e3).toISOString().slice(0,10);
 
 /* ---------- routing ---------- */
+const ICON={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',mock:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>',listening:'<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',reading:'<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>',writing:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',speaking:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/>',errors:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12l6 6M15 12l-6 6"/>'};
 const ROUTES=[['home','Tổng quan'],['mock','Thi thử'],['listening','Nghe'],['reading','Đọc'],['writing','Viết'],['speaking','Nói'],['errors','Sổ lỗi']];
 let param={},lastP={};
 const ART=location.href.split('#')[0];
@@ -178,7 +218,9 @@ window.addEventListener('hashchange',render);
 function render(){clearTimers();stopSpeak();const h=(location.hash||'#home').slice(1);const m=h.match(/^([a-z]+)(?:-t(\d+))?(?:-p(\w+?))?(?:-(full|step))?$/)||[];const r=m[1]||'home';
   if(m[2]||m[3]||m[4])param={test:m[2],part:m[3],mode:m[4]};
   const route=ROUTES.some(x=>x[0]===r)?r:'home';
-  $('#nav').innerHTML=ROUTES.map(([k,v])=>`<a href="#${k}" class="${k===route?'on':''}">${v}</a>`).join('');
+  const SHORT={home:'Tổng quan',mock:'Thi thử',listening:'Nghe',reading:'Đọc',writing:'Viết',speaking:'Nói',errors:'Sổ lỗi'};
+  $('#nav').innerHTML=ROUTES.map(([k,v])=>`<a href="#${k}" class="${k===route?'on':''}" aria-label="${v}"><svg viewBox="0 0 24 24">${ICON[k]}</svg><span>${SHORT[k]}</span></a>`).join('');
+  {const d=Math.max(0,Math.ceil((EXAM-Date.now())/864e5));$('#scount').innerHTML=`Còn <b>${d} ngày</b> tới kỳ thi 04/12`;$('#mcount').innerHTML=`còn <b style="display:inline;font-size:16px">${d}</b> ngày`;}
   lastP=param;
   ({home:Home,mock:Mock,listening:Listening,reading:Reading,writing:Writing,speaking:Speaking,errors:Errors})[route]();
   const p=param;param={};return p}
@@ -207,7 +249,12 @@ function Home(){
    <div class="card"><h2>Lịch sử luyện</h2>${store.attempts.length?`<table><tr><th>Ngày</th><th>Bài</th><th class="n">Điểm</th></tr>${store.attempts.slice(-14).reverse().map(a=>`<tr><td class="small">${new Date(a.ts).toLocaleDateString('vi-VN')}</td><td>${esc(a.label||a.skill)}</td><td class="n"><b>${a.score!=null?a.score.toFixed(1):'–'}</b></td></tr>`).join('')}</table>`:'<p class="mute">Chưa có bài nào. Bắt đầu với buổi tối hôm nay ở cột bên trái.</p>'}
    ${mocks.length?`<p class="small mute">${mocks.length} lần thi thử trọn đề.</p>`:''}
    <p class="small mute">Điểm Nghe/Đọc quy đổi tuyến tính (số câu đúng ÷ tổng × 10) – chỉ là ước tính. Viết/Nói do Claude chấm theo tiêu chí VSTEP, chưa tính phát âm.</p></div>
-  </div>`;
+  </div>
+  <details class="card" id="install"><summary style="cursor:pointer;min-height:44px;font-weight:700;font-size:18px">📲 Cài app ra màn hình chính (điện thoại & máy tính)</summary>
+   <div class="grid2" style="margin-top:10px"><div><h3>iPhone (Safari)</h3><ol><li>Mở link bằng <b>Safari</b>.</li><li>Bấm nút <b>Chia sẻ</b> (ô vuông có mũi tên lên).</li><li>Chọn <b>Thêm vào MH chính</b> → <b>Thêm</b>.</li></ol>
+   <h3>Android (Chrome)</h3><ol><li>Mở link bằng <b>Chrome</b>.</li><li>Bấm <b>⋮</b> góc trên phải → <b>Thêm vào màn hình chính</b> / <b>Cài đặt ứng dụng</b>.</li></ol></div>
+   <div><h3>Máy tính (Chrome / Edge)</h3><ol><li>Mở link bằng Chrome hoặc Edge.</li><li>Bấm biểu tượng <b>Cài đặt</b> (màn hình có mũi tên) ở cuối thanh địa chỉ, hoặc menu <b>⋮</b> → <b>Truyền, lưu và chia sẻ</b> → <b>Cài đặt trang dưới dạng ứng dụng</b>.</li><li>App mở trong cửa sổ riêng, có icon trên Desktop/Taskbar.</li></ol>
+   <p class="small mute">Bài làm, lịch sử và sổ lỗi lưu riêng trên từng máy.</p></div></div></details>`;
   const ks=$('#ksave');if(ks)ks.onclick=()=>{const v=$('#kin').value.trim();if(!/^sk-/.test(v)){$('#kin').focus();$('#kin').style.borderColor='var(--red)';return}try{localStorage.setItem(KEY_LS,v)}catch(e){}Home()};
   const kd=$('#kdel');if(kd)kd.onclick=()=>{try{localStorage.removeItem(KEY_LS)}catch(e){}Home()};
   const km=$('#kmodel');if(km)km.onchange=()=>{try{localStorage.setItem(MODEL_LS,km.value)}catch(e){}};
