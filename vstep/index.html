@@ -19,14 +19,13 @@
    PICTURE: thước điểm 0–10 với vạch B1/B2/C1, kim điểm hiện tại và mục tiêu.
    COLOUR and TYPE: giấy trắng, mực xanh bi (bài làm), đỏ bút chấm (sửa lỗi); Be Vietnam Pro.
    LAYOUT: thanh tab trên, nội dung 1 cột rộng ≤1180px, đề – bài làm hai cột trên màn rộng. */
-:root{color-scheme:light dark;
---bg:light-dark(#f6f6f3,#121317);--card:light-dark(#ffffff,#1b1d22);--ink:light-dark(#16181d,#ecedf0);--mute:light-dark(#5d6270,#9aa0ad);
---line:light-dark(#e3e3de,#2c2f37);--blue:light-dark(#2343c9,#8aa2ff);--blue-soft:light-dark(#e9edfc,#1f2742);
---red:light-dark(#d42a22,#ff7a6e);--red-soft:light-dark(#fdeceb,#3a1f1e);--ok:light-dark(#137a43,#5fd394);--ok-soft:light-dark(#e6f5ec,#17301f);--warn:light-dark(#9a5b00,#f3b25a)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+:root{color-scheme:light;--bg:#f6f6f3;--card:#ffffff;--ink:#16181d;--mute:#5d6270;--line:#e3e3de;--blue:#2343c9;--blue-soft:#e9edfc;--red:#d42a22;--red-soft:#fdeceb;--ok:#137a43;--ok-soft:#e6f5ec;--warn:#9a5b00;--hl:#fff1a8}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#121317;--card:#1b1d22;--ink:#ecedf0;--mute:#9aa0ad;--line:#2c2f37;--blue:#8aa2ff;--blue-soft:#1f2742;--red:#ff7a6e;--red-soft:#3a1f1e;--ok:#5fd394;--ok-soft:#17301f;--warn:#f3b25a;--hl:#4a4210}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#121317;--card:#1b1d22;--ink:#ecedf0;--mute:#9aa0ad;--line:#2c2f37;--blue:#8aa2ff;--blue-soft:#1f2742;--red:#ff7a6e;--red-soft:#3a1f1e;--ok:#5fd394;--ok-soft:#17301f;--warn:#f3b25a;--hl:#4a4210}
+
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;overflow-x:clip}
-h1,h2,h3{line-height:1.15;margin:0 0 .5em;text-wrap:balance}h1{font-size:clamp(26px,4vw,40px);font-weight:800}h2{font-size:22px;font-weight:700}h3{font-size:17px;font-weight:700}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;overflow-x:hidden;overflow-x:clip}
+h1,h2,h3{line-height:1.15;margin:0 0 .5em;text-wrap:balance}h1{font-size:32px;font-size:clamp(26px,4vw,40px);font-weight:800}h2{font-size:22px;font-weight:700}h3{font-size:17px;font-weight:700}
 p{margin:.4em 0 .8em}a{color:var(--blue)}
 /* ===== 2 giao diện: desktop = thanh bên trái; mobile = thanh tab đáy ===== */
 .top{position:fixed;z-index:20;background:var(--card)}
@@ -46,7 +45,7 @@ p{margin:.4em 0 .8em}a{color:var(--blue)}
  .mob{display:none!important}
 }
 @media(max-width:899px){
- .top{left:0;right:0;bottom:0;border-top:1px solid var(--line);padding:0 0 env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgb(0 0 0/.06)}
+ .top{left:0;right:0;bottom:0;border-top:1px solid var(--line);padding:0 0 env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(0,0,0,.06)}
  .top .brand,.side-foot{display:none}
  .nav{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
  .nav a{flex-direction:column;gap:3px;padding:8px 0 7px;font-size:11px;justify-content:center;min-height:58px;text-align:center}
@@ -90,7 +89,7 @@ textarea{width:100%;min-height:220px;font:17px/1.7 "Be Vietnam Pro",sans-serif;p
 .score{font:800 40px "Be Vietnam Pro",system-ui,sans-serif;line-height:1}.crit{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--line)}
 .crit b{font-variant-numeric:tabular-nums}
 .gauge{position:relative;height:150px;margin:8px 0 4px}
-.gauge svg{position:absolute;inset:0;width:100%;height:100%}
+.gauge svg{position:absolute;top:0;left:0;width:100%;height:100%}
 .steps{display:flex;gap:6px;flex-wrap:wrap}.steps span{padding:6px 12px;border-radius:99px;border:1px solid var(--line);font-size:14px;font-weight:600}
 .steps span.on{background:var(--ink);color:var(--card);border-color:var(--ink)}.steps span.done{border-color:var(--ok);color:var(--ok)}
 .plan li{margin:4px 0}.today{outline:2px solid var(--red);border-radius:8px}
@@ -109,438 +108,1072 @@ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chip{font-size:14px;padding:4px 10px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-weight:600}
 .qa{padding:8px 0;border-top:1px dashed var(--line)}.qa b{display:block}.say{min-height:34px;padding:0 10px;font-size:13px}
 .qt{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--ok-soft);color:var(--ok);margin:4px 0 0}
-.ts{background:linear-gradient(transparent 60%,light-dark(#fff1a8,#4a4210) 60%)}
+.ts{background:linear-gradient(transparent 60%,var(--hl) 60%)}
 </style>
 </head>
 <body>
 <div class="mbar mob"><a class="brand" href="#home"><i>B4</i>VSTEP Bậc 4</a><span class="count" id="mcount"></span></div>
 <div class="top"><a class="brand" href="#home"><i>B4</i>VSTEP Bậc 4</a><nav class="nav" id="nav"></nav><div class="side-foot"><div class="count" id="scount"></div><div class="small mute" style="margin-top:6px">Mục tiêu: tổng ≥ 23.0 → 6.0</div></div></div>
 <main id="app"><p class="loading">Đang tải bộ đề…</p></main>
-<script>
+<script>var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 {
-/* ---------- utilities ---------- */
-const $=s=>document.querySelector(s);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const md=s=>esc(s).replace(/\*\*\s*\*\*/g,'').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(?!\s)(.+?)\*/g,'<i>$1</i>');
-const paras=s=>String(s||'').split(/\n\s*\n|\n/).filter(x=>x.trim()).map(p=>`<p>${md(p)}</p>`).join('');
-const words=s=>(String(s).trim().match(/[A-Za-zÀ-ỹ0-9'’-]+/g)||[]).length;
-const r05=x=>Math.round(x*2)/2;
-const level=x=>x>=8.5?'C1 – Bậc 5':x>=6?'B2 – Bậc 4':x>=4?'B1 – Bậc 3':'Chưa đạt bậc';
-const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const EXAM=new Date('2026-12-04T07:00:00+07:00');
-let T=[];               // tests
-let cap={};             // capabilities
-let store={attempts:[],errors:[],drafts:{},hist:{}};
-let stopTimers=[];
-const DICT={final:null,state:null};
-const clearTimers=()=>{stopTimers.forEach(f=>f());stopTimers=[]};
-function timer(el,sec,onEnd){let left=sec;const tick=()=>{el.textContent=fmt(Math.max(left,0));el.classList.toggle('low',left<=300&&sec>300||left<=15&&sec<=300);if(left<=0){stop();onEnd&&onEnd();}left--};const id=setInterval(tick,1000);tick();const stop=()=>clearInterval(id);stopTimers.push(stop);return {stop,left:()=>left}}
-
-/* ---------- persistence ---------- */
-let dbRef=null,saving=Promise.resolve();
-function lsLoad(){try{const v=localStorage.getItem('vstep4');if(v)store=JSON.parse(v)}catch(e){}}
-function persist(){store.attempts=store.attempts.slice(-200);store.errors=store.errors.slice(-400);
-  try{localStorage.setItem('vstep4',JSON.stringify(store))}catch(e){}
-  if(dbRef){const data=JSON.parse(JSON.stringify(store));saving=saving.then(()=>dbRef.set(data)).catch(()=>{})}}
-function addAttempt(a){store.attempts.push({ts:Date.now(),...a});persist()}
-function addErrors(list,skill,src){let n=0;for(const e of list||[]){if(!e.wrong||!e.right)continue;if(store.errors.some(x=>x.wrong===e.wrong&&x.right===e.right))continue;store.errors.push({id:Date.now()+'-'+n++,ts:Date.now(),skill,src,wrong:e.wrong,right:e.right,type:e.type||'',why:e.why||'',ok:0});}persist();return n}
-
-/* ---------- Claude helpers (API key của người dùng) ---------- */
-const KEY_LS='vstep4_key',MODEL_LS='vstep4_model';
-const getKey=()=>{try{return localStorage.getItem(KEY_LS)||''}catch(e){return ''}};
-const getModel=()=>{try{return localStorage.getItem(MODEL_LS)||'claude-sonnet-5-5'}catch(e){return 'claude-sonnet-5-5'}};
-async function callClaude(prompt,max){const key=getKey();
-  window.__lastPrompt='Hãy chấm bài dưới đây như giám khảo VSTEP. BỎ QUA yêu cầu trả JSON: trả lời bằng tiếng Việt dễ đọc gồm điểm từng tiêu chí, danh sách lỗi dạng "sai → đúng (giải thích)", 3 việc cần sửa ngay và bản viết lại B2.\n\n'+prompt;
-  if(!key)throw {nokey:true,message:'Chưa nhập API key nên trang chưa tự chấm được. Anh có thể copy bài sang Claude để chấm, hoặc nhập key ở trang Tổng quan.'};
-  let r;try{r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:getModel(),max_tokens:max,messages:[{role:'user',content:prompt}]})})}
-  catch(e){throw {message:'Không kết nối được tới Claude. Kiểm tra mạng rồi bấm lại.'}}
-  const d=await r.json().catch(()=>({}));
-  if(!r.ok){const m=(d.error&&d.error.message)||String(r.status);
-    throw {nokey:r.status===401,message:r.status===401?'API key không đúng hoặc đã bị xóa. Vào Tổng quan nhập lại.':r.status===429?'Đang bị giới hạn lượt, đợi 1 phút rồi bấm lại.':/credit|billing/i.test(m)?'Tài khoản API đã hết credit – nạp thêm tại console.anthropic.com.':'Lỗi từ Claude: '+m}}
-  return (d.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('')}
-async function askJSON(prompt){const t=await callClaude(prompt+'\n\nRespond with the JSON object only, no markdown fences.',6000);
-  try{return JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1))}catch(e){throw {message:'Kết quả chấm bị lỗi định dạng, anh bấm chấm lại.'}}}
-async function askText(prompt){return callClaude(prompt,700)}
-function errBox(e){return `<div class="bad-note">${esc(e.message)}${e.nokey?`<div class="row" style="margin-top:10px"><button class="small pri" id="cpprompt">Copy bài + yêu cầu chấm</button><a class="btn small" style="display:inline-flex;align-items:center;text-decoration:none" href="https://claude.ai/new" target="_blank" rel="noopener">Mở Claude để dán</a></div>`:''}</div>`}
-document.addEventListener('click',e=>{if(e.target.id!=='cpprompt')return;const b=e.target;(navigator.clipboard?navigator.clipboard.writeText(window.__lastPrompt||''):Promise.reject()).then(()=>{b.textContent='Đã copy ✓ – dán vào Claude'},()=>{b.textContent='Không copy được'})});
-function makeDictation(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return null;let rec=null,fin=null,st=null;
-  return {onFinal(f){fin=f},onState(f){st=f},
-    start(){rec=new SR();rec.lang='en-US';rec.continuous=true;rec.interimResults=false;
-      rec.onresult=ev=>{for(let i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal&&fin)fin({text:ev.results[i][0].transcript})};
-      rec.onstart=()=>st&&st({state:'listening'});rec.onend=()=>st&&st({state:'idle'});rec.onerror=()=>st&&st({state:'idle'});
-      try{rec.start()}catch(e){return Promise.reject(e)}return Promise.resolve()},
-    stop(){try{rec&&rec.stop()}catch(e){}return Promise.resolve()}}}
-
-/* ---------- speech ---------- */
-const VOICE={A:'buttery',B:'airy'};
-function voiceFor(sp){if(!sp)return 'rounded';if(VOICE[sp])return VOICE[sp];return /woman|girl|mother|mrs|ms|sarah|kate|jane|lisa|mary/i.test(sp)?'airy':'glassy'}
-async function speakLines(lines,rate=1){
-  if(!lines||!lines.length)return;
-  if(cap.tts){return cap.tts.speak(lines.map(l=>({text:l.t.slice(0,1900),voice:voiceFor(l.sp),language:'en',rate})))}
-  if('speechSynthesis' in window){const vs=await bestVoices();return new Promise(res=>{speechSynthesis.cancel();lines.forEach((l,i)=>{const u=new SpeechSynthesisUtterance(l.t);u.lang='en-GB';u.rate=rate*.9;if(vs.length)u.voice=vs[(l.sp==='B'?1:0)%vs.length];if(i===lines.length-1){u.onend=res;u.onerror=res}speechSynthesis.speak(u)})})}
-  throw {message:'Trình duyệt này không đọc được âm thanh.'}
-}
-function stopSpeak(){try{cap.tts&&cap.tts.stop()}catch(e){}try{speechSynthesis.cancel()}catch(e){}try{curAudio&&curAudio.pause()}catch(e){}document.querySelectorAll('audio').forEach(a=>a.pause())}
-let curAudio=null,AUDIO=new Set();
-async function bestVoices(){let v=speechSynthesis.getVoices();if(!v.length){await new Promise(r=>{speechSynthesis.onvoiceschanged=r;setTimeout(r,1500)});v=speechSynthesis.getVoices()}
-  const en=v.filter(x=>/^en[-_]/i.test(x.lang));const score=x=>(/natural|neural|premium|enhanced|google/i.test(x.name)?10:0)+(/en[-_]GB/i.test(x.lang)?3:/en[-_]US/i.test(x.lang)?2:0)+(x.localService?0:1);
-  return en.sort((a,b)=>score(b)-score(a)).slice(0,2)}
-const playMp3=(src,rate=1)=>new Promise((res,rej)=>{stopSpeak();const a=new Audio(src);curAudio=a;a.playbackRate=rate;a.onended=res;a.onerror=()=>rej({message:'Không tải được file nghe, kiểm tra mạng.'});a.play().catch(()=>rej({message:'Trình duyệt chặn phát âm thanh, bấm lại.'}))});
-document.addEventListener('play',e=>{document.querySelectorAll('audio').forEach(a=>{if(a!==e.target)a.pause()})},true);
-
-/* ---------- plan (11 tối) ---------- */
-const PLAN=[
-['2026-11-23','Học khung luận 5 đoạn. Viết Task 2 Test 7 (40\')','Nói Part 1: 6 chủ đề quen',[['writing','7','2'],['speaking','1','1']]],
-['2026-11-24','Khung thư thân mật. Task 1 Test 2 + Test 7','Nói Part 2 Test 2 + 7; Nghe Part 1',[['writing','2','1'],['speaking','2','2'],['listening','1','1']]],
-['2026-11-25','Dạng ý kiến. Task 2 Test 2','Nói Part 3 Test 2 + 7; Đọc 2 bài',[['writing','2','2'],['speaking','2','3'],['reading','1','1']]],
-['2026-11-26','Thư trang trọng + Dạng 4. Viết 1 thư 20\'','Nói Part 1 thêm chủ đề; Nghe Part 2',[['writing','10','1'],['listening','2','2']]],
-['2026-11-27','Viết trọn 60\' Test 1','Nói trọn Test 1',[['writing','1','2'],['speaking','1','1']]],
-['2026-11-28','THI THỬ trọn 4 kỹ năng Test 3','19:00–22:15',[['mock','3']]],
-['2026-11-29','Sửa đề thi thử, viết lại Task 2 Test 3','Kiểm email ca thi',[['writing','3','2'],['errors']]],
-['2026-11-30','Viết trọn 60\' Test 4','Nói Test 4; Nghe Part 3',[['writing','4','2'],['speaking','4','1'],['listening','4','3']]],
-['2026-12-01','Viết trọn 60\' Test 5','Nói Test 5; Đọc 1 bài',[['writing','5','2'],['speaking','5','1'],['reading','5','1']]],
-['2026-12-02','THI THỬ trọn 4 kỹ năng Test 6','Mốc: Viết ≥5.5, Nói ≥6.0',[['mock','6']]],
-['2026-12-03','Nhẹ: 1 Task 1 20\', Nói Part 2–3','Soạn CCCD, ngủ trước 23:00',[['writing','8','1'],['speaking','8','2']]]];
-const todayStr=()=>new Date(Date.now()+7*3600e3).toISOString().slice(0,10);
-
-/* ---------- routing ---------- */
-const ICON={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',mock:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>',listening:'<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',reading:'<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>',writing:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',speaking:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/>',errors:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12l6 6M15 12l-6 6"/>'};
-const ROUTES=[['home','Tổng quan'],['mock','Thi thử'],['listening','Nghe'],['reading','Đọc'],['writing','Viết'],['speaking','Nói'],['errors','Sổ lỗi']];
-let param={},lastP={};
-const ART=location.href.split('#')[0];
-const hashOf=(r,p={})=>r+(p.test?'-t'+p.test:'')+(p.part?'-p'+p.part:'')+(p.mode?'-'+p.mode:'');
-function go(r,p={}){param=p;const h=hashOf(r,p);if(location.hash!=='#'+h)location.hash=h;else render()}
-function linkBtn(){return `<button class="small" style="min-height:38px" id="cplink">🔗 Copy link bài này</button>`}
-document.addEventListener('click',e=>{if(e.target.id!=='cplink')return;const u=ART+location.hash;const b=e.target;
-  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>{b.textContent='Đã copy link ✓'},()=>{b.outerHTML=`<input type="text" readonly value="${u}" style="width:100%" onclick="this.select()">`})});
-window.addEventListener('hashchange',render);
-function render(){clearTimers();stopSpeak();const h=(location.hash||'#home').slice(1);const m=h.match(/^([a-z]+)(?:-t(\d+))?(?:-p(\w+?))?(?:-(full|step))?$/)||[];const r=m[1]||'home';
-  if(m[2]||m[3]||m[4])param={test:m[2],part:m[3],mode:m[4]};
-  const route=ROUTES.some(x=>x[0]===r)?r:'home';
-  const SHORT={home:'Tổng quan',mock:'Thi thử',listening:'Nghe',reading:'Đọc',writing:'Viết',speaking:'Nói',errors:'Sổ lỗi'};
-  $('#nav').innerHTML=ROUTES.map(([k,v])=>`<a href="#${k}" class="${k===route?'on':''}" aria-label="${v}"><svg viewBox="0 0 24 24">${ICON[k]}</svg><span>${SHORT[k]}</span></a>`).join('');
-  {const d=Math.max(0,Math.ceil((EXAM-Date.now())/864e5));$('#scount').innerHTML=`Còn <b>${d} ngày</b> tới kỳ thi 04/12`;$('#mcount').innerHTML=`còn <b style="display:inline;font-size:16px">${d}</b> ngày`;}
-  lastP=param;
-  ({home:Home,mock:Mock,listening:Listening,reading:Reading,writing:Writing,speaking:Speaking,errors:Errors})[route]();
-  const p=param;param={};return p}
-const testSel=(id,v)=>`<select id="${id}">${T.map(t=>`<option value="${t.id}" ${+v===t.id?'selected':''}>Test ${t.id}</option>`).join('')}</select>`;
-const LMAP={L:['L'],R:['R'],W:['W','W2'],S:['S','Sp']};
-const latest=skill=>{const a=store.attempts.filter(x=>(LMAP[skill]||[skill]).includes(x.skill)&&x.score!=null);return a.length?a[a.length-1].score:null};
-
-/* ---------- HOME ---------- */
-function Home(){
-  const base={L:5.5,R:6.5,W:3.5,S:5.5},cur={L:latest('L')??base.L,R:latest('R')??base.R,W:latest('W')??base.W,S:latest('S')??base.S};
-  const avg=(cur.L+cur.R+cur.W+cur.S)/4,ov=r05(avg);
-  const days=Math.max(0,Math.ceil((EXAM-Date.now())/864e5));const td=todayStr();
-  const mocks=store.attempts.filter(a=>a.skill==='MOCK');
-  $('#app').innerHTML=`
-  <div class="card">
-    <div class="row" style="justify-content:space-between"><div><h1>Đích đến: 6.0 – Bậc 4</h1><p class="mute">Thi 04–06/12/2026 tại ĐH Văn Lang · còn <b>${days} ngày</b>. Cần tổng 4 kỹ năng ≥ 23.0.</p></div>
-    <div style="text-align:right"><div class="score" style="color:${ov>=6?'var(--ok)':'var(--red)'}">${ov.toFixed(1)}</div><div class="small mute">ước tính hiện tại · ${level(ov)}</div></div></div>
-    <div class="gauge" id="gauge"><svg></svg></div>
-    <div class="grid4">${[['L','Nghe',5.5],['R','Đọc',6.5],['W','Viết',5.5],['S','Nói',6.0]].map(([k,n,goal])=>`<div class="card" style="margin:0;padding:12px 14px"><div class="small mute">${n} · mục tiêu ${goal.toFixed(1)}</div><div style="font-size:28px;font-weight:800;color:${cur[k]>=goal?'var(--ok)':'var(--ink)'}">${cur[k].toFixed(1)}</div><div class="small mute">${latest(k)==null?'điểm thi 8/2026':'lần luyện gần nhất'}</div></div>`).join('')}</div>
-  </div>
-  <div class="card" id="keycard"><h2>Chấm bằng Claude</h2>${getKey()?`<div class="row"><span class="tag g">Đã có API key …${esc(getKey().slice(-4))}</span><label class="small row" style="gap:6px">Model <select id="kmodel">${[['claude-sonnet-5-5','Sonnet (khuyên dùng)'],['claude-opus-5-5','Opus (kỹ hơn, đắt hơn)'],['claude-haiku-5-5','Haiku (rẻ, nhanh)']].map(([v,l])=>`<option value="${v}" ${getModel()===v?'selected':''}>${l}</option>`).join('')}</select></label><button class="small" id="kdel">Xóa key</button></div>`
-   :`<p class="mute small">Dán API key Anthropic (bắt đầu bằng <b>sk-ant-</b>) để trang tự chấm Viết và Nói. Key chỉ lưu trong trình duyệt của máy này. Lấy key tại <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. Chưa có key vẫn luyện được: lúc chấm, trang cho copy bài sang Claude.</p><div class="row"><input type="text" id="kin" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" style="flex:1;min-width:220px"><button class="pri" id="ksave">Lưu key</button></div>`}
-   <p class="small mute" style="margin-bottom:0">Lịch sử, bài nháp và sổ lỗi lưu trên trình duyệt này.</p></div>
-  <div class="grid2">
-   <div class="card"><h2>Lịch 11 tối</h2><ol class="plan" style="padding-left:20px;margin:0">${PLAN.map(([d,a,b,links],i)=>`<li class="${d===td?'today':''}" style="padding:6px 8px"><b>${d.slice(8)}/${d.slice(5,7)}</b> · ${esc(a)} <span class="mute small">· ${esc(b)}</span><div class="row" style="gap:6px;margin-top:4px">${links.map(l=>`<button class="small" style="min-height:36px;padding:0 10px" data-go='${JSON.stringify(l)}'>${({writing:'Viết',speaking:'Nói',listening:'Nghe',reading:'Đọc',mock:'Thi thử',errors:'Sổ lỗi'})[l[0]]}${l[1]?' T'+l[1]:''}${l[2]?' · P'+l[2]:''}</button>`).join('')}</div></li>`).join('')}</ol></div>
-   <div class="card"><h2>Lịch sử luyện</h2>${store.attempts.length?`<table><tr><th>Ngày</th><th>Bài</th><th class="n">Điểm</th></tr>${store.attempts.slice(-14).reverse().map(a=>`<tr><td class="small">${new Date(a.ts).toLocaleDateString('vi-VN')}</td><td>${esc(a.label||a.skill)}</td><td class="n"><b>${a.score!=null?a.score.toFixed(1):'–'}</b></td></tr>`).join('')}</table>`:'<p class="mute">Chưa có bài nào. Bắt đầu với buổi tối hôm nay ở cột bên trái.</p>'}
-   ${mocks.length?`<p class="small mute">${mocks.length} lần thi thử trọn đề.</p>`:''}
-   <p class="small mute">Điểm Nghe/Đọc quy đổi tuyến tính (số câu đúng ÷ tổng × 10) – chỉ là ước tính. Viết/Nói do Claude chấm theo tiêu chí VSTEP, chưa tính phát âm.</p></div>
-  </div>
-  <details class="card" id="install"><summary style="cursor:pointer;min-height:44px;font-weight:700;font-size:18px">📲 Cài app ra màn hình chính (điện thoại & máy tính)</summary>
-   <div class="grid2" style="margin-top:10px"><div><h3>iPhone (Safari)</h3><ol><li>Mở link bằng <b>Safari</b>.</li><li>Bấm nút <b>Chia sẻ</b> (ô vuông có mũi tên lên).</li><li>Chọn <b>Thêm vào MH chính</b> → <b>Thêm</b>.</li></ol>
-   <h3>Android (Chrome)</h3><ol><li>Mở link bằng <b>Chrome</b>.</li><li>Bấm <b>⋮</b> góc trên phải → <b>Thêm vào màn hình chính</b> / <b>Cài đặt ứng dụng</b>.</li></ol></div>
-   <div><h3>Máy tính (Chrome / Edge)</h3><ol><li>Mở link bằng Chrome hoặc Edge.</li><li>Bấm biểu tượng <b>Cài đặt</b> (màn hình có mũi tên) ở cuối thanh địa chỉ, hoặc menu <b>⋮</b> → <b>Truyền, lưu và chia sẻ</b> → <b>Cài đặt trang dưới dạng ứng dụng</b>.</li><li>App mở trong cửa sổ riêng, có icon trên Desktop/Taskbar.</li></ol>
-   <p class="small mute">Bài làm, lịch sử và sổ lỗi lưu riêng trên từng máy.</p></div></div></details>`;
-  const ks=$('#ksave');if(ks)ks.onclick=()=>{const v=$('#kin').value.trim();if(!/^sk-/.test(v)){$('#kin').focus();$('#kin').style.borderColor='var(--red)';return}try{localStorage.setItem(KEY_LS,v)}catch(e){}Home()};
-  const kd=$('#kdel');if(kd)kd.onclick=()=>{try{localStorage.removeItem(KEY_LS)}catch(e){}Home()};
-  const km=$('#kmodel');if(km)km.onchange=()=>{try{localStorage.setItem(MODEL_LS,km.value)}catch(e){}};
-  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const [r,t,p,mo]=JSON.parse(b.dataset.go);go(r,{test:t,part:p,mode:r==='writing'?'full':undefined})});
-  const s=$('#gauge svg');const draw=()=>{const W=s.clientWidth,H=s.clientHeight,x=v=>20+(W-40)*v/10,y=70;if(W<80)return;
-    const band=(a,b,c,l)=>`<rect x="${x(a)}" y="${y-14}" width="${x(b)-x(a)}" height="28" fill="${c}"/><text x="${(x(a)+x(b))/2}" y="${y+48}" text-anchor="middle" font-size="13" fill="var(--mute)">${l}</text>`;
-    let g=band(0,4,'var(--line)','Chưa đạt')+band(4,6,'var(--blue-soft)','B1')+band(6,8.5,'var(--ok-soft)','B2 – Bậc 4')+band(8.5,10,'var(--line)',W>520?'C1':'');
-    for(let i=0;i<=10;i++)g+=`<line x1="${x(i)}" x2="${x(i)}" y1="${y-18}" y2="${y+18}" stroke="var(--mute)" stroke-width="${i%2?0.5:1}"/>${W>420||i%2==0?`<text x="${x(i)}" y="${y-24}" font-size="12" text-anchor="middle" fill="var(--mute)">${i}</text>`:''}`;
-    g+=`<line x1="${x(6)}" x2="${x(6)}" y1="${y-30}" y2="${y+30}" stroke="var(--ok)" stroke-width="3"/>`;
-    g+=`<path d="M${x(avg)} ${y+20} l-9 16 h18z" fill="var(--red)"/><text x="${x(avg)}" y="${H-4}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--red)">Anh: ${avg.toFixed(2)}</text>`;
-    s.innerHTML=g};new ResizeObserver(draw).observe(s);
-}
-
-/* ---------- MCQ renderer ---------- */
-function mcqHTML(qs,pre,ans={},key=null,tag=null){return qs.map(q=>`<div class="q" id="${pre}q${q.n}"><b>${q.n}.</b> ${md(q.q)}${tag?`<div>${tag(q)}</div>`:''}<div class="opts">${'ABCD'.split('').filter(k=>q.opts[k]!=null).map(k=>{const cls=key?(k===key[q.n]?'right':(ans[q.n]===k?'wrong':'')):'';return `<label class="opt ${cls}"><input type="radio" name="${pre}${q.n}" value="${k}" ${ans[q.n]===k?'checked':''} ${key?'disabled':''}><span><b>${k}.</b> ${md(q.opts[k])}</span></label>`}).join('')}</div>${key&&ans[q.n]!==key[q.n]?`<div class="row small" style="margin-top:6px"><span class="tag r">Đáp án ${key[q.n]}</span><button class="small" style="min-height:34px" data-why="${q.n}">Vì sao?</button><span class="why mute small"></span></div>`:''}</div>`).join('')}
-function readAns(pre,qs){const a={};qs.forEach(q=>{const el=document.querySelector(`input[name="${pre}${q.n}"]:checked`);if(el)a[q.n]=el.value});return a}
-function bindWhy(qs,key,ans,ctxFn){document.querySelectorAll('[data-why]').forEach(b=>b.onclick=async()=>{const n=+b.dataset.why,q=qs.find(x=>x.n===n),out=b.nextElementSibling;out.innerHTML='<span class="loading">Đang giải thích…</span>';
-  try{out.textContent=await askText(`Explain in Vietnamese, at most 70 words, why the correct answer to this VSTEP question is ${key[n]}. Quote the key English phrase from the source (in quotes). The candidate chose ${ans[n]||'nothing'}; say briefly why that is wrong.\nSOURCE:\n${ctxFn(q).slice(0,6000)}\nQUESTION: ${q.q}\nOPTIONS: ${Object.entries(q.opts).map(([k,v])=>k+'. '+v).join(' | ')}`)}catch(e){out.textContent=e.message}})}
-
-/* ---------- GUIDES ---------- */
-let G=null;
-function guideBox(skill,extra=''){const g=G&&G.general[skill];if(!g)return '';let open=true;try{open=localStorage.getItem('vstep4_g_'+skill)!=='0'}catch(e){}
-  return `<details class="card guide" ${open?'open':''} data-gk="${skill}"><summary>📘 ${esc(g.title)}</summary><p><b>${esc(g.lead)}</b></p>
-  <ol class="gsteps">${g.steps.map(([h,t])=>`<li><b>${esc(h)}.</b> ${esc(t)}</li>`).join('')}</ol>${g.words?`<p class="note">${esc(g.words)}</p>`:''}${extra}<p class="small mute" style="margin-bottom:0"><b>Cách luyện:</b> ${esc(g.practice)}</p></details>`}
-document.addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.gk){try{localStorage.setItem('vstep4_g_'+d.dataset.gk,d.open?'1':'0')}catch(_){}}},true);
-document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(!b)return;const t=b.dataset.say;stopSpeak();speakLines(t.split(/\n+/).filter(Boolean).map(x=>({sp:'',t:x})),.9).catch(()=>{})});
-const sayBtn=t=>`<button class="say" data-say="${esc(t)}">🔊 Nghe</button>`;
-function rqType(q){const s=q.q.replace(/\*/g,'');
-  if(/sentence.*(fit|added|inserted)|where would|squares|\[1\]|\[a\]/i.test(s))return ['Chèn câu','Tìm từ nối/đại từ trong câu cần chèn (this, however, they…) rồi ghép với câu trước – sau.'];
-  if(/refer(s)? to/i.test(s))return ['Quy chiếu','Đọc câu ngay TRƯỚC từ đó; chọn danh từ gần nhất hợp số ít/số nhiều.'];
-  if(/closest in meaning|could be (best )?replaced|meaning|is closest|best replaced|means/i.test(s))return ['Từ vựng','Thay từng đáp án vào câu trong bài, đáp án đọc hợp nghĩa là đúng. Không cần biết từ đó trước.'];
-  if(/best title|main idea|mainly (about|discuss)|primarily|topic of|main purpose|main topic|passage (mainly|is about)/i.test(s))return ['Ý chính','LÀM CUỐI. Đọc câu đầu mỗi đoạn (câu tô vàng); chọn đáp án bao quát cả bài.'];
-  if(/\bNOT\b|\bEXCEPT\b/.test(s))return ['Thông tin KHÔNG có','Tìm 3 đáp án CÓ trong bài để loại; đáp án còn lại đúng.'];
-  if(/attitude|tone|opinion of the author|feel about/i.test(s))return ['Thái độ tác giả','Tìm tính từ/động từ cảm xúc; loại đáp án quá mạnh hoặc trái chiều.'];
-  if(/why does the (author|writer)|in order to|mention/i.test(s))return ['Mục đích chi tiết','Đọc câu trước và sau chi tiết đó: tác giả nhắc nó để giải thích/minh họa ý nào?'];
-  if(/infer|impl|suggest|most likely|probably|conclude/i.test(s))return ['Suy luận','Không có câu y hệt: chọn ý bài ngầm ủng hộ, không suy diễn quá xa.'];
-  return ['Chi tiết','Gạch từ khóa (tên, số, từ in đậm), dò trong bài, đọc 3 câu quanh đó, loại trừ.']}
-function lqType(q){const s=q.q.replace(/\*/g,'');
-  if(/\bNOT\b/.test(s))return ['Thông tin KHÔNG nhắc','Đánh dấu 3 đáp án nghe thấy; còn lại là đáp án.'];
-  if(/what time|when|how long|how much|how many|how often|date|price|cost/i.test(s))return ['Số / thời gian','Nghe số, giờ, giá. Cẩn thận đổi ý: thường đáp án là số được nói SAU (but, actually, late…).'];
-  if(/where/i.test(s))return ['Địa điểm','Nghe tên nơi chốn, giới từ (next to, behind, opposite).'];
-  if(/why|reason/i.test(s))return ['Lý do','Chờ because / so / that\'s why / the reason is.'];
-  if(/purpose|mainly|main|about\?|talk about|topic/i.test(s))return ['Ý chính / mục đích','Nghe kỹ 2–3 câu ĐẦU: người nói thường nêu mục đích ngay.'];
-  if(/who|speaker|profession|work in|job/i.test(s))return ['Người nói / nghề','Nghe từ khóa nghề nghiệp, nơi làm việc (patients → bác sĩ; passengers → sân bay).'];
-  if(/imply|infer|probably|most likely|suggest|think|feel|opinion|attitude/i.test(s))return ['Suy luận / thái độ','Nghe giọng và tính từ cảm xúc (great, disappointed, worried).'];
-  if(/advise|should|recommend|ask .* to do|asked to/i.test(s))return ['Lời khuyên / yêu cầu','Chờ You should / Please / Make sure / Don\'t forget.'];
-  return ['Chi tiết','Nghe từ đồng nghĩa của đáp án, không chờ từ y hệt.']}
-const tagHTML=([a,b])=>`<span class="qt">${esc(a)}</span> <span class="small mute">${esc(b)}</span>`;
-function topicSent(text){return String(text||'').split(/\n\s*\n|\n/).filter(x=>x.trim()).map(p=>{const m=p.match(/^((?:\*\*[A-Z]\.\*\*\s*)?)(.+?[.!?])(\s.*|$)/s);return m?`<p>${md(m[1])}<span class="ts" title="Câu chủ đề">${md(m[2])}</span>${md(m[3])}</p>`:`<p>${md(p)}</p>`}).join('')}
-function vocabFor(p){if(!G)return [];const V=G.rvocab,found=[];const txt=p.qs.map(q=>q.q.replace(/\*/g,'')).join(' ').toLowerCase().replace(/[’']/g,"'");
-  for(const k of Object.keys(V))if(txt.includes(k.toLowerCase())&&!found.includes(k))found.push(k);return found.map(k=>[k,...V[k]])}
-
-/* ---------- LISTENING ---------- */
-const LSEG=[['Q1',[1]],['Q2',[2]],['Q3',[3]],['Q4',[4]],['Q5',[5]],['Q6',[6]],['Q7',[7]],['Q8',[8]],['C1',[9,10,11,12]],['C2',[13,14,15,16]],['C3',[17,18,19,20]],['T1',[21,22,23,24,25]],['T2',[26,27,28,29,30]],['T3',[31,32,33,34,35]]];
-const LPARTS={1:LSEG.slice(0,8),2:LSEG.slice(8,11),3:LSEG.slice(11)};
-function Listening(){const p=param;listeningView({test:+(p.test||1),part:p.part||'1',exam:false})}
-function listeningView({test,part,exam,onDone}){
-  const t=T[test-1],segs=part==='all'?LSEG:LPARTS[part];const played={};
-  const qset=n=>t.listening.filter(q=>n.includes(q.n));
-  $('#app').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">Nghe · Test ${test}</h1>${exam?'<span class="tag r">Thi thử: mỗi đoạn nghe 1 lần</span>':`<div class="row">${testSel('lt',test)}<select id="lp">${[['1','Part 1 (câu 1–8)'],['2','Part 2 (9–20)'],['3','Part 3 (21–35)'],['all','Cả bài (35 câu)']].map(([v,l])=>`<option value="${v}" ${v==part?'selected':''}>${l}</option>`).join('')}</select><label class="small row" style="gap:4px">Tốc độ <select id="rate"><option value="0.85">chậm</option><option value="1" selected>chuẩn</option></select></label></div>`}</div>
-  ${exam?'':''}<p class="small mute">${AUDIO.has('t'+test+'/Q1')?'File nghe MP3 giọng đọc tự nhiên (giọng Anh–Anh, nam/nữ khác nhau), dựng từ transcript gốc. '+(exam?'Mỗi đoạn chỉ phát 1 lần.':'Dùng thanh phát để tạm dừng, tua lại.'):'Đề này đang dùng giọng đọc của máy (file MP3 sẽ có sau). Trên điện thoại nên dùng Chrome.'} Đọc câu hỏi trước khi nghe.</p></div>${exam?'':guideBox('L')}
-  ${segs.map(([k,ns])=>{const qs=qset(ns);return `<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${k[0]==='Q'?'Part 1 · Câu '+ns[0]:k[0]==='C'?'Part 2 · Hội thoại '+k[1]:'Part 3 · Bài nói '+k[1]}</h3>${AUDIO.has(`t${test}/${k}`)&&!exam?'':`<button class="pri" data-play="${k}">▶ Phát</button>`}</div>${AUDIO.has(`t${test}/${k}`)&&!exam?`<audio controls preload="none" data-au src="audio/t${test}/${k}.mp3" style="width:100%;margin-top:10px"></audio>`:''}${qs[0]&&qs[0].ctx&&k[0]!=='Q'?`<p class="small mute">${md(qs[0].ctx)}</p>`:''}${mcqHTML(qs,'L',{},null,exam?null:q=>tagHTML(lqType(q)))}<div class="tx hide" data-tx="${k}"></div></div>`}).join('')}
-  <div class="row"><button class="red" id="lsub">Nộp bài Nghe</button><span id="lres"></span></div>`;
-  if(!exam){$('#lt').onchange=$('#lp').onchange=()=>go('listening',{test:$('#lt').value,part:$('#lp').value});$('#rate').onchange=()=>document.querySelectorAll('[data-au]').forEach(a=>a.playbackRate=+$('#rate').value);document.querySelectorAll('[data-au]').forEach(a=>a.onplay=()=>{a.playbackRate=+$('#rate').value})}
-  document.querySelectorAll('[data-play]').forEach(b=>b.onclick=async()=>{const k=b.dataset.play;if(exam&&played[k])return;played[k]=1;
-    document.querySelectorAll('[data-play]').forEach(x=>x.disabled=true);b.textContent='… đang phát';
-    try{await (AUDIO.has(`t${test}/${k}`)?playMp3(`audio/t${test}/${k}.mp3`,exam?1:+($('#rate')?.value||1)):speakLines(t.transcript[k]||[],exam?1:+($('#rate')?.value||1)))}catch(e){b.insertAdjacentHTML('afterend',`<span class="small bad-note">${esc(e.message||'Không phát được')}</span>`)}
-    document.querySelectorAll('[data-play]').forEach(x=>x.disabled=exam&&played[x.dataset.play]);b.textContent=exam?'Đã phát':'▶ Phát lại'});
-  $('#lsub').onclick=()=>{stopSpeak();const allQ=segs.flatMap(([k,ns])=>qset(ns)),ans=readAns('L',allQ);const right=allQ.filter(q=>ans[q.n]===t.keyL[q.n]).length;
-    const score=part==='all'?r05(right/35*10):null;
-    segs.forEach(([k,ns])=>{const qs=qset(ns);const box=document.querySelector(`[data-tx="${k}"]`);const card=box.parentElement;
-      card.querySelectorAll('.q').forEach(e=>e.remove());box.insertAdjacentHTML('beforebegin',mcqHTML(qs,'L',ans,t.keyL));
-      box.classList.remove('hide');box.innerHTML=`<details><summary class="small" style="cursor:pointer;min-height:36px">Xem transcript</summary>${(t.transcript[k]||[]).map(l=>`<p>${l.sp?`<b>${esc(l.sp)}:</b> `:''}${esc(l.t)}</p>`).join('')}</details>`});
-    bindWhy(t.listening,t.keyL,ans,q=>{const seg=LSEG.find(s=>s[1].includes(q.n));return (t.transcript[seg[0]]||[]).map(l=>(l.sp?l.sp+': ':'')+l.t).join('\n')});
-    $('#lres').innerHTML=`<b>${right}/${allQ.length} câu đúng</b>${score!=null?` · ước tính ${score.toFixed(1)}/10`:''}`;$('#lsub').disabled=true;
-    addAttempt({skill:part==='all'?'L':'Lp',label:`Nghe T${test} ${part==='all'?'cả bài':'Part '+part}`,score,raw:`${right}/${allQ.length}`});
-    if(onDone)onDone({right,score:r05(right/35*10)});};
-}
-
-/* ---------- READING ---------- */
-function Reading(){const p=param;readingView({test:+(p.test||1),pass:p.part||'1',exam:false})}
-function readingView({test,pass,exam,onDone}){
-  const t=T[test-1];const list=pass==='all'?t.reading:[t.reading[+pass-1]];const allQ=list.flatMap(p=>p.qs);const mins=pass==='all'?60:15;
-  $('#app').innerHTML=`<div class="card row" style="justify-content:space-between"><h1 style="margin:0">Đọc · Test ${test}</h1><div class="row">${exam?'':testSel('rt',test)+`<select id="rp">${[1,2,3,4].map(i=>`<option value="${i}" ${pass==i?'selected':''}>Bài ${i} (15')</option>`).join('')}<option value="all" ${pass==='all'?'selected':''}>Cả 4 bài (60')</option></select>`}<span class="timer" id="rtm"></span></div></div>
-  ${exam?'<div class="note small" style="margin-bottom:16px">Câu chi tiết trước, ý chính cuối; 15 phút/bài; không bỏ trống.</div>':guideBox('R')}
-  ${list.map((p,i)=>{const v=exam?[]:vocabFor(p);return `${v.length?`<div class="card" style="margin-bottom:12px"><h3 style="margin:0 0 6px">Từ cần nắm – ${esc(p.title)}</h3><p class="small mute" style="margin:0 0 6px">Chỉ những từ câu hỏi hỏi trực tiếp. Các từ mới khác: đoán đại ý, không cần thuộc.</p><table class="stack"><thead><tr><th>Từ</th><th>Loại</th><th>Nghĩa</th><th>Đồng nghĩa / ghi nhớ</th></tr></thead><tbody>${v.map(([w,pos,vi,syn])=>`<tr><td><b>${esc(w)}</b></td><td>${esc(pos)}</td><td>${esc(vi)}</td><td class="mute">${esc(syn)}</td></tr>`).join('')}</tbody></table></div>`:''}<div class="grid2" style="margin-bottom:16px"><div class="card sticky" style="margin:0"><h3>${esc(p.title)}</h3>${exam?'':'<p class="small mute" style="margin-top:-4px">Phần tô vàng = câu đầu mỗi đoạn, nơi thường chứa ý chính.</p>'}<div class="passage">${exam?paras(p.text):topicSent(p.text)}</div></div><div class="card" style="margin:0">${mcqHTML(p.qs,'R',{},null,exam?null:q=>tagHTML(rqType(q)))}</div></div>`}).join('')}
-  <div class="row"><button class="red" id="rsub">Nộp bài Đọc</button><span id="rres"></span></div>`;
-  if(!exam){$('#rt').onchange=$('#rp').onchange=()=>go('reading',{test:$('#rt').value,part:$('#rp').value})}
-  const submit=()=>{clearTimers();const ans=readAns('R',allQ),right=allQ.filter(q=>ans[q.n]===t.keyR[q.n]).length;
-    document.querySelectorAll('.grid2').forEach((g,i)=>{g.lastElementChild.innerHTML=mcqHTML(list[i].qs,'R',ans,t.keyR)});
-    bindWhy(t.reading.flatMap(p=>p.qs),t.keyR,ans,q=>t.reading.find(p=>p.qs.includes(q)).text);
-    const score=pass==='all'?r05(right/40*10):null;$('#rres').innerHTML=`<b>${right}/${allQ.length} câu đúng</b>${score!=null?` · ước tính ${score.toFixed(1)}/10`:''}`;$('#rsub').disabled=true;
-    addAttempt({skill:pass==='all'?'R':'Rp',label:`Đọc T${test} ${pass==='all'?'cả bài':'bài '+pass}`,score,raw:`${right}/${allQ.length}`});
-    if(onDone)onDone({right,score:r05(right/40*10)})};
-  if(exam)timer($('#rtm'),mins*60,submit);else{$('#rtm').textContent=fmt(mins*60);$('#rtm').insertAdjacentHTML('afterend','<button class="small" id="rgo">▶ Bắt đầu tính giờ</button>');const go1=()=>{if($('#rgo')){$('#rgo').remove();timer($('#rtm'),mins*60,submit)}};$('#rgo').onclick=go1;document.querySelectorAll('input[name^="R"]').forEach(x=>x.addEventListener('change',go1))}
-  $('#rsub').onclick=submit;
-}
-
-/* ---------- WRITING ---------- */
-const STEPS={1:[['Dàn ý','Ghi 3–5 dòng: thư thân mật hay trang trọng, mỗi gạch đầu dòng của đề sẽ trả lời bằng ý gì.'],['Chào + mở thư','Dear …, + 1–2 câu mở (Thanks for your email… / I am writing to…).'],['Thân thư','Mỗi gạch đầu dòng của đề = 1 đoạn 2–4 câu.'],['Kết + ký tên','1–2 câu kết + Best wishes / Yours faithfully + tên tiếng Anh.']],
- 2:[['Dàn ý','Dạng đề? 2 ý cho thân bài 1, 2 ý cho thân bài 2, lấy từ 6 ý vạn năng (thời gian, tiền, sức khỏe, kỹ năng, quan hệ, môi trường).'],['Mở bài','~40 từ: In recent years, … has become a matter of public concern. + câu nêu hướng.'],['Thân bài 1','~95 từ: Ý – Giải thích – Ví dụ – Kết quả (The first … is that … This is because … For example, … As a result, …).'],['Thân bài 2','~95 từ: cùng khung 4 câu, mở bằng Another … / On the other hand, …'],['Kết bài','~40 từ: In conclusion, … Therefore, I believe that … Không thêm ý mới.']]};
-const TEMPL={1:"Dear Sara,\n\nThanks for your email. It was great to hear from you. You asked me about …, so let me tell you.\n\nFirst of all, …\n\nAs for …, …\n\nBy the way, …\n\nAnyway, I have to go now. Write back soon and tell me your news!\n\nBest wishes,\nAnna",
- 2:"In recent years, … has become a matter of public concern. This essay will discuss …\n\nThe first … is that … This is because … For example, … As a result, …\n\nAnother … is that … This means that … For instance, … Therefore, …\n\nIn conclusion, … Therefore, I believe that …"};
-function Writing(){const p=param;writingView({test:+(p.test||1),task:+(p.part||2),mode:p.mode||'step'})}
-function gradeBlock(g,full,fixable){
-  const crit=full?`<div class="row" style="gap:24px;align-items:flex-end"><div><div class="small mute">Điểm ước tính</div><div class="score" style="color:${g.band>=5.5?'var(--ok)':'var(--red)'}">${(+g.band).toFixed(1)}</div></div><div style="flex:1;min-width:220px">${[['Đáp ứng đề','tf'],['Tổ chức','org'],['Từ vựng','voc'],['Ngữ pháp','gra']].map(([l,k])=>`<div class="crit"><span>${l}</span><b>${g[k]??'–'}</b></div>`).join('')}</div></div>`:`<div class="row"><span class="tag ${g.verdict==='Đạt'?'g':'r'}">${esc(g.verdict||'')}</span></div>`;
-  return `${crit}<p>${esc(g.summary||g.comment||'')}</p>
-  ${g.priorities?.length?`<h3>Sửa ngay</h3><ol>${g.priorities.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}
-  ${g.errors?.length?`<div class="row" style="justify-content:space-between"><h3 style="margin:0">Bút đỏ: ${g.errors.length} lỗi</h3>${fixable?'<button class="small" style="min-height:38px" id="fixall">Sửa tất cả trong bài</button>':''}</div>${g.errors.map((e,i)=>`<div class="fix"><span class="tag r">${esc(e.type||'lỗi')}</span> <s>${esc(e.wrong)}</s> → <span class="rt">${esc(e.right)}</span>${fixable?` <button class="small" style="min-height:34px;padding:0 10px" data-fix="${i}">Sửa trong bài</button>`:''}<div class="small mute">${esc(e.why||'')}</div></div>`).join('')}`:'<p class="tag g">Không thấy lỗi đáng kể</p>'}
-  ${g.paragraphs?.length?`<h3>Nhận xét từng đoạn</h3>${g.paragraphs.map(p=>`<p><b>${esc(p.role)}:</b> ${esc(p.comment)}</p>`).join('')}`:''}
-  ${g.next_tip?`<div class="note"><b>Phần tiếp theo:</b> ${esc(g.next_tip)}</div>`:''}
-  ${g.improved?`<details style="margin-top:10px"><summary style="cursor:pointer;min-height:40px;font-weight:600">Xem bản đã sửa (B2)</summary><div class="prompt">${paras(g.improved)}</div></details>`:''}`}
-const W_RULES=`VSTEP writing criteria (each 0–10): Task fulfilment (answers every bullet/part of the prompt, right format and tone, enough length), Organization (paragraphing, logical order, linking), Vocabulary (range, accuracy, spelling), Grammar (range, accuracy, sentence structure). Calibrate like a real VSTEP examiner: typical B1 = 4.0–5.5, B2 = 6.0–8.0, C1 = 8.5+. This candidate scored 3.5 before; known weaknesses: sentence structure, spelling, messy organization; ideas are fine. Goal: 5.5+.`;
-function writeGuide(test,task){const g=G&&G.w[test]&&G.w[test]['w'+task];if(!g)return '';
-  return `<h3 style="margin-top:14px">Đề này: ${esc(g.type)}</h3>
-  <table class="stack"><thead><tr><th>Phần</th><th>Viết gì</th></tr></thead><tbody>${g.outline.map(([a,b])=>`<tr><td><b>${esc(a)}</b></td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>
-  <h3 style="margin-top:14px">Câu khung đúng ngữ pháp – học thuộc, thay ý của anh vào</h3><ol>${g.sentences.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
-  <h3>Từ vựng phải nhớ (kèm họ từ: danh – tính – trạng – động)</h3><table class="stack"><thead><tr><th>Từ</th><th>Loại</th><th>Nghĩa</th><th>Họ từ</th></tr></thead><tbody>${g.vocab.map(([w,pos,vi,f])=>`<tr><td><b>${esc(w)}</b></td><td>${esc(pos)}</td><td>${esc(vi)}</td><td class="mute">${esc(f)}</td></tr>`).join('')}</tbody></table>
-  <details style="margin:12px 0"><summary style="cursor:pointer;min-height:40px;font-weight:700">Bài mẫu đơn giản để có điểm (${words(g.model)} từ)</summary><div class="prompt">${paras(g.model)}</div><p class="small mute">Câu ngắn, đúng khung, đủ ý từng gạch đầu dòng. Bài mẫu nâng cao của bộ đề nằm ở cột "Bút đỏ" bên dưới.</p></details>`}
-function writingView({test,task,mode,exam,onDone,draft}){
-  const t=T[test-1],prompt=task===1?t.writing.task1:t.writing.task2,min=task===1?120:250,steps=STEPS[task];let st=0;const parts=[];
-  $('#app').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">Viết · Test ${test} · Task ${task}</h1>${exam?'':`<div class="row">${linkBtn()}${testSel('wt',test)}<select id="wk"><option value="2" ${task==2?'selected':''}>Task 2 – luận (2/3 điểm)</option><option value="1" ${task==1?'selected':''}>Task 1 – thư</option></select><select id="wm"><option value="step" ${mode==='step'?'selected':''}>Viết từng phần</option><option value="full" ${mode==='full'?'selected':''}>Cả bài, bấm giờ</option></select></div>`}</div>
-   <div class="prompt" style="margin-top:12px">${paras(prompt)}</div><p class="small mute">Tối thiểu <b>${min} từ</b> · ${task===1?'20':'40'} phút · bàn phím không tự sửa chính tả (giống phòng thi).</p></div>
-   ${exam?'':guideBox('W',writeGuide(test,task))}
-   <div class="grid2"><div class="card" style="margin:0" id="wleft"></div><div class="card" style="margin:0" id="wright"><h2>Bút đỏ</h2><p class="mute">${mode==='step'?'Viết xong phần nào, bấm "Chấm phần này". Claude sửa đúng phần đó và gợi ý phần tiếp theo.':'Nộp bài để được chấm theo 4 tiêu chí VSTEP và sửa từng câu.'}</p><details><summary style="cursor:pointer;min-height:40px;font-weight:600">Khung mẫu học thuộc</summary><pre style="white-space:pre-wrap;font:15px/1.6 inherit" class="mute">${esc(TEMPL[task])}</pre></details>${t[task===1?'sampleLetter':'sampleEssay']?`<details><summary style="cursor:pointer;min-height:40px;font-weight:600">Bài mẫu trong bộ đề</summary><div class="small">${paras(t[task===1?'sampleLetter':'sampleEssay'])}</div></details>`:''}</div></div>`;
-  if(!exam){$('#wt').onchange=$('#wk').onchange=$('#wm').onchange=()=>go('writing',{test:$('#wt').value,part:$('#wk').value,mode:$('#wm').value})}
-  const ta=(id,ph,val='')=>`<textarea id="${id}" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="${esc(ph)}">${esc(val)}</textarea><div class="row small" style="justify-content:space-between;margin-top:6px"><span>Số từ: <span class="wc" id="${id}wc">0</span></span></div>`;
-  const bindWC=(id,goal)=>{const a=$('#'+id),c=$('#'+id+'wc');const f=()=>{const n=words(a.value);c.textContent=n+(goal?` / ${goal}`:'');c.className='wc '+(goal?(n>=goal?'good':'bad'):'')};a.oninput=f;f()};
-  const full=async(text,btn)=>{if(!exam&&$('#wtxt')){store.drafts=store.drafts||{};store.drafts[`W-t${test}-p${task}`]=text;persist()}btn.disabled=true;$('#wright').innerHTML='<h2>Bút đỏ</h2><p class="loading">Claude đang chấm như giám khảo VSTEP… (20–40 giây)</p>';
-    try{const g=await askJSON(`You are a strict, experienced VSTEP writing examiner. ${W_RULES}
-TASK ${task} PROMPT:\n${prompt.replace(/\*/g,'')}\n\nCANDIDATE RESPONSE (${words(text)} words; minimum ${min}):\n"""${text}"""\n
-Return JSON only, feedback in Vietnamese, English corrections in English:
-{"tf":number,"org":number,"voc":number,"gra":number,"band":number (mean of the four, rounded to nearest 0.5),"summary":"2–3 câu tiếng Việt","priorities":["đúng 3 việc cần sửa ngay, cụ thể"],"errors":[{"wrong":"exact substring copied from the response","right":"corrected","type":"ngữ pháp|chính tả|từ vựng|cấu trúc câu|mạch lạc|đáp ứng đề","why":"giải thích ngắn tiếng Việt"}] (up to 15, most score-costly first; include every spelling error),"paragraphs":[{"role":"tên đoạn","comment":"nhận xét tiếng Việt"}],"improved":"the candidate's own text corrected and reorganized to solid B2, keeping their ideas, paragraphs separated by blank lines, at least ${min+20} words"}`,'complex');
-      const hk=`W-t${test}-p${task}`;store.hist=store.hist||{};(store.hist[hk]=store.hist[hk]||[]).push(r05(+g.band));const hs=store.hist[hk].slice(-6);
-      $('#wright').innerHTML='<h2>Bút đỏ</h2>'+`<p class="small"><b>Các lần chấm bài này:</b> ${hs.map(x=>x.toFixed(1)).join(' → ')}</p>`+gradeBlock(g,true,!exam&&!!$('#wtxt'))+`<div class="row" style="margin-top:12px"><button id="wsave">Lưu ${g.errors?.length||0} lỗi vào Sổ lỗi</button></div><div class="note" style="margin-top:12px">Sửa ngay ở ô bài làm (bấm "Sửa trong bài" hoặc tự gõ), rồi bấm <b>Chấm lại</b> để xem điểm tăng.</div>`;
-      const fixOne=(e,b)=>{const a=$('#wtxt');if(!a)return false;let i=a.value.indexOf(e.wrong);if(i<0)i=a.value.toLowerCase().indexOf(e.wrong.toLowerCase());
-        if(i<0){if(b){b.textContent='Không thấy – tự sửa';b.disabled=true}return false}
-        a.value=a.value.slice(0,i)+e.right+a.value.slice(i+e.wrong.length);a.oninput&&a.oninput();if(b){b.textContent='Đã sửa ✓';b.disabled=true}return true};
-      document.querySelectorAll('[data-fix]').forEach(b=>b.onclick=()=>fixOne(g.errors[+b.dataset.fix],b));
-      const fa=$('#fixall');if(fa)fa.onclick=()=>{document.querySelectorAll('[data-fix]').forEach(b=>{if(!b.disabled)fixOne(g.errors[+b.dataset.fix],b)});fa.disabled=true};
-      if(!exam){btn.disabled=false;btn.textContent='Chấm lại bản đã sửa'}
-      $('#wsave').onclick=()=>{const n=addErrors(g.errors,'W',`T${test} Task ${task}`);$('#wsave').textContent=`Đã lưu ${n} lỗi mới`;$('#wsave').disabled=true};
-      const sc=r05(+g.band);addAttempt({skill:'W'+task,label:`Viết T${test} Task ${task}`,score:sc});if(onDone)onDone({score:sc,g});
-    }catch(e){$('#wright').innerHTML=`<h2>Bút đỏ</h2>${errBox(e)}`;btn.disabled=false;if(onDone&&exam)onDone({score:null,err:e.message,text})}};
-  if(mode==='full'||exam){
-    $('#wleft').innerHTML=`<div class="row" style="justify-content:space-between"><h2 style="margin:0">Bài làm</h2>${exam?'':'<span class="timer" id="wtm"></span>'}</div>${ta('wtxt',task===1?'Dear …,':'In recent years, …',draft||'')}<div class="row" style="margin-top:10px"><button class="red" id="wsub">${exam?'Xong Task này':'Nộp & chấm'}</button>${exam?'':'<button id="wnew">Làm lại từ đầu</button>'}</div>`;
-    bindWC('wtxt',min);
-    if(!exam){const dk=`W-t${test}-p${task}`;store.drafts=store.drafts||{};const a=$('#wtxt');if(!a.value&&store.drafts[dk])a.value=store.drafts[dk];a.oninput();
-      let dt;const base=a.oninput;a.oninput=()=>{base();clearTimeout(dt);dt=setTimeout(()=>{store.drafts[dk]=a.value;persist();const n=$('#dsaved');if(n)n.textContent='Đã lưu nháp '+new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})},1500)};
-      $('#wtxtwc').parentElement.insertAdjacentHTML('afterend','<span class="small mute" id="dsaved">Bài nháp tự lưu</span>')}
-    if(!exam)$('#wnew').onclick=()=>{const dk=`W-t${test}-p${task}`;if(store.drafts)delete store.drafts[dk];persist();$('#wtxt').value='';$('#wtxt').oninput();$('#wtxt').focus()};
-    if(exam){$('#wsub').onclick=()=>onDone&&onDone({text:$('#wtxt').value,defer:true});return}
-    {const wt=$('#wtm');wt.textContent=fmt((task===1?20:40)*60);wt.title='Bắt đầu tính giờ khi anh gõ chữ đầu tiên';let st0=false;const a=$('#wtxt');a.addEventListener('input',()=>{if(st0)return;st0=true;timer(wt,(task===1?20:40)*60,()=>full($('#wtxt').value,$('#wsub')))});}$('#wsub').onclick=()=>{clearTimers();full($('#wtxt').value,$('#wsub'))};return}
-  const drawStep=()=>{const done=st>=steps.length;
-    $('#wleft').innerHTML=`<div class="steps">${steps.map(([n],i)=>`<span class="${i===st?'on':i<st?'done':''}">${i+1}. ${n}</span>`).join('')}<span class="${done?'on':''}">Ghép & chấm</span></div>
-    ${parts.length?`<div class="prompt small" style="margin-top:12px">${parts.map((p,i)=>`<p><b>${steps[i][0]}:</b> ${esc(p)}</p>`).join('')}</div>`:''}
-    ${done?`<h3 style="margin-top:14px">Bài ghép (sửa lần cuối rồi chấm)</h3>${ta('wtxt','',parts.slice(1).join('\n\n'))}<div class="row" style="margin-top:10px"><button class="red" id="wsub">Chấm cả bài</button></div>`
-    :`<h3 style="margin-top:14px">${steps[st][0]}</h3><p class="small mute">${esc(steps[st][1])}</p>${ta('wpart','')}<div class="row" style="margin-top:10px"><button class="pri" id="wchk">Chấm phần này</button><button id="wnext">Phần tiếp →</button></div>`}`;
-    if(done){bindWC('wtxt',min);$('#wsub').onclick=()=>full($('#wtxt').value,$('#wsub'));return}
-    bindWC('wpart',0);
-    $('#wnext').onclick=()=>{const v=$('#wpart').value.trim();if(!v){$('#wpart').focus();return}parts[st]=v;st++;$('#wright').innerHTML='<h2>Bút đỏ</h2><p class="mute">Đã ghi phần trước. Viết phần tiếp rồi bấm "Chấm phần này".</p>';drawStep()};
-    $('#wchk').onclick=async()=>{const v=$('#wpart').value.trim();if(!v){$('#wpart').focus();return}const b=$('#wchk');b.disabled=true;$('#wright').innerHTML='<h2>Bút đỏ</h2><p class="loading">Đang chấm phần này…</p>';
-      try{const g=await askJSON(`You are a VSTEP writing tutor. ${W_RULES}
-The candidate is building a Task ${task} response section by section. PROMPT:\n${prompt.replace(/\*/g,'')}\n\nSECTIONS ALREADY WRITTEN:\n${parts.map((p,i)=>steps[i][0]+': '+p).join('\n')||'(none)'}\n\nCURRENT SECTION: ${steps[st][0]} — goal: ${steps[st][1]}\nTEXT:\n"""${v}"""\n
-Judge only the current section (for "Dàn ý": does it identify the right essay/letter type and cover every part of the prompt?). Return JSON only, Vietnamese feedback:
-{"verdict":"Đạt" or "Cần sửa","comment":"2–3 câu tiếng Việt, cụ thể","errors":[{"wrong":"exact substring","right":"corrected","type":"ngữ pháp|chính tả|từ vựng|cấu trúc câu|mạch lạc|đáp ứng đề","why":"tiếng Việt"}],"improved":"this section rewritten at solid B2 (for an outline: a corrected outline)","next_tip":"1 câu gợi ý cụ thể cho phần tiếp theo"}`);
-        $('#wright').innerHTML='<h2>Bút đỏ</h2>'+gradeBlock(g,false)+`<div class="row" style="margin-top:12px"><button id="wsave">Lưu lỗi</button><button id="wuse">Dùng bản đã sửa</button></div>`;
-        $('#wsave').onclick=()=>{const n=addErrors(g.errors,'W',`T${test} Task ${task} · ${steps[st][0]}`);$('#wsave').textContent=`Đã lưu ${n}`;$('#wsave').disabled=true};
-        $('#wuse').onclick=()=>{if(g.improved){$('#wpart').value=g.improved;$('#wpart').oninput()}};
-      }catch(e){$('#wright').innerHTML=`<h2>Bút đỏ</h2>${errBox(e)}`}b.disabled=false};
-  };drawStep();
-}
-
-/* ---------- SPEAKING ---------- */
-function Speaking(){const p=param;speakingView({test:+(p.test||1),part:+(p.part||1)})}
-function speakGuide(test,part){const g=G&&G.s[test];if(!g)return '';
-  if(part===1)return g.p1.map(t=>`<h3 style="margin-top:14px">Chủ đề: ${esc(t.topic)}</h3><div class="chips">${t.vocab.map(v=>`<span class="chip">${esc(v)}</span>`).join('')}</div>${t.answers.map(([q,a])=>`<div class="qa"><b>${esc(q)}</b>${esc(a)} ${sayBtn(a)}</div>`).join('')}`).join('')+'<p class="small mute">Mỗi câu: trả lời – lý do – ví dụ, rồi DỪNG. Thay chi tiết bằng chuyện của anh.</p>';
-  if(part===2){const p=g.p2;return `<h3 style="margin-top:14px">Nên chọn: ${esc(p.pick)}</h3><ol>${p.outline.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><div class="chips">${p.vocab.map(v=>`<span class="chip">${esc(v)}</span>`).join('')}</div><details><summary style="cursor:pointer;min-height:40px;font-weight:700">Bài nói mẫu (~${words(p.model)} từ ≈ 1,5–2 phút)</summary><div class="prompt">${paras(p.model)}</div>${sayBtn(p.model)}</details>`}
-  const p=g.p3;return `<h3 style="margin-top:14px">Từ vựng chủ đề</h3><div class="chips">${p.vocab.map(v=>`<span class="chip">${esc(v)}</span>`).join('')}</div><details><summary style="cursor:pointer;min-height:40px;font-weight:700">Bài nói mẫu (~${words(p.model)} từ ≈ 2–2,5 phút)</summary><div class="prompt">${paras(p.model)}</div>${sayBtn(p.model)}</details><h3>Câu hỏi phụ – trả lời 2–3 câu</h3>${p.follow.map(([q,a])=>`<div class="qa"><b>${esc(q)}</b>${esc(a)} ${sayBtn(a)}</div>`).join('')}`}
-function speakingView({test,part,exam,onDone}){
-  const t=T[test-1],s=t.speaking;let qText='',prep=0,talk=0;
-  if(part===1){qText=s.part1.map(x=>`Let's talk about ${x.topic.replace(/\.$/,'')}.\n`+x.qs.map((q,i)=>`${i+1}. ${q}`).join('\n')).join('\n\n');prep=0;talk=180}
-  if(part===2){qText=s.part2+'\nWhich do you think is the best choice?';prep=60;talk=120}
-  if(part===3){qText=`Topic: ${s.part3.topic}\n${s.part3.ideas.map(x=>'- '+x).join('\n')}\n\nFollow-up questions:\n${s.part3.follow.map(x=>'- '+x).join('\n')}`;prep=60;talk=240}
-  const frame={1:'A–R–E: Answer (Yes, I do / Actually, …) → Reason (because …) → Example (For example, last week I …). Mỗi câu hỏi nói 3 câu.',2:'In my opinion, [A] is the best option because of the following reasons. Firstly, … Secondly, … Meanwhile, [B] is not a good choice because … and [C] … That\'s why I would choose [A].',3:'Nowadays, more and more people are concerned about … I totally agree that … for the following reasons. (3 gợi ý) Apart from that, in my own opinion, … In short, … Sau đó trả lời 3 câu hỏi phụ.'}[part];
-  $('#app').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">Nói · Test ${test} · Part ${part}</h1>${exam?'':`<div class="row">${linkBtn()}${testSel('st',test)}<select id="sp">${[1,2,3].map(i=>`<option value="${i}" ${i==part?'selected':''}>Part ${i} – ${['Tương tác xã hội','Thảo luận giải pháp','Phát triển chủ đề'][i-1]}</option>`).join('')}</select></div>`}</div>
-   <div class="prompt" style="margin-top:12px">${paras(qText)}</div><p class="small mute"><b>Khung:</b> ${esc(frame)}</p></div>${exam?'':guideBox('S',speakGuide(test,part))}
-   <div class="grid2"><div class="card" style="margin:0"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Bài nói</h2><span class="timer" id="stm">${fmt(prep||talk)}</span></div>
-     <p class="small mute" id="sstate">${prep?'Bấm Bắt đầu: 1 phút chuẩn bị (ghi từ khóa), rồi nói.':'Bấm Bắt đầu: máy đọc câu hỏi, anh trả lời.'}</p>
-     <div class="row"><button class="pri" id="sgo">Bắt đầu</button><button id="smic" class="${cap.dictation?'':'hide'}">🎙 Ghi âm → chữ</button><button id="sread">🔊 Nghe câu hỏi</button></div>
-     <textarea id="stxt" spellcheck="false" style="margin-top:10px;min-height:200px" placeholder="${cap.dictation?'Bấm Ghi âm và nói; chữ sẽ hiện ở đây. Có thể sửa tay.':'Trình duyệt này chưa ghi âm được (dùng Chrome để ghi âm), hoặc dùng micro của bàn phím điện thoại, hoặc gõ lại lời nói.'}"></textarea>
-     <div class="row small" style="justify-content:space-between"><span>Số từ: <b id="swc">0</b> <span class="mute">(mục tiêu ${part===1?'≥ 150':part===2?'≥ 220':'≥ 320'})</span></span></div>
-     <div class="row" style="margin-top:10px"><button class="red" id="ssub">${exam?'Xong phần này':'Chấm bài nói'}</button></div></div>
-   <div class="card" style="margin:0" id="sright"><h2>Bút đỏ</h2><p class="mute">Claude chấm từ văn bản lời nói: ngữ pháp, từ vựng, cách phát triển ý, độ dài. Chưa chấm được phát âm.</p></div></div>`;
-  if(!exam){$('#st').onchange=$('#sp').onchange=()=>go('speaking',{test:$('#st').value,part:$('#sp').value})}
-  const ta=$('#stxt');ta.oninput=()=>$('#swc').textContent=words(ta.value);
-  $('#sread').onclick=()=>speakLines(qText.split('\n').filter(Boolean).map(x=>({sp:'',t:x.replace(/^- /,'')}))).catch(()=>{});
-  let listening=false;
-  if(cap.dictation){DICT.final=text=>{ta.value=(ta.value+' '+text).trim();ta.oninput()};DICT.state=state=>{listening=state==='listening';const b=$('#smic');if(b)b.textContent=listening?'■ Dừng ghi':'🎙 Ghi âm → chữ'};
-    $('#smic').onclick=()=>{if(listening){cap.dictation.stop().catch(()=>{});return}stopSpeak();cap.dictation.start().catch(e=>{$('#sstate').textContent=e&&e.code==='not_granted'?'Micro chưa được cho phép – anh gõ lại lời nói.':'Không mở được micro.'})}}
-  $('#sgo').onclick=()=>{$('#sgo').disabled=true;const startTalk=()=>{$('#sstate').textContent='Nói ngay! Hết giờ sẽ tự dừng.';if(cap.dictation&&!listening){$('#sstate').textContent+=' Bấm 🎙 để ghi.'}timer($('#stm'),talk,()=>{$('#sstate').textContent='Hết giờ.';if(listening)cap.dictation.stop().catch(()=>{})})};
-    speakLines(qText.split('\n').filter(Boolean).slice(0,part===1?4:6).map(x=>({sp:'',t:x.replace(/^- /,'')}))).catch(()=>{});
-    if(prep){$('#sstate').textContent='Chuẩn bị 1 phút: chỉ ghi từ khóa.';timer($('#stm'),prep,startTalk)}else startTalk()};
-  $('#ssub').onclick=async()=>{clearTimers();if(listening)await cap.dictation.stop().catch(()=>{});const text=ta.value.trim();if(exam){onDone&&onDone({text,defer:true,qText});return}
-    if(words(text)<10){$('#sright').innerHTML='<h2>Bút đỏ</h2><p class="bad-note">Chưa có nội dung để chấm.</p>';return}
-    $('#sright').innerHTML='<h2>Bút đỏ</h2><p class="loading">Đang chấm bài nói…</p>';
-    try{const g=await gradeSpeaking(part,qText,text);$('#sright').innerHTML='<h2>Bút đỏ</h2>'+speakBlock(g)+`<div class="row" style="margin-top:12px"><button id="ssave">Lưu lỗi</button></div>`;
-      $('#ssave').onclick=()=>{const n=addErrors(g.errors,'S',`T${test} Part ${part}`);$('#ssave').textContent=`Đã lưu ${n}`;$('#ssave').disabled=true};
-      addAttempt({skill:'Sp',label:`Nói T${test} Part ${part}`,score:r05(+g.band)})}catch(e){$('#sright').innerHTML=`<h2>Bút đỏ</h2>${errBox(e)}`}};
-}
-async function gradeSpeaking(part,qText,text){return askJSON(`You are a VSTEP speaking examiner. Criteria (0–10 each): Grammar, Vocabulary, Discourse management (answering fully, developing ideas with reasons and examples, organization), plus a Length/fluency estimate from the amount said (Part 1 ≈3 min, Part 2 ≈2 min, Part 3 ≈4 min incl. follow-ups). Pronunciation cannot be judged from text: ignore it. Calibrate: B1 4.0–5.5, B2 6.0–8.0. The candidate scored 5.5 before and aims for 6.0. This is an automatic speech-to-text transcript: ignore punctuation and obvious recognition slips.
-PART ${part} QUESTIONS:\n${qText}\n\nTRANSCRIPT (${words(text)} words):\n"""${text}"""\n
-Return JSON only, Vietnamese feedback: {"gra":n,"voc":n,"dis":n,"len":n,"band":n (mean rounded to 0.5),"summary":"2–3 câu","priorities":["3 việc cụ thể để lên 6.0"],"errors":[{"wrong":"exact words","right":"corrected","type":"ngữ pháp|từ vựng|cấu trúc câu|phát triển ý","why":"tiếng Việt"}] (up to 10),"better":"a model answer in English at solid B2 using the candidate's own ideas, about 30% longer"}`)}
-function speakBlock(g){return `<div class="row" style="gap:24px;align-items:flex-end"><div><div class="small mute">Điểm ước tính</div><div class="score" style="color:${g.band>=6?'var(--ok)':'var(--red)'}">${(+g.band).toFixed(1)}</div></div><div style="flex:1;min-width:200px">${[['Ngữ pháp','gra'],['Từ vựng','voc'],['Phát triển ý','dis'],['Độ dài / trôi chảy','len']].map(([l,k])=>`<div class="crit"><span>${l}</span><b>${g[k]??'–'}</b></div>`).join('')}</div></div>
- <p>${esc(g.summary||'')}</p>${g.priorities?.length?`<h3>Để lên 6.0</h3><ol>${g.priorities.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}
- ${(g.errors||[]).map(e=>`<div class="fix"><span class="tag r">${esc(e.type||'lỗi')}</span> <s>${esc(e.wrong)}</s> → <span class="rt">${esc(e.right)}</span><div class="small mute">${esc(e.why||'')}</div></div>`).join('')}
- ${g.better?`<details style="margin-top:10px"><summary style="cursor:pointer;min-height:40px;font-weight:600">Câu trả lời mẫu B2 từ ý của anh</summary><div class="prompt">${paras(g.better)}</div><button id="sbetter" style="margin-top:8px">🔊 Nghe bản mẫu</button></details>`:''}`}
-document.addEventListener('click',e=>{if(e.target.id==='sbetter'){const p=e.target.previousElementSibling.innerText;speakLines(p.split(/\n+/).filter(Boolean).map(t=>({sp:'',t}))).catch(()=>{})}});
-
-/* ---------- MOCK EXAM ---------- */
-function Mock(){const p=param;const sel=+(p.test||3);
-  $('#app').innerHTML=`<div class="card"><h1>Thi thử trọn đề</h1><p>Đúng trình tự phòng thi: <b>Nghe</b> (mỗi đoạn nghe 1 lần) → <b>Đọc 60'</b> → <b>Viết 60'</b> (Task 2 trước, Task 1 sau) → <b>Nói</b> 3 phần. Cuối bài có điểm tổng làm tròn 0.5 và bậc.</p>
-  <div class="row">${testSel('mt',sel)}<button class="red" id="mgo">Bắt đầu thi thử</button></div><p class="small mute">Khoảng 3 giờ 15 phút. Lịch gợi ý: Test 3 ngày 28/11, Test 6 ngày 02/12. Không rời trang giữa chừng – điểm từng phần chỉ lưu khi hoàn thành.</p></div>`;
-  $('#mgo').onclick=()=>runMock(+$('#mt').value)}
-async function runMock(test){const res={test};
-  const step=(fn,opts)=>new Promise(r=>fn({...opts,test,exam:true,onDone:r}));
-  res.L=await step(listeningView,{part:'all'});await gate('Xong phần Nghe','Tiếp: Đọc 60 phút.');
-  res.R=await step(readingView,{pass:'all'});await gate('Xong phần Đọc','Tiếp: Viết 60 phút – Task 2 (40\') trước, rồi Task 1 (20\').');
-  const wEnd=Date.now()+60*60e3;const wbar=()=>{clearTimers();const el=document.createElement('div');el.className='card row';el.style.justifyContent='space-between';el.innerHTML='<b>Thời gian Viết còn lại (cả 2 task)</b><span class="timer" id="mwt"></span>';$('#app').prepend(el);timer($('#mwt'),Math.max(0,Math.round((wEnd-Date.now())/1000)),()=>{$('#wsub')&&$('#wsub').click()})};
-  res.W2=await new Promise(r=>{writingView({test,task:2,mode:'full',exam:true,onDone:r});wbar()});
-  res.W1=await new Promise(r=>{writingView({test,task:1,mode:'full',exam:true,onDone:r});wbar()});clearTimers();
-  await gate('Xong phần Viết','Tiếp: Nói – Part 1 (3\'), Part 2 (1\' chuẩn bị + 2\'), Part 3 (1\' + 4\').');
-  res.S=[];for(const part of [1,2,3]){res.S.push({part,...await step(speakingView,{part})})}
-  mockReport(res)}
-function gate(title,next){return new Promise(r=>{clearTimers();$('#app').innerHTML=`<div class="card"><h1>${esc(title)}</h1><p>${esc(next)}</p><button class="pri" id="gnext">Tiếp tục</button></div>`;$('#gnext').onclick=r;scrollTo(0,0)})}
-async function mockReport(res){const t=T[res.test-1];
-  $('#app').innerHTML=`<div class="card"><h1>Kết quả thi thử · Test ${res.test}</h1><p class="loading" id="mload">Claude đang chấm Viết và Nói (khoảng 1–2 phút)…</p><div id="mout"></div></div>`;
-  const gw=async(task,text)=>{if(words(text)<20)return {band:0,summary:'Không có bài làm.',errors:[]};return askJSON(`You are a strict, experienced VSTEP writing examiner. ${W_RULES}\nTASK ${task} PROMPT:\n${(task===1?t.writing.task1:t.writing.task2).replace(/\*/g,'')}\n\nRESPONSE (${words(text)} words; minimum ${task===1?120:250}):\n"""${text}"""\nReturn JSON only, Vietnamese feedback: {"tf":n,"org":n,"voc":n,"gra":n,"band":n,"summary":"2 câu","priorities":["3 việc"],"errors":[{"wrong":"exact substring","right":"corrected","type":"ngữ pháp|chính tả|từ vựng|cấu trúc câu|mạch lạc|đáp ứng đề","why":"tiếng Việt"}] (up to 12),"improved":"corrected B2 version of their text"}`,'complex')};
-  let g1,g2,gs=[];const errs=[];
-  try{[g2,g1]=await Promise.all([gw(2,res.W2.text||''),gw(1,res.W1.text||'')]);
-    gs=await Promise.all(res.S.map(s=>words(s.text)<10?{band:0,summary:'Không có nội dung.',errors:[]}:gradeSpeaking(s.part,s.qText,s.text)))}catch(e){$('#mload').outerHTML=errBox(e)}
-  const W=g1&&g2?r05((+g1.band+2*+g2.band)/3):null,S=gs.length===3?r05(gs.reduce((a,g)=>a+ +g.band,0)/3):null;
-  const L=res.L.score,R=res.R.score,sum=[L,R,W,S].every(x=>x!=null)?L+R+W+S:null,ov=sum!=null?r05(sum/4):null;
-  $('#mload')?.remove();
-  $('#mout').innerHTML=`<div class="grid4" style="margin:12px 0">${[['Nghe',L,`${res.L.right}/35`],['Đọc',R,`${res.R.right}/40`],['Viết',W,'Task 1 ×1, Task 2 ×2'],['Nói',S,'TB 3 phần']].map(([n,v,s])=>`<div class="card" style="margin:0;padding:12px"><div class="small mute">${n}</div><div style="font-size:30px;font-weight:800">${v!=null?v.toFixed(1):'–'}</div><div class="small mute">${s}</div></div>`).join('')}</div>
-   ${ov!=null?`<div class="${ov>=6?'note':'bad-note'}" style="font-size:18px"><b>Tổng ${sum.toFixed(1)} → trung bình ${(sum/4).toFixed(2)} → ${ov.toFixed(1)} · ${level(ov)}</b>${ov<6?` · còn thiếu ${(23-sum).toFixed(1)} điểm tổng`:''}</div>`:''}
-   ${g2?`<h2 style="margin-top:20px">Viết Task 2</h2>${gradeBlock(g2,true)}`:''}${g1?`<h2 style="margin-top:20px">Viết Task 1</h2>${gradeBlock(g1,true)}`:''}
-   ${gs.map((g,i)=>`<h2 style="margin-top:20px">Nói Part ${i+1}</h2>${speakBlock(g)}`).join('')}
-   <div class="row" style="margin-top:16px"><button class="pri" id="msave">Lưu tất cả lỗi vào Sổ lỗi</button><a class="btn" href="#home" style="display:inline-flex;align-items:center;text-decoration:none">Về Tổng quan</a></div>`;
-  $('#msave').onclick=()=>{let n=0;if(g2)n+=addErrors(g2.errors,'W',`Thi thử T${res.test} Task 2`);if(g1)n+=addErrors(g1.errors,'W',`Thi thử T${res.test} Task 1`);gs.forEach((g,i)=>n+=addErrors(g.errors,'S',`Thi thử T${res.test} Part ${i+1}`));$('#msave').textContent=`Đã lưu ${n} lỗi`;$('#msave').disabled=true};
-  if(W!=null)addAttempt({skill:'W',label:`Thi thử T${res.test} – Viết`,score:W});if(S!=null)addAttempt({skill:'S',label:`Thi thử T${res.test} – Nói`,score:S});
-  addAttempt({skill:'MOCK',label:`Thi thử T${res.test} – Tổng`,score:ov,detail:{L,R,W,S}});
-}
-
-/* ---------- ERROR BOOK ---------- */
-const SPELL=['environment','government','necessary','advantage','disadvantage','beneficial','convenient','technology','opportunity','development','knowledge','achieve','believe','receive','recommend','accommodation','responsible','successful','communicate','especially','definitely','separate','business','interesting','pollution','transportation','traditional','experience','their','which'];
-function Errors(){const E=store.errors,open=E.filter(e=>e.ok<2);const types={};E.forEach(e=>types[e.type||'khác']=(types[e.type||'khác']||0)+1);
-  $('#app').innerHTML=`<div class="card"><h1>Sổ lỗi</h1><p class="mute">${E.length} lỗi đã lưu · ${open.length} lỗi chưa thuộc (gõ đúng 2 lần là thuộc).</p>
-  <div class="row">${Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="tag r">${esc(k)}: ${v}</span>`).join('')}</div>
-  <div class="row" style="margin-top:12px"><button class="red" id="edrill" ${open.length?'':'disabled'}>Drill sửa câu (${Math.min(open.length,5)} câu)</button><button class="pri" id="sdrill">Drill chính tả (10 từ)</button></div></div>
-  <div class="card" id="drill" style="display:none"></div>
-  <div class="card"><h2>Tất cả lỗi</h2>${E.length?`<table class="stack"><thead><tr><th>Sai</th><th>Đúng</th><th>Loại</th><th>Nguồn</th></tr></thead><tbody>${E.slice().reverse().map(e=>`<tr><td><s style="color:var(--red)">${esc(e.wrong)}</s></td><td><b>${esc(e.right)}</b><div class="small mute">${esc(e.why)}</div></td><td>${esc(e.type)}${e.ok>=2?' <span class="tag g">thuộc</span>':''}</td><td class="small mute">${esc(e.src)}</td></tr>`).join('')}</tbody></table>`:'<p class="mute">Chưa có lỗi nào. Sau mỗi lần chấm Viết/Nói, bấm "Lưu lỗi".</p>'}</div>`;
-  $('#edrill').onclick=()=>drillSent(open.sort(()=>Math.random()-.5).slice(0,5),0,0);
-  $('#sdrill').onclick=()=>{const own=E.filter(e=>e.type==='chính tả'&&/^[A-Za-z'-]+$/.test(e.right)).map(e=>e.right);drillSpell([...new Set([...own,...SPELL])].sort(()=>Math.random()-.5).slice(0,10),0,0)}}
-const norm=s=>String(s).toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9' ]/g,' ').replace(/\s+/g,' ').trim();
-function drillSent(list,i,score){const d=$('#drill');d.style.display='block';if(i>=list.length){d.innerHTML=`<h2>Xong: ${score}/${list.length} câu đúng</h2><button id="dend">Đóng</button>`;$('#dend').onclick=Errors;persist();return}
-  const e=list[i];d.innerHTML=`<h2>Câu ${i+1}/${list.length}</h2><p>Gõ lại cho đúng:</p><p class="prompt" style="color:var(--red)">${esc(e.wrong)}</p><p class="small mute">Gợi ý: lỗi ${esc(e.type)}</p><input type="text" id="din" style="width:100%" spellcheck="false" autocomplete="off" autocapitalize="off"><div class="row" style="margin-top:10px"><button class="pri" id="dchk">Kiểm tra</button></div><div id="dres"></div>`;
-  $('#din').focus();const chk=()=>{const ok=norm($('#din').value)===norm(e.right);const rec=store.errors.find(x=>x.id===e.id);if(rec){rec.ok=ok?rec.ok+1:0;persist()}
-    $('#dres').innerHTML=`<p class="${ok?'note':'bad-note'}">${ok?'Đúng!':'Chưa đúng.'} Đáp án: <b>${esc(e.right)}</b><br><span class="small">${esc(e.why)}</span></p><button id="dnext" class="pri">Tiếp →</button>`;$('#dchk').disabled=true;$('#dnext').onclick=()=>drillSent(list,i+1,score+(ok?1:0));$('#dnext').focus()};
-  $('#dchk').onclick=chk;$('#din').onkeydown=ev=>{if(ev.key==='Enter')chk()}}
-function drillSpell(list,i,score){const d=$('#drill');d.style.display='block';if(i>=list.length){d.innerHTML=`<h2>Chính tả: ${score}/${list.length}</h2><button id="dend">Đóng</button>`;$('#dend').onclick=Errors;return}
-  const w=list[i];d.innerHTML=`<h2>Từ ${i+1}/${list.length}</h2><p>Bấm nghe rồi gõ từ. ${cap.tts||'speechSynthesis' in window?'':'(Trình duyệt không đọc được – từ hiện mờ 1 giây.)'}</p><div class="row"><button id="dsay">🔊 Nghe từ</button><span id="dpeek" class="mute"></span></div><input type="text" id="din" style="width:100%;margin-top:10px" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"><div class="row" style="margin-top:10px"><button class="pri" id="dchk">Kiểm tra</button></div><div id="dres"></div>`;
-  const say=()=>speakLines([{sp:'',t:w}],.8).catch(()=>{$('#dpeek').textContent=w;setTimeout(()=>$('#dpeek').textContent='',1000)});$('#dsay').onclick=say;say();$('#din').focus();
-  const chk=()=>{const ok=$('#din').value.trim().toLowerCase()===w.toLowerCase();$('#dres').innerHTML=`<p class="${ok?'note':'bad-note'}">${ok?'Đúng!':'Sai.'} <b style="font-size:20px;letter-spacing:.04em">${esc(w)}</b></p><button id="dnext" class="pri">Tiếp →</button>`;$('#dchk').disabled=true;$('#dnext').onclick=()=>drillSpell(list,i+1,score+(ok?1:0));$('#dnext').focus()};
-  $('#dchk').onclick=chk;$('#din').onkeydown=ev=>{if(ev.key==='Enter')chk()}}
-
-/* ---------- boot ---------- */
-async function boot(){lsLoad();
-  cap={sample:true,tts:null,dictation:makeDictation()};
-  if(cap.dictation){cap.dictation.onFinal(({text})=>DICT.final&&DICT.final(text));cap.dictation.onState(({state})=>DICT.state&&DICT.state(state))}
-  try{const am=await fetch('audio/index.json');if(am.ok)AUDIO=new Set(await am.json())}catch(e){}
-  try{G=await (await fetch('data/guides.json')).json()}catch(e){}
-  try{T=await (await fetch('data/tests.json')).json()}catch(e){$('#app').innerHTML='<p class="bad-note">Không tải được bộ đề.</p>';return}
-  render();
-}
-boot();
+  let timer2 = function(el, sec, onEnd) {
+    let left = sec;
+    const tick = () => {
+      el.textContent = fmt(Math.max(left, 0));
+      el.classList.toggle("low", left <= 300 && sec > 300 || left <= 15 && sec <= 300);
+      if (left <= 0) {
+        stop();
+        onEnd && onEnd();
+      }
+      left--;
+    };
+    const id = setInterval(tick, 1e3);
+    tick();
+    const stop = () => clearInterval(id);
+    stopTimers.push(stop);
+    return { stop, left: () => left };
+  }, lsLoad2 = function() {
+    try {
+      const v = localStorage.getItem("vstep4");
+      if (v) store = JSON.parse(v);
+    } catch (e) {
+    }
+  }, persist2 = function() {
+    store.attempts = store.attempts.slice(-200);
+    store.errors = store.errors.slice(-400);
+    try {
+      localStorage.setItem("vstep4", JSON.stringify(store));
+    } catch (e) {
+    }
+    if (dbRef) {
+      const data = JSON.parse(JSON.stringify(store));
+      saving = saving.then(() => dbRef.set(data)).catch(() => {
+      });
+    }
+  }, addAttempt2 = function(a) {
+    store.attempts.push(__spreadValues({ ts: Date.now() }, a));
+    persist2();
+  }, addErrors2 = function(list, skill, src) {
+    let n = 0;
+    for (const e of list || []) {
+      if (!e.wrong || !e.right) continue;
+      if (store.errors.some((x) => x.wrong === e.wrong && x.right === e.right)) continue;
+      store.errors.push({ id: Date.now() + "-" + n++, ts: Date.now(), skill, src, wrong: e.wrong, right: e.right, type: e.type || "", why: e.why || "", ok: 0 });
+    }
+    persist2();
+    return n;
+  }, errBox2 = function(e) {
+    return '<div class="bad-note">'.concat(esc(e.message)).concat(e.nokey ? '<div class="row" style="margin-top:10px"><button class="small pri" id="cpprompt">Copy b\xE0i + y\xEAu c\u1EA7u ch\u1EA5m</button><a class="btn small" style="display:inline-flex;align-items:center;text-decoration:none" href="https://claude.ai/new" target="_blank" rel="noopener">M\u1EDF Claude \u0111\u1EC3 d\xE1n</a></div>' : "", "</div>");
+  }, makeDictation2 = function() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return null;
+    let rec = null, fin = null, st = null;
+    return {
+      onFinal(f) {
+        fin = f;
+      },
+      onState(f) {
+        st = f;
+      },
+      start() {
+        rec = new SR();
+        rec.lang = "en-US";
+        rec.continuous = true;
+        rec.interimResults = false;
+        rec.onresult = (ev) => {
+          for (let i = ev.resultIndex; i < ev.results.length; i++) if (ev.results[i].isFinal && fin) fin({ text: ev.results[i][0].transcript });
+        };
+        rec.onstart = () => st && st({ state: "listening" });
+        rec.onend = () => st && st({ state: "idle" });
+        rec.onerror = () => st && st({ state: "idle" });
+        try {
+          rec.start();
+        } catch (e) {
+          return Promise.reject(e);
+        }
+        return Promise.resolve();
+      },
+      stop() {
+        try {
+          rec && rec.stop();
+        } catch (e) {
+        }
+        return Promise.resolve();
+      }
+    };
+  }, voiceFor2 = function(sp) {
+    if (!sp) return "rounded";
+    if (VOICE[sp]) return VOICE[sp];
+    return /woman|girl|mother|mrs|ms|sarah|kate|jane|lisa|mary/i.test(sp) ? "airy" : "glassy";
+  }, stopSpeak2 = function() {
+    try {
+      cap.tts && cap.tts.stop();
+    } catch (e) {
+    }
+    try {
+      speechSynthesis.cancel();
+    } catch (e) {
+    }
+    try {
+      curAudio && curAudio.pause();
+    } catch (e) {
+    }
+    document.querySelectorAll("audio").forEach((a) => a.pause());
+  }, go2 = function(r, p = {}) {
+    param = p;
+    const h = hashOf(r, p);
+    if (location.hash !== "#" + h) location.hash = h;
+    else render2();
+  }, linkBtn2 = function() {
+    return '<button class="small" style="min-height:38px" id="cplink">\u{1F517} Copy link b\xE0i n\xE0y</button>';
+  }, render2 = function() {
+    clearTimers();
+    stopSpeak2();
+    const h = (location.hash || "#home").slice(1);
+    const m = h.match(/^([a-z]+)(?:-t(\d+))?(?:-p(\w+?))?(?:-(full|step))?$/) || [];
+    const r = m[1] || "home";
+    if (m[2] || m[3] || m[4]) param = { test: m[2], part: m[3], mode: m[4] };
+    const route = ROUTES.some((x) => x[0] === r) ? r : "home";
+    const SHORT = { home: "T\u1ED5ng quan", mock: "Thi th\u1EED", listening: "Nghe", reading: "\u0110\u1ECDc", writing: "Vi\u1EBFt", speaking: "N\xF3i", errors: "S\u1ED5 l\u1ED7i" };
+    $("#nav").innerHTML = ROUTES.map(([k, v]) => '<a href="#'.concat(k, '" class="').concat(k === route ? "on" : "", '" aria-label="').concat(v, '"><svg viewBox="0 0 24 24">').concat(ICON[k], "</svg><span>").concat(SHORT[k], "</span></a>")).join("");
+    {
+      const d = Math.max(0, Math.ceil((EXAM - Date.now()) / 864e5));
+      $("#scount").innerHTML = "C\xF2n <b>".concat(d, " ng\xE0y</b> t\u1EDBi k\u1EF3 thi 04/12");
+      $("#mcount").innerHTML = 'c\xF2n <b style="display:inline;font-size:16px">'.concat(d, "</b> ng\xE0y");
+    }
+    lastP = param;
+    ({ home: Home2, mock: Mock2, listening: Listening2, reading: Reading2, writing: Writing2, speaking: Speaking2, errors: Errors2 })[route]();
+    const p = param;
+    param = {};
+    return p;
+  }, Home2 = function() {
+    var _a, _b, _c, _d;
+    const base = { L: 5.5, R: 6.5, W: 3.5, S: 5.5 }, cur = { L: (_a = latest("L")) != null ? _a : base.L, R: (_b = latest("R")) != null ? _b : base.R, W: (_c = latest("W")) != null ? _c : base.W, S: (_d = latest("S")) != null ? _d : base.S };
+    const avg = (cur.L + cur.R + cur.W + cur.S) / 4, ov = r05(avg);
+    const days = Math.max(0, Math.ceil((EXAM - Date.now()) / 864e5));
+    const td = todayStr();
+    const mocks = store.attempts.filter((a) => a.skill === "MOCK");
+    $("#app").innerHTML = '\n  <div class="card">\n    <div class="row" style="justify-content:space-between"><div><h1>\u0110\xEDch \u0111\u1EBFn: 6.0 \u2013 B\u1EADc 4</h1><p class="mute">Thi 04\u201306/12/2026 t\u1EA1i \u0110H V\u0103n Lang \xB7 c\xF2n <b>'.concat(days, ' ng\xE0y</b>. C\u1EA7n t\u1ED5ng 4 k\u1EF9 n\u0103ng \u2265 23.0.</p></div>\n    <div style="text-align:right"><div class="score" style="color:').concat(ov >= 6 ? "var(--ok)" : "var(--red)", '">').concat(ov.toFixed(1), '</div><div class="small mute">\u01B0\u1EDBc t\xEDnh hi\u1EC7n t\u1EA1i \xB7 ').concat(level(ov), '</div></div></div>\n    <div class="gauge" id="gauge"><svg></svg></div>\n    <div class="grid4">').concat([["L", "Nghe", 5.5], ["R", "\u0110\u1ECDc", 6.5], ["W", "Vi\u1EBFt", 5.5], ["S", "N\xF3i", 6]].map(([k, n, goal]) => '<div class="card" style="margin:0;padding:12px 14px"><div class="small mute">'.concat(n, " \xB7 m\u1EE5c ti\xEAu ").concat(goal.toFixed(1), '</div><div style="font-size:28px;font-weight:800;color:').concat(cur[k] >= goal ? "var(--ok)" : "var(--ink)", '">').concat(cur[k].toFixed(1), '</div><div class="small mute">').concat(latest(k) == null ? "\u0111i\u1EC3m thi 8/2026" : "l\u1EA7n luy\u1EC7n g\u1EA7n nh\u1EA5t", "</div></div>")).join(""), '</div>\n  </div>\n  <div class="card" id="keycard"><h2>Ch\u1EA5m b\u1EB1ng Claude</h2>').concat(getKey() ? '<div class="row"><span class="tag g">\u0110\xE3 c\xF3 API key \u2026'.concat(esc(getKey().slice(-4)), '</span><label class="small row" style="gap:6px">Model <select id="kmodel">').concat([["claude-sonnet-5-5", "Sonnet (khuy\xEAn d\xF9ng)"], ["claude-opus-5-5", "Opus (k\u1EF9 h\u01A1n, \u0111\u1EAFt h\u01A1n)"], ["claude-haiku-5-5", "Haiku (r\u1EBB, nhanh)"]].map(([v, l]) => '<option value="'.concat(v, '" ').concat(getModel() === v ? "selected" : "", ">").concat(l, "</option>")).join(""), '</select></label><button class="small" id="kdel">X\xF3a key</button></div>') : '<p class="mute small">D\xE1n API key Anthropic (b\u1EAFt \u0111\u1EA7u b\u1EB1ng <b>sk-ant-</b>) \u0111\u1EC3 trang t\u1EF1 ch\u1EA5m Vi\u1EBFt v\xE0 N\xF3i. Key ch\u1EC9 l\u01B0u trong tr\xECnh duy\u1EC7t c\u1EE7a m\xE1y n\xE0y. L\u1EA5y key t\u1EA1i <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. Ch\u01B0a c\xF3 key v\u1EABn luy\u1EC7n \u0111\u01B0\u1EE3c: l\xFAc ch\u1EA5m, trang cho copy b\xE0i sang Claude.</p><div class="row"><input type="text" id="kin" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" style="flex:1;min-width:220px"><button class="pri" id="ksave">L\u01B0u key</button></div>', '\n   <p class="small mute" style="margin-bottom:0">L\u1ECBch s\u1EED, b\xE0i nh\xE1p v\xE0 s\u1ED5 l\u1ED7i l\u01B0u tr\xEAn tr\xECnh duy\u1EC7t n\xE0y.</p></div>\n  <div class="grid2">\n   <div class="card"><h2>L\u1ECBch 11 t\u1ED1i</h2><ol class="plan" style="padding-left:20px;margin:0">').concat(PLAN.map(([d, a, b, links], i) => '<li class="'.concat(d === td ? "today" : "", '" style="padding:6px 8px"><b>').concat(d.slice(8), "/").concat(d.slice(5, 7), "</b> \xB7 ").concat(esc(a), ' <span class="mute small">\xB7 ').concat(esc(b), '</span><div class="row" style="gap:6px;margin-top:4px">').concat(links.map((l) => '<button class="small" style="min-height:36px;padding:0 10px" data-go=\''.concat(JSON.stringify(l), "'>").concat({ writing: "Vi\u1EBFt", speaking: "N\xF3i", listening: "Nghe", reading: "\u0110\u1ECDc", mock: "Thi th\u1EED", errors: "S\u1ED5 l\u1ED7i" }[l[0]]).concat(l[1] ? " T" + l[1] : "").concat(l[2] ? " \xB7 P" + l[2] : "", "</button>")).join(""), "</div></li>")).join(""), '</ol></div>\n   <div class="card"><h2>L\u1ECBch s\u1EED luy\u1EC7n</h2>').concat(store.attempts.length ? '<table><tr><th>Ng\xE0y</th><th>B\xE0i</th><th class="n">\u0110i\u1EC3m</th></tr>'.concat(store.attempts.slice(-14).reverse().map((a) => '<tr><td class="small">'.concat(new Date(a.ts).toLocaleDateString("vi-VN"), "</td><td>").concat(esc(a.label || a.skill), '</td><td class="n"><b>').concat(a.score != null ? a.score.toFixed(1) : "\u2013", "</b></td></tr>")).join(""), "</table>") : '<p class="mute">Ch\u01B0a c\xF3 b\xE0i n\xE0o. B\u1EAFt \u0111\u1EA7u v\u1EDBi bu\u1ED5i t\u1ED1i h\xF4m nay \u1EDF c\u1ED9t b\xEAn tr\xE1i.</p>', "\n   ").concat(mocks.length ? '<p class="small mute">'.concat(mocks.length, " l\u1EA7n thi th\u1EED tr\u1ECDn \u0111\u1EC1.</p>") : "", '\n   <p class="small mute">\u0110i\u1EC3m Nghe/\u0110\u1ECDc quy \u0111\u1ED5i tuy\u1EBFn t\xEDnh (s\u1ED1 c\xE2u \u0111\xFAng \xF7 t\u1ED5ng \xD7 10) \u2013 ch\u1EC9 l\xE0 \u01B0\u1EDBc t\xEDnh. Vi\u1EBFt/N\xF3i do Claude ch\u1EA5m theo ti\xEAu ch\xED VSTEP, ch\u01B0a t\xEDnh ph\xE1t \xE2m.</p></div>\n  </div>\n  <details class="card" id="install"><summary style="cursor:pointer;min-height:44px;font-weight:700;font-size:18px">\u{1F4F2} C\xE0i app ra m\xE0n h\xECnh ch\xEDnh (\u0111i\u1EC7n tho\u1EA1i & m\xE1y t\xEDnh)</summary>\n   <div class="grid2" style="margin-top:10px"><div><h3>iPhone (Safari)</h3><ol><li>M\u1EDF link b\u1EB1ng <b>Safari</b>.</li><li>B\u1EA5m n\xFAt <b>Chia s\u1EBB</b> (\xF4 vu\xF4ng c\xF3 m\u0169i t\xEAn l\xEAn).</li><li>Ch\u1ECDn <b>Th\xEAm v\xE0o MH ch\xEDnh</b> \u2192 <b>Th\xEAm</b>.</li></ol>\n   <h3>Android (Chrome)</h3><ol><li>M\u1EDF link b\u1EB1ng <b>Chrome</b>.</li><li>B\u1EA5m <b>\u22EE</b> g\xF3c tr\xEAn ph\u1EA3i \u2192 <b>Th\xEAm v\xE0o m\xE0n h\xECnh ch\xEDnh</b> / <b>C\xE0i \u0111\u1EB7t \u1EE9ng d\u1EE5ng</b>.</li></ol></div>\n   <div><h3>M\xE1y t\xEDnh (Chrome / Edge)</h3><ol><li>M\u1EDF link b\u1EB1ng Chrome ho\u1EB7c Edge.</li><li>B\u1EA5m bi\u1EC3u t\u01B0\u1EE3ng <b>C\xE0i \u0111\u1EB7t</b> (m\xE0n h\xECnh c\xF3 m\u0169i t\xEAn) \u1EDF cu\u1ED1i thanh \u0111\u1ECBa ch\u1EC9, ho\u1EB7c menu <b>\u22EE</b> \u2192 <b>Truy\u1EC1n, l\u01B0u v\xE0 chia s\u1EBB</b> \u2192 <b>C\xE0i \u0111\u1EB7t trang d\u01B0\u1EDBi d\u1EA1ng \u1EE9ng d\u1EE5ng</b>.</li><li>App m\u1EDF trong c\u1EEDa s\u1ED5 ri\xEAng, c\xF3 icon tr\xEAn Desktop/Taskbar.</li></ol>\n   <p class="small mute">B\xE0i l\xE0m, l\u1ECBch s\u1EED v\xE0 s\u1ED5 l\u1ED7i l\u01B0u ri\xEAng tr\xEAn t\u1EEBng m\xE1y.</p></div></div></details>');
+    const ks = $("#ksave");
+    if (ks) ks.onclick = () => {
+      const v = $("#kin").value.trim();
+      if (!/^sk-/.test(v)) {
+        $("#kin").focus();
+        $("#kin").style.borderColor = "var(--red)";
+        return;
+      }
+      try {
+        localStorage.setItem(KEY_LS, v);
+      } catch (e) {
+      }
+      Home2();
+    };
+    const kd = $("#kdel");
+    if (kd) kd.onclick = () => {
+      try {
+        localStorage.removeItem(KEY_LS);
+      } catch (e) {
+      }
+      Home2();
+    };
+    const km = $("#kmodel");
+    if (km) km.onchange = () => {
+      try {
+        localStorage.setItem(MODEL_LS, km.value);
+      } catch (e) {
+      }
+    };
+    document.querySelectorAll("[data-go]").forEach((b) => b.onclick = () => {
+      const [r, t, p, mo] = JSON.parse(b.dataset.go);
+      go2(r, { test: t, part: p, mode: r === "writing" ? "full" : void 0 });
+    });
+    const s = $("#gauge svg");
+    const draw = () => {
+      const W = s.clientWidth, H = s.clientHeight, x = (v) => 20 + (W - 40) * v / 10, y = 70;
+      if (W < 80) return;
+      const band = (a, b, c, l) => '<rect x="'.concat(x(a), '" y="').concat(y - 14, '" width="').concat(x(b) - x(a), '" height="28" fill="').concat(c, '"/><text x="').concat((x(a) + x(b)) / 2, '" y="').concat(y + 48, '" text-anchor="middle" font-size="13" fill="var(--mute)">').concat(l, "</text>");
+      let g = band(0, 4, "var(--line)", "Ch\u01B0a \u0111\u1EA1t") + band(4, 6, "var(--blue-soft)", "B1") + band(6, 8.5, "var(--ok-soft)", "B2 \u2013 B\u1EADc 4") + band(8.5, 10, "var(--line)", W > 520 ? "C1" : "");
+      for (let i = 0; i <= 10; i++) g += '<line x1="'.concat(x(i), '" x2="').concat(x(i), '" y1="').concat(y - 18, '" y2="').concat(y + 18, '" stroke="var(--mute)" stroke-width="').concat(i % 2 ? 0.5 : 1, '"/>').concat(W > 420 || i % 2 == 0 ? '<text x="'.concat(x(i), '" y="').concat(y - 24, '" font-size="12" text-anchor="middle" fill="var(--mute)">').concat(i, "</text>") : "");
+      g += '<line x1="'.concat(x(6), '" x2="').concat(x(6), '" y1="').concat(y - 30, '" y2="').concat(y + 30, '" stroke="var(--ok)" stroke-width="3"/>');
+      g += '<path d="M'.concat(x(avg), " ").concat(y + 20, ' l-9 16 h18z" fill="var(--red)"/><text x="').concat(x(avg), '" y="').concat(H - 4, '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--red)">Anh: ').concat(avg.toFixed(2), "</text>");
+      s.innerHTML = g;
+    };
+    if (window.ResizeObserver) new ResizeObserver(draw).observe(s);
+    else {
+      draw();
+      addEventListener("resize", draw);
+    }
+  }, mcqHTML2 = function(qs, pre, ans = {}, key = null, tag = null) {
+    return qs.map((q) => '<div class="q" id="'.concat(pre, "q").concat(q.n, '"><b>').concat(q.n, ".</b> ").concat(md(q.q)).concat(tag ? "<div>".concat(tag(q), "</div>") : "", '<div class="opts">').concat("ABCD".split("").filter((k) => q.opts[k] != null).map((k) => {
+      const cls = key ? k === key[q.n] ? "right" : ans[q.n] === k ? "wrong" : "" : "";
+      return '<label class="opt '.concat(cls, '"><input type="radio" name="').concat(pre).concat(q.n, '" value="').concat(k, '" ').concat(ans[q.n] === k ? "checked" : "", " ").concat(key ? "disabled" : "", "><span><b>").concat(k, ".</b> ").concat(md(q.opts[k]), "</span></label>");
+    }).join(""), "</div>").concat(key && ans[q.n] !== key[q.n] ? '<div class="row small" style="margin-top:6px"><span class="tag r">\u0110\xE1p \xE1n '.concat(key[q.n], '</span><button class="small" style="min-height:34px" data-why="').concat(q.n, '">V\xEC sao?</button><span class="why mute small"></span></div>') : "", "</div>")).join("");
+  }, readAns2 = function(pre, qs) {
+    const a = {};
+    qs.forEach((q) => {
+      const el = document.querySelector('input[name="'.concat(pre).concat(q.n, '"]:checked'));
+      if (el) a[q.n] = el.value;
+    });
+    return a;
+  }, bindWhy2 = function(qs, key, ans, ctxFn) {
+    document.querySelectorAll("[data-why]").forEach((b) => b.onclick = async () => {
+      const n = +b.dataset.why, q = qs.find((x) => x.n === n), out = b.nextElementSibling;
+      out.innerHTML = '<span class="loading">\u0110ang gi\u1EA3i th\xEDch\u2026</span>';
+      try {
+        out.textContent = await askText("Explain in Vietnamese, at most 70 words, why the correct answer to this VSTEP question is ".concat(key[n], ". Quote the key English phrase from the source (in quotes). The candidate chose ").concat(ans[n] || "nothing", "; say briefly why that is wrong.\nSOURCE:\n").concat(ctxFn(q).slice(0, 6e3), "\nQUESTION: ").concat(q.q, "\nOPTIONS: ").concat(Object.entries(q.opts).map(([k, v]) => k + ". " + v).join(" | ")));
+      } catch (e) {
+        out.textContent = e.message;
+      }
+    });
+  }, guideBox2 = function(skill, extra = "") {
+    const g = G && G.general[skill];
+    if (!g) return "";
+    let open = true;
+    try {
+      open = localStorage.getItem("vstep4_g_" + skill) !== "0";
+    } catch (e) {
+    }
+    return '<details class="card guide" '.concat(open ? "open" : "", ' data-gk="').concat(skill, '"><summary>\u{1F4D8} ').concat(esc(g.title), "</summary><p><b>").concat(esc(g.lead), '</b></p>\n  <ol class="gsteps">').concat(g.steps.map(([h, t]) => "<li><b>".concat(esc(h), ".</b> ").concat(esc(t), "</li>")).join(""), "</ol>").concat(g.words ? '<p class="note">'.concat(esc(g.words), "</p>") : "").concat(extra, '<p class="small mute" style="margin-bottom:0"><b>C\xE1ch luy\u1EC7n:</b> ').concat(esc(g.practice), "</p></details>");
+  }, rqType2 = function(q) {
+    const s = q.q.replace(/\*/g, "");
+    if (/sentence.*(fit|added|inserted)|where would|squares|\[1\]|\[a\]/i.test(s)) return ["Ch\xE8n c\xE2u", "T\xECm t\u1EEB n\u1ED1i/\u0111\u1EA1i t\u1EEB trong c\xE2u c\u1EA7n ch\xE8n (this, however, they\u2026) r\u1ED3i gh\xE9p v\u1EDBi c\xE2u tr\u01B0\u1EDBc \u2013 sau."];
+    if (/refer(s)? to/i.test(s)) return ["Quy chi\u1EBFu", "\u0110\u1ECDc c\xE2u ngay TR\u01AF\u1EDAC t\u1EEB \u0111\xF3; ch\u1ECDn danh t\u1EEB g\u1EA7n nh\u1EA5t h\u1EE3p s\u1ED1 \xEDt/s\u1ED1 nhi\u1EC1u."];
+    if (/closest in meaning|could be (best )?replaced|meaning|is closest|best replaced|means/i.test(s)) return ["T\u1EEB v\u1EF1ng", "Thay t\u1EEBng \u0111\xE1p \xE1n v\xE0o c\xE2u trong b\xE0i, \u0111\xE1p \xE1n \u0111\u1ECDc h\u1EE3p ngh\u0129a l\xE0 \u0111\xFAng. Kh\xF4ng c\u1EA7n bi\u1EBFt t\u1EEB \u0111\xF3 tr\u01B0\u1EDBc."];
+    if (/best title|main idea|mainly (about|discuss)|primarily|topic of|main purpose|main topic|passage (mainly|is about)/i.test(s)) return ["\xDD ch\xEDnh", "L\xC0M CU\u1ED0I. \u0110\u1ECDc c\xE2u \u0111\u1EA7u m\u1ED7i \u0111o\u1EA1n (c\xE2u t\xF4 v\xE0ng); ch\u1ECDn \u0111\xE1p \xE1n bao qu\xE1t c\u1EA3 b\xE0i."];
+    if (/\bNOT\b|\bEXCEPT\b/.test(s)) return ["Th\xF4ng tin KH\xD4NG c\xF3", "T\xECm 3 \u0111\xE1p \xE1n C\xD3 trong b\xE0i \u0111\u1EC3 lo\u1EA1i; \u0111\xE1p \xE1n c\xF2n l\u1EA1i \u0111\xFAng."];
+    if (/attitude|tone|opinion of the author|feel about/i.test(s)) return ["Th\xE1i \u0111\u1ED9 t\xE1c gi\u1EA3", "T\xECm t\xEDnh t\u1EEB/\u0111\u1ED9ng t\u1EEB c\u1EA3m x\xFAc; lo\u1EA1i \u0111\xE1p \xE1n qu\xE1 m\u1EA1nh ho\u1EB7c tr\xE1i chi\u1EC1u."];
+    if (/why does the (author|writer)|in order to|mention/i.test(s)) return ["M\u1EE5c \u0111\xEDch chi ti\u1EBFt", "\u0110\u1ECDc c\xE2u tr\u01B0\u1EDBc v\xE0 sau chi ti\u1EBFt \u0111\xF3: t\xE1c gi\u1EA3 nh\u1EAFc n\xF3 \u0111\u1EC3 gi\u1EA3i th\xEDch/minh h\u1ECDa \xFD n\xE0o?"];
+    if (/infer|impl|suggest|most likely|probably|conclude/i.test(s)) return ["Suy lu\u1EADn", "Kh\xF4ng c\xF3 c\xE2u y h\u1EC7t: ch\u1ECDn \xFD b\xE0i ng\u1EA7m \u1EE7ng h\u1ED9, kh\xF4ng suy di\u1EC5n qu\xE1 xa."];
+    return ["Chi ti\u1EBFt", "G\u1EA1ch t\u1EEB kh\xF3a (t\xEAn, s\u1ED1, t\u1EEB in \u0111\u1EADm), d\xF2 trong b\xE0i, \u0111\u1ECDc 3 c\xE2u quanh \u0111\xF3, lo\u1EA1i tr\u1EEB."];
+  }, lqType2 = function(q) {
+    const s = q.q.replace(/\*/g, "");
+    if (/\bNOT\b/.test(s)) return ["Th\xF4ng tin KH\xD4NG nh\u1EAFc", "\u0110\xE1nh d\u1EA5u 3 \u0111\xE1p \xE1n nghe th\u1EA5y; c\xF2n l\u1EA1i l\xE0 \u0111\xE1p \xE1n."];
+    if (/what time|when|how long|how much|how many|how often|date|price|cost/i.test(s)) return ["S\u1ED1 / th\u1EDDi gian", "Nghe s\u1ED1, gi\u1EDD, gi\xE1. C\u1EA9n th\u1EADn \u0111\u1ED5i \xFD: th\u01B0\u1EDDng \u0111\xE1p \xE1n l\xE0 s\u1ED1 \u0111\u01B0\u1EE3c n\xF3i SAU (but, actually, late\u2026)."];
+    if (/where/i.test(s)) return ["\u0110\u1ECBa \u0111i\u1EC3m", "Nghe t\xEAn n\u01A1i ch\u1ED1n, gi\u1EDBi t\u1EEB (next to, behind, opposite)."];
+    if (/why|reason/i.test(s)) return ["L\xFD do", "Ch\u1EDD because / so / that's why / the reason is."];
+    if (/purpose|mainly|main|about\?|talk about|topic/i.test(s)) return ["\xDD ch\xEDnh / m\u1EE5c \u0111\xEDch", "Nghe k\u1EF9 2\u20133 c\xE2u \u0110\u1EA6U: ng\u01B0\u1EDDi n\xF3i th\u01B0\u1EDDng n\xEAu m\u1EE5c \u0111\xEDch ngay."];
+    if (/who|speaker|profession|work in|job/i.test(s)) return ["Ng\u01B0\u1EDDi n\xF3i / ngh\u1EC1", "Nghe t\u1EEB kh\xF3a ngh\u1EC1 nghi\u1EC7p, n\u01A1i l\xE0m vi\u1EC7c (patients \u2192 b\xE1c s\u0129; passengers \u2192 s\xE2n bay)."];
+    if (/imply|infer|probably|most likely|suggest|think|feel|opinion|attitude/i.test(s)) return ["Suy lu\u1EADn / th\xE1i \u0111\u1ED9", "Nghe gi\u1ECDng v\xE0 t\xEDnh t\u1EEB c\u1EA3m x\xFAc (great, disappointed, worried)."];
+    if (/advise|should|recommend|ask .* to do|asked to/i.test(s)) return ["L\u1EDDi khuy\xEAn / y\xEAu c\u1EA7u", "Ch\u1EDD You should / Please / Make sure / Don't forget."];
+    return ["Chi ti\u1EBFt", "Nghe t\u1EEB \u0111\u1ED3ng ngh\u0129a c\u1EE7a \u0111\xE1p \xE1n, kh\xF4ng ch\u1EDD t\u1EEB y h\u1EC7t."];
+  }, topicSent2 = function(text) {
+    return String(text || "").split(/\n\s*\n|\n/).filter((x) => x.trim()).map((p) => {
+      const m = p.match(new RegExp("^((?:\\*\\*[A-Z]\\.\\*\\*\\s*)?)(.+?[.!?])(\\s.*|$)", "s"));
+      return m ? "<p>".concat(md(m[1]), '<span class="ts" title="C\xE2u ch\u1EE7 \u0111\u1EC1">').concat(md(m[2]), "</span>").concat(md(m[3]), "</p>") : "<p>".concat(md(p), "</p>");
+    }).join("");
+  }, vocabFor2 = function(p) {
+    if (!G) return [];
+    const V = G.rvocab, found = [];
+    const txt = p.qs.map((q) => q.q.replace(/\*/g, "")).join(" ").toLowerCase().replace(/[’']/g, "'");
+    for (const k of Object.keys(V)) if (txt.includes(k.toLowerCase()) && !found.includes(k)) found.push(k);
+    return found.map((k) => [k, ...V[k]]);
+  }, Listening2 = function() {
+    const p = param;
+    listeningView2({ test: +(p.test || 1), part: p.part || "1", exam: false });
+  }, listeningView2 = function({ test, part, exam, onDone }) {
+    const t = T[test - 1], segs = part === "all" ? LSEG : LPARTS[part];
+    const played = {};
+    const qset = (n) => t.listening.filter((q) => n.includes(q.n));
+    $("#app").innerHTML = '<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">Nghe \xB7 Test '.concat(test, "</h1>").concat(exam ? '<span class="tag r">Thi th\u1EED: m\u1ED7i \u0111o\u1EA1n nghe 1 l\u1EA7n</span>' : '<div class="row">'.concat(testSel("lt", test), '<select id="lp">').concat([["1", "Part 1 (c\xE2u 1\u20138)"], ["2", "Part 2 (9\u201320)"], ["3", "Part 3 (21\u201335)"], ["all", "C\u1EA3 b\xE0i (35 c\xE2u)"]].map(([v, l]) => '<option value="'.concat(v, '" ').concat(v == part ? "selected" : "", ">").concat(l, "</option>")).join(""), '</select><label class="small row" style="gap:4px">T\u1ED1c \u0111\u1ED9 <select id="rate"><option value="0.85">ch\u1EADm</option><option value="1" selected>chu\u1EA9n</option></select></label></div>'), "</div>\n  ").concat(exam ? "" : "", '<p class="small mute">').concat(AUDIO.has("t" + test + "/Q1") ? "File nghe MP3 gi\u1ECDng \u0111\u1ECDc t\u1EF1 nhi\xEAn (gi\u1ECDng Anh\u2013Anh, nam/n\u1EEF kh\xE1c nhau), d\u1EF1ng t\u1EEB transcript g\u1ED1c. " + (exam ? "M\u1ED7i \u0111o\u1EA1n ch\u1EC9 ph\xE1t 1 l\u1EA7n." : "D\xF9ng thanh ph\xE1t \u0111\u1EC3 t\u1EA1m d\u1EEBng, tua l\u1EA1i.") : "\u0110\u1EC1 n\xE0y \u0111ang d\xF9ng gi\u1ECDng \u0111\u1ECDc c\u1EE7a m\xE1y (file MP3 s\u1EBD c\xF3 sau). Tr\xEAn \u0111i\u1EC7n tho\u1EA1i n\xEAn d\xF9ng Chrome.", " \u0110\u1ECDc c\xE2u h\u1ECFi tr\u01B0\u1EDBc khi nghe.</p></div>").concat(exam ? "" : guideBox2("L"), "\n  ").concat(segs.map(([k, ns]) => {
+      const qs = qset(ns);
+      return '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">'.concat(k[0] === "Q" ? "Part 1 \xB7 C\xE2u " + ns[0] : k[0] === "C" ? "Part 2 \xB7 H\u1ED9i tho\u1EA1i " + k[1] : "Part 3 \xB7 B\xE0i n\xF3i " + k[1], "</h3>").concat(AUDIO.has("t".concat(test, "/").concat(k)) && !exam ? "" : '<button class="pri" data-play="'.concat(k, '">\u25B6 Ph\xE1t</button>'), "</div>").concat(AUDIO.has("t".concat(test, "/").concat(k)) && !exam ? '<audio controls preload="none" data-au src="audio/t'.concat(test, "/").concat(k, '.mp3" style="width:100%;margin-top:10px"></audio>') : "").concat(qs[0] && qs[0].ctx && k[0] !== "Q" ? '<p class="small mute">'.concat(md(qs[0].ctx), "</p>") : "").concat(mcqHTML2(qs, "L", {}, null, exam ? null : (q) => tagHTML(lqType2(q))), '<div class="tx hide" data-tx="').concat(k, '"></div></div>');
+    }).join(""), '\n  <div class="row"><button class="red" id="lsub">N\u1ED9p b\xE0i Nghe</button><span id="lres"></span></div>');
+    if (!exam) {
+      $("#lt").onchange = $("#lp").onchange = () => go2("listening", { test: $("#lt").value, part: $("#lp").value });
+      $("#rate").onchange = () => document.querySelectorAll("[data-au]").forEach((a) => a.playbackRate = +$("#rate").value);
+      document.querySelectorAll("[data-au]").forEach((a) => a.onplay = () => {
+        a.playbackRate = +$("#rate").value;
+      });
+    }
+    document.querySelectorAll("[data-play]").forEach((b) => b.onclick = async () => {
+      var _a, _b;
+      const k = b.dataset.play;
+      if (exam && played[k]) return;
+      played[k] = 1;
+      document.querySelectorAll("[data-play]").forEach((x) => x.disabled = true);
+      b.textContent = "\u2026 \u0111ang ph\xE1t";
+      try {
+        await (AUDIO.has("t".concat(test, "/").concat(k)) ? playMp3("audio/t".concat(test, "/").concat(k, ".mp3"), exam ? 1 : +(((_a = $("#rate")) == null ? void 0 : _a.value) || 1)) : speakLines(t.transcript[k] || [], exam ? 1 : +(((_b = $("#rate")) == null ? void 0 : _b.value) || 1)));
+      } catch (e) {
+        b.insertAdjacentHTML("afterend", '<span class="small bad-note">'.concat(esc(e.message || "Kh\xF4ng ph\xE1t \u0111\u01B0\u1EE3c"), "</span>"));
+      }
+      document.querySelectorAll("[data-play]").forEach((x) => x.disabled = exam && played[x.dataset.play]);
+      b.textContent = exam ? "\u0110\xE3 ph\xE1t" : "\u25B6 Ph\xE1t l\u1EA1i";
+    });
+    $("#lsub").onclick = () => {
+      stopSpeak2();
+      const allQ = segs.flatMap(([k, ns]) => qset(ns)), ans = readAns2("L", allQ);
+      const right = allQ.filter((q) => ans[q.n] === t.keyL[q.n]).length;
+      const score = part === "all" ? r05(right / 35 * 10) : null;
+      segs.forEach(([k, ns]) => {
+        const qs = qset(ns);
+        const box = document.querySelector('[data-tx="'.concat(k, '"]'));
+        const card = box.parentElement;
+        card.querySelectorAll(".q").forEach((e) => e.remove());
+        box.insertAdjacentHTML("beforebegin", mcqHTML2(qs, "L", ans, t.keyL));
+        box.classList.remove("hide");
+        box.innerHTML = '<details><summary class="small" style="cursor:pointer;min-height:36px">Xem transcript</summary>'.concat((t.transcript[k] || []).map((l) => "<p>".concat(l.sp ? "<b>".concat(esc(l.sp), ":</b> ") : "").concat(esc(l.t), "</p>")).join(""), "</details>");
+      });
+      bindWhy2(t.listening, t.keyL, ans, (q) => {
+        const seg = LSEG.find((s) => s[1].includes(q.n));
+        return (t.transcript[seg[0]] || []).map((l) => (l.sp ? l.sp + ": " : "") + l.t).join("\n");
+      });
+      $("#lres").innerHTML = "<b>".concat(right, "/").concat(allQ.length, " c\xE2u \u0111\xFAng</b>").concat(score != null ? " \xB7 \u01B0\u1EDBc t\xEDnh ".concat(score.toFixed(1), "/10") : "");
+      $("#lsub").disabled = true;
+      addAttempt2({ skill: part === "all" ? "L" : "Lp", label: "Nghe T".concat(test, " ").concat(part === "all" ? "c\u1EA3 b\xE0i" : "Part " + part), score, raw: "".concat(right, "/").concat(allQ.length) });
+      if (onDone) onDone({ right, score: r05(right / 35 * 10) });
+    };
+  }, Reading2 = function() {
+    const p = param;
+    readingView2({ test: +(p.test || 1), pass: p.part || "1", exam: false });
+  }, readingView2 = function({ test, pass, exam, onDone }) {
+    const t = T[test - 1];
+    const list = pass === "all" ? t.reading : [t.reading[+pass - 1]];
+    const allQ = list.flatMap((p) => p.qs);
+    const mins = pass === "all" ? 60 : 15;
+    $("#app").innerHTML = '<div class="card row" style="justify-content:space-between"><h1 style="margin:0">\u0110\u1ECDc \xB7 Test '.concat(test, '</h1><div class="row">').concat(exam ? "" : testSel("rt", test) + '<select id="rp">'.concat([1, 2, 3, 4].map((i) => '<option value="'.concat(i, '" ').concat(pass == i ? "selected" : "", ">B\xE0i ").concat(i, " (15')</option>")).join(""), '<option value="all" ').concat(pass === "all" ? "selected" : "", ">C\u1EA3 4 b\xE0i (60')</option></select>"), '<span class="timer" id="rtm"></span></div></div>\n  ').concat(exam ? '<div class="note small" style="margin-bottom:16px">C\xE2u chi ti\u1EBFt tr\u01B0\u1EDBc, \xFD ch\xEDnh cu\u1ED1i; 15 ph\xFAt/b\xE0i; kh\xF4ng b\u1ECF tr\u1ED1ng.</div>' : guideBox2("R"), "\n  ").concat(list.map((p, i) => {
+      const v = exam ? [] : vocabFor2(p);
+      return "".concat(v.length ? '<div class="card" style="margin-bottom:12px"><h3 style="margin:0 0 6px">T\u1EEB c\u1EA7n n\u1EAFm \u2013 '.concat(esc(p.title), '</h3><p class="small mute" style="margin:0 0 6px">Ch\u1EC9 nh\u1EEFng t\u1EEB c\xE2u h\u1ECFi h\u1ECFi tr\u1EF1c ti\u1EBFp. C\xE1c t\u1EEB m\u1EDBi kh\xE1c: \u0111o\xE1n \u0111\u1EA1i \xFD, kh\xF4ng c\u1EA7n thu\u1ED9c.</p><table class="stack"><thead><tr><th>T\u1EEB</th><th>Lo\u1EA1i</th><th>Ngh\u0129a</th><th>\u0110\u1ED3ng ngh\u0129a / ghi nh\u1EDB</th></tr></thead><tbody>').concat(v.map(([w, pos, vi, syn]) => "<tr><td><b>".concat(esc(w), "</b></td><td>").concat(esc(pos), "</td><td>").concat(esc(vi), '</td><td class="mute">').concat(esc(syn), "</td></tr>")).join(""), "</tbody></table></div>") : "", '<div class="grid2" style="margin-bottom:16px"><div class="card sticky" style="margin:0"><h3>').concat(esc(p.title), "</h3>").concat(exam ? "" : '<p class="small mute" style="margin-top:-4px">Ph\u1EA7n t\xF4 v\xE0ng = c\xE2u \u0111\u1EA7u m\u1ED7i \u0111o\u1EA1n, n\u01A1i th\u01B0\u1EDDng ch\u1EE9a \xFD ch\xEDnh.</p>', '<div class="passage">').concat(exam ? paras(p.text) : topicSent2(p.text), '</div></div><div class="card" style="margin:0">').concat(mcqHTML2(p.qs, "R", {}, null, exam ? null : (q) => tagHTML(rqType2(q))), "</div></div>");
+    }).join(""), '\n  <div class="row"><button class="red" id="rsub">N\u1ED9p b\xE0i \u0110\u1ECDc</button><span id="rres"></span></div>');
+    if (!exam) {
+      $("#rt").onchange = $("#rp").onchange = () => go2("reading", { test: $("#rt").value, part: $("#rp").value });
+    }
+    const submit = () => {
+      clearTimers();
+      const ans = readAns2("R", allQ), right = allQ.filter((q) => ans[q.n] === t.keyR[q.n]).length;
+      document.querySelectorAll(".grid2").forEach((g, i) => {
+        g.lastElementChild.innerHTML = mcqHTML2(list[i].qs, "R", ans, t.keyR);
+      });
+      bindWhy2(t.reading.flatMap((p) => p.qs), t.keyR, ans, (q) => t.reading.find((p) => p.qs.includes(q)).text);
+      const score = pass === "all" ? r05(right / 40 * 10) : null;
+      $("#rres").innerHTML = "<b>".concat(right, "/").concat(allQ.length, " c\xE2u \u0111\xFAng</b>").concat(score != null ? " \xB7 \u01B0\u1EDBc t\xEDnh ".concat(score.toFixed(1), "/10") : "");
+      $("#rsub").disabled = true;
+      addAttempt2({ skill: pass === "all" ? "R" : "Rp", label: "\u0110\u1ECDc T".concat(test, " ").concat(pass === "all" ? "c\u1EA3 b\xE0i" : "b\xE0i " + pass), score, raw: "".concat(right, "/").concat(allQ.length) });
+      if (onDone) onDone({ right, score: r05(right / 40 * 10) });
+    };
+    if (exam) timer2($("#rtm"), mins * 60, submit);
+    else {
+      $("#rtm").textContent = fmt(mins * 60);
+      $("#rtm").insertAdjacentHTML("afterend", '<button class="small" id="rgo">\u25B6 B\u1EAFt \u0111\u1EA7u t\xEDnh gi\u1EDD</button>');
+      const go1 = () => {
+        if ($("#rgo")) {
+          $("#rgo").remove();
+          timer2($("#rtm"), mins * 60, submit);
+        }
+      };
+      $("#rgo").onclick = go1;
+      document.querySelectorAll('input[name^="R"]').forEach((x) => x.addEventListener("change", go1));
+    }
+    $("#rsub").onclick = submit;
+  }, Writing2 = function() {
+    const p = param;
+    writingView2({ test: +(p.test || 1), task: +(p.part || 2), mode: p.mode || "step" });
+  }, gradeBlock2 = function(g, full, fixable) {
+    var _a, _b, _c;
+    const crit = full ? '<div class="row" style="gap:24px;align-items:flex-end"><div><div class="small mute">\u0110i\u1EC3m \u01B0\u1EDBc t\xEDnh</div><div class="score" style="color:'.concat(g.band >= 5.5 ? "var(--ok)" : "var(--red)", '">').concat((+g.band).toFixed(1), '</div></div><div style="flex:1;min-width:220px">').concat([["\u0110\xE1p \u1EE9ng \u0111\u1EC1", "tf"], ["T\u1ED5 ch\u1EE9c", "org"], ["T\u1EEB v\u1EF1ng", "voc"], ["Ng\u1EEF ph\xE1p", "gra"]].map(([l, k]) => {
+      var _a2;
+      return '<div class="crit"><span>'.concat(l, "</span><b>").concat((_a2 = g[k]) != null ? _a2 : "\u2013", "</b></div>");
+    }).join(""), "</div></div>") : '<div class="row"><span class="tag '.concat(g.verdict === "\u0110\u1EA1t" ? "g" : "r", '">').concat(esc(g.verdict || ""), "</span></div>");
+    return "".concat(crit, "<p>").concat(esc(g.summary || g.comment || ""), "</p>\n  ").concat(((_a = g.priorities) == null ? void 0 : _a.length) ? "<h3>S\u1EEDa ngay</h3><ol>".concat(g.priorities.map((x) => "<li>".concat(esc(x), "</li>")).join(""), "</ol>") : "", "\n  ").concat(((_b = g.errors) == null ? void 0 : _b.length) ? '<div class="row" style="justify-content:space-between"><h3 style="margin:0">B\xFAt \u0111\u1ECF: '.concat(g.errors.length, " l\u1ED7i</h3>").concat(fixable ? '<button class="small" style="min-height:38px" id="fixall">S\u1EEDa t\u1EA5t c\u1EA3 trong b\xE0i</button>' : "", "</div>").concat(g.errors.map((e, i) => '<div class="fix"><span class="tag r">'.concat(esc(e.type || "l\u1ED7i"), "</span> <s>").concat(esc(e.wrong), '</s> \u2192 <span class="rt">').concat(esc(e.right), "</span>").concat(fixable ? ' <button class="small" style="min-height:34px;padding:0 10px" data-fix="'.concat(i, '">S\u1EEDa trong b\xE0i</button>') : "", '<div class="small mute">').concat(esc(e.why || ""), "</div></div>")).join("")) : '<p class="tag g">Kh\xF4ng th\u1EA5y l\u1ED7i \u0111\xE1ng k\u1EC3</p>', "\n  ").concat(((_c = g.paragraphs) == null ? void 0 : _c.length) ? "<h3>Nh\u1EADn x\xE9t t\u1EEBng \u0111o\u1EA1n</h3>".concat(g.paragraphs.map((p) => "<p><b>".concat(esc(p.role), ":</b> ").concat(esc(p.comment), "</p>")).join("")) : "", "\n  ").concat(g.next_tip ? '<div class="note"><b>Ph\u1EA7n ti\u1EBFp theo:</b> '.concat(esc(g.next_tip), "</div>") : "", "\n  ").concat(g.improved ? '<details style="margin-top:10px"><summary style="cursor:pointer;min-height:40px;font-weight:600">Xem b\u1EA3n \u0111\xE3 s\u1EEDa (B2)</summary><div class="prompt">'.concat(paras(g.improved), "</div></details>") : "");
+  }, writeGuide2 = function(test, task) {
+    const g = G && G.w[test] && G.w[test]["w" + task];
+    if (!g) return "";
+    return '<h3 style="margin-top:14px">\u0110\u1EC1 n\xE0y: '.concat(esc(g.type), '</h3>\n  <table class="stack"><thead><tr><th>Ph\u1EA7n</th><th>Vi\u1EBFt g\xEC</th></tr></thead><tbody>').concat(g.outline.map(([a, b]) => "<tr><td><b>".concat(esc(a), "</b></td><td>").concat(esc(b), "</td></tr>")).join(""), '</tbody></table>\n  <h3 style="margin-top:14px">C\xE2u khung \u0111\xFAng ng\u1EEF ph\xE1p \u2013 h\u1ECDc thu\u1ED9c, thay \xFD c\u1EE7a anh v\xE0o</h3><ol>').concat(g.sentences.map((x) => "<li>".concat(esc(x), "</li>")).join(""), '</ol>\n  <h3>T\u1EEB v\u1EF1ng ph\u1EA3i nh\u1EDB (k\xE8m h\u1ECD t\u1EEB: danh \u2013 t\xEDnh \u2013 tr\u1EA1ng \u2013 \u0111\u1ED9ng)</h3><table class="stack"><thead><tr><th>T\u1EEB</th><th>Lo\u1EA1i</th><th>Ngh\u0129a</th><th>H\u1ECD t\u1EEB</th></tr></thead><tbody>').concat(g.vocab.map(([w, pos, vi, f]) => "<tr><td><b>".concat(esc(w), "</b></td><td>").concat(esc(pos), "</td><td>").concat(esc(vi), '</td><td class="mute">').concat(esc(f), "</td></tr>")).join(""), '</tbody></table>\n  <details style="margin:12px 0"><summary style="cursor:pointer;min-height:40px;font-weight:700">B\xE0i m\u1EABu \u0111\u01A1n gi\u1EA3n \u0111\u1EC3 c\xF3 \u0111i\u1EC3m (').concat(words(g.model), ' t\u1EEB)</summary><div class="prompt">').concat(paras(g.model), '</div><p class="small mute">C\xE2u ng\u1EAFn, \u0111\xFAng khung, \u0111\u1EE7 \xFD t\u1EEBng g\u1EA1ch \u0111\u1EA7u d\xF2ng. B\xE0i m\u1EABu n\xE2ng cao c\u1EE7a b\u1ED9 \u0111\u1EC1 n\u1EB1m \u1EDF c\u1ED9t "B\xFAt \u0111\u1ECF" b\xEAn d\u01B0\u1EDBi.</p></details>');
+  }, writingView2 = function({ test, task, mode, exam, onDone, draft }) {
+    const t = T[test - 1], prompt = task === 1 ? t.writing.task1 : t.writing.task2, min = task === 1 ? 120 : 250, steps = STEPS[task];
+    let st = 0;
+    const parts = [];
+    $("#app").innerHTML = '<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">Vi\u1EBFt \xB7 Test '.concat(test, " \xB7 Task ").concat(task, "</h1>").concat(exam ? "" : '<div class="row">'.concat(linkBtn2()).concat(testSel("wt", test), '<select id="wk"><option value="2" ').concat(task == 2 ? "selected" : "", '>Task 2 \u2013 lu\u1EADn (2/3 \u0111i\u1EC3m)</option><option value="1" ').concat(task == 1 ? "selected" : "", '>Task 1 \u2013 th\u01B0</option></select><select id="wm"><option value="step" ').concat(mode === "step" ? "selected" : "", '>Vi\u1EBFt t\u1EEBng ph\u1EA7n</option><option value="full" ').concat(mode === "full" ? "selected" : "", ">C\u1EA3 b\xE0i, b\u1EA5m gi\u1EDD</option></select></div>"), '</div>\n   <div class="prompt" style="margin-top:12px">').concat(paras(prompt), '</div><p class="small mute">T\u1ED1i thi\u1EC3u <b>').concat(min, " t\u1EEB</b> \xB7 ").concat(task === 1 ? "20" : "40", " ph\xFAt \xB7 b\xE0n ph\xEDm kh\xF4ng t\u1EF1 s\u1EEDa ch\xEDnh t\u1EA3 (gi\u1ED1ng ph\xF2ng thi).</p></div>\n   ").concat(exam ? "" : guideBox2("W", writeGuide2(test, task)), '\n   <div class="grid2"><div class="card" style="margin:0" id="wleft"></div><div class="card" style="margin:0" id="wright"><h2>B\xFAt \u0111\u1ECF</h2><p class="mute">').concat(mode === "step" ? 'Vi\u1EBFt xong ph\u1EA7n n\xE0o, b\u1EA5m "Ch\u1EA5m ph\u1EA7n n\xE0y". Claude s\u1EEDa \u0111\xFAng ph\u1EA7n \u0111\xF3 v\xE0 g\u1EE3i \xFD ph\u1EA7n ti\u1EBFp theo.' : "N\u1ED9p b\xE0i \u0111\u1EC3 \u0111\u01B0\u1EE3c ch\u1EA5m theo 4 ti\xEAu ch\xED VSTEP v\xE0 s\u1EEDa t\u1EEBng c\xE2u.", '</p><details><summary style="cursor:pointer;min-height:40px;font-weight:600">Khung m\u1EABu h\u1ECDc thu\u1ED9c</summary><pre style="white-space:pre-wrap;font:15px/1.6 inherit" class="mute">').concat(esc(TEMPL[task]), "</pre></details>").concat(t[task === 1 ? "sampleLetter" : "sampleEssay"] ? '<details><summary style="cursor:pointer;min-height:40px;font-weight:600">B\xE0i m\u1EABu trong b\u1ED9 \u0111\u1EC1</summary><div class="small">'.concat(paras(t[task === 1 ? "sampleLetter" : "sampleEssay"]), "</div></details>") : "", "</div></div>");
+    if (!exam) {
+      $("#wt").onchange = $("#wk").onchange = $("#wm").onchange = () => go2("writing", { test: $("#wt").value, part: $("#wk").value, mode: $("#wm").value });
+    }
+    const ta = (id, ph, val = "") => '<textarea id="'.concat(id, '" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="').concat(esc(ph), '">').concat(esc(val), '</textarea><div class="row small" style="justify-content:space-between;margin-top:6px"><span>S\u1ED1 t\u1EEB: <span class="wc" id="').concat(id, 'wc">0</span></span></div>');
+    const bindWC = (id, goal) => {
+      const a = $("#" + id), c = $("#" + id + "wc");
+      const f = () => {
+        const n = words(a.value);
+        c.textContent = n + (goal ? " / ".concat(goal) : "");
+        c.className = "wc " + (goal ? n >= goal ? "good" : "bad" : "");
+      };
+      a.oninput = f;
+      f();
+    };
+    const full = async (text, btn) => {
+      var _a;
+      if (!exam && $("#wtxt")) {
+        store.drafts = store.drafts || {};
+        store.drafts["W-t".concat(test, "-p").concat(task)] = text;
+        persist2();
+      }
+      btn.disabled = true;
+      $("#wright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="loading">Claude \u0111ang ch\u1EA5m nh\u01B0 gi\xE1m kh\u1EA3o VSTEP\u2026 (20\u201340 gi\xE2y)</p>';
+      try {
+        const g = await askJSON("You are a strict, experienced VSTEP writing examiner. ".concat(W_RULES, "\nTASK ").concat(task, " PROMPT:\n").concat(prompt.replace(/\*/g, ""), "\n\nCANDIDATE RESPONSE (").concat(words(text), " words; minimum ").concat(min, '):\n"""').concat(text, '"""\n\nReturn JSON only, feedback in Vietnamese, English corrections in English:\n{"tf":number,"org":number,"voc":number,"gra":number,"band":number (mean of the four, rounded to nearest 0.5),"summary":"2\u20133 c\xE2u ti\u1EBFng Vi\u1EC7t","priorities":["\u0111\xFAng 3 vi\u1EC7c c\u1EA7n s\u1EEDa ngay, c\u1EE5 th\u1EC3"],"errors":[{"wrong":"exact substring copied from the response","right":"corrected","type":"ng\u1EEF ph\xE1p|ch\xEDnh t\u1EA3|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|m\u1EA1ch l\u1EA1c|\u0111\xE1p \u1EE9ng \u0111\u1EC1","why":"gi\u1EA3i th\xEDch ng\u1EAFn ti\u1EBFng Vi\u1EC7t"}] (up to 15, most score-costly first; include every spelling error),"paragraphs":[{"role":"t\xEAn \u0111o\u1EA1n","comment":"nh\u1EADn x\xE9t ti\u1EBFng Vi\u1EC7t"}],"improved":"the candidate\'s own text corrected and reorganized to solid B2, keeping their ideas, paragraphs separated by blank lines, at least ').concat(min + 20, ' words"}'), "complex");
+        const hk = "W-t".concat(test, "-p").concat(task);
+        store.hist = store.hist || {};
+        (store.hist[hk] = store.hist[hk] || []).push(r05(+g.band));
+        const hs = store.hist[hk].slice(-6);
+        $("#wright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>" + '<p class="small"><b>C\xE1c l\u1EA7n ch\u1EA5m b\xE0i n\xE0y:</b> '.concat(hs.map((x) => x.toFixed(1)).join(" \u2192 "), "</p>") + gradeBlock2(g, true, !exam && !!$("#wtxt")) + '<div class="row" style="margin-top:12px"><button id="wsave">L\u01B0u '.concat(((_a = g.errors) == null ? void 0 : _a.length) || 0, ' l\u1ED7i v\xE0o S\u1ED5 l\u1ED7i</button></div><div class="note" style="margin-top:12px">S\u1EEDa ngay \u1EDF \xF4 b\xE0i l\xE0m (b\u1EA5m "S\u1EEDa trong b\xE0i" ho\u1EB7c t\u1EF1 g\xF5), r\u1ED3i b\u1EA5m <b>Ch\u1EA5m l\u1EA1i</b> \u0111\u1EC3 xem \u0111i\u1EC3m t\u0103ng.</div>');
+        const fixOne = (e, b) => {
+          const a = $("#wtxt");
+          if (!a) return false;
+          let i = a.value.indexOf(e.wrong);
+          if (i < 0) i = a.value.toLowerCase().indexOf(e.wrong.toLowerCase());
+          if (i < 0) {
+            if (b) {
+              b.textContent = "Kh\xF4ng th\u1EA5y \u2013 t\u1EF1 s\u1EEDa";
+              b.disabled = true;
+            }
+            return false;
+          }
+          a.value = a.value.slice(0, i) + e.right + a.value.slice(i + e.wrong.length);
+          a.oninput && a.oninput();
+          if (b) {
+            b.textContent = "\u0110\xE3 s\u1EEDa \u2713";
+            b.disabled = true;
+          }
+          return true;
+        };
+        document.querySelectorAll("[data-fix]").forEach((b) => b.onclick = () => fixOne(g.errors[+b.dataset.fix], b));
+        const fa = $("#fixall");
+        if (fa) fa.onclick = () => {
+          document.querySelectorAll("[data-fix]").forEach((b) => {
+            if (!b.disabled) fixOne(g.errors[+b.dataset.fix], b);
+          });
+          fa.disabled = true;
+        };
+        if (!exam) {
+          btn.disabled = false;
+          btn.textContent = "Ch\u1EA5m l\u1EA1i b\u1EA3n \u0111\xE3 s\u1EEDa";
+        }
+        $("#wsave").onclick = () => {
+          const n = addErrors2(g.errors, "W", "T".concat(test, " Task ").concat(task));
+          $("#wsave").textContent = "\u0110\xE3 l\u01B0u ".concat(n, " l\u1ED7i m\u1EDBi");
+          $("#wsave").disabled = true;
+        };
+        const sc = r05(+g.band);
+        addAttempt2({ skill: "W" + task, label: "Vi\u1EBFt T".concat(test, " Task ").concat(task), score: sc });
+        if (onDone) onDone({ score: sc, g });
+      } catch (e) {
+        $("#wright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>".concat(errBox2(e));
+        btn.disabled = false;
+        if (onDone && exam) onDone({ score: null, err: e.message, text });
+      }
+    };
+    if (mode === "full" || exam) {
+      $("#wleft").innerHTML = '<div class="row" style="justify-content:space-between"><h2 style="margin:0">B\xE0i l\xE0m</h2>'.concat(exam ? "" : '<span class="timer" id="wtm"></span>', "</div>").concat(ta("wtxt", task === 1 ? "Dear \u2026," : "In recent years, \u2026", draft || ""), '<div class="row" style="margin-top:10px"><button class="red" id="wsub">').concat(exam ? "Xong Task n\xE0y" : "N\u1ED9p & ch\u1EA5m", "</button>").concat(exam ? "" : '<button id="wnew">L\xE0m l\u1EA1i t\u1EEB \u0111\u1EA7u</button>', "</div>");
+      bindWC("wtxt", min);
+      if (!exam) {
+        const dk = "W-t".concat(test, "-p").concat(task);
+        store.drafts = store.drafts || {};
+        const a = $("#wtxt");
+        if (!a.value && store.drafts[dk]) a.value = store.drafts[dk];
+        a.oninput();
+        let dt;
+        const base = a.oninput;
+        a.oninput = () => {
+          base();
+          clearTimeout(dt);
+          dt = setTimeout(() => {
+            store.drafts[dk] = a.value;
+            persist2();
+            const n = $("#dsaved");
+            if (n) n.textContent = "\u0110\xE3 l\u01B0u nh\xE1p " + (/* @__PURE__ */ new Date()).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+          }, 1500);
+        };
+        $("#wtxtwc").parentElement.insertAdjacentHTML("afterend", '<span class="small mute" id="dsaved">B\xE0i nh\xE1p t\u1EF1 l\u01B0u</span>');
+      }
+      if (!exam) $("#wnew").onclick = () => {
+        const dk = "W-t".concat(test, "-p").concat(task);
+        if (store.drafts) delete store.drafts[dk];
+        persist2();
+        $("#wtxt").value = "";
+        $("#wtxt").oninput();
+        $("#wtxt").focus();
+      };
+      if (exam) {
+        $("#wsub").onclick = () => onDone && onDone({ text: $("#wtxt").value, defer: true });
+        return;
+      }
+      {
+        const wt = $("#wtm");
+        wt.textContent = fmt((task === 1 ? 20 : 40) * 60);
+        wt.title = "B\u1EAFt \u0111\u1EA7u t\xEDnh gi\u1EDD khi anh g\xF5 ch\u1EEF \u0111\u1EA7u ti\xEAn";
+        let st0 = false;
+        const a = $("#wtxt");
+        a.addEventListener("input", () => {
+          if (st0) return;
+          st0 = true;
+          timer2(wt, (task === 1 ? 20 : 40) * 60, () => full($("#wtxt").value, $("#wsub")));
+        });
+      }
+      $("#wsub").onclick = () => {
+        clearTimers();
+        full($("#wtxt").value, $("#wsub"));
+      };
+      return;
+    }
+    const drawStep = () => {
+      const done = st >= steps.length;
+      $("#wleft").innerHTML = '<div class="steps">'.concat(steps.map(([n], i) => '<span class="'.concat(i === st ? "on" : i < st ? "done" : "", '">').concat(i + 1, ". ").concat(n, "</span>")).join(""), '<span class="').concat(done ? "on" : "", '">Gh\xE9p & ch\u1EA5m</span></div>\n    ').concat(parts.length ? '<div class="prompt small" style="margin-top:12px">'.concat(parts.map((p, i) => "<p><b>".concat(steps[i][0], ":</b> ").concat(esc(p), "</p>")).join(""), "</div>") : "", "\n    ").concat(done ? '<h3 style="margin-top:14px">B\xE0i gh\xE9p (s\u1EEDa l\u1EA7n cu\u1ED1i r\u1ED3i ch\u1EA5m)</h3>'.concat(ta("wtxt", "", parts.slice(1).join("\n\n")), '<div class="row" style="margin-top:10px"><button class="red" id="wsub">Ch\u1EA5m c\u1EA3 b\xE0i</button></div>') : '<h3 style="margin-top:14px">'.concat(steps[st][0], '</h3><p class="small mute">').concat(esc(steps[st][1]), "</p>").concat(ta("wpart", ""), '<div class="row" style="margin-top:10px"><button class="pri" id="wchk">Ch\u1EA5m ph\u1EA7n n\xE0y</button><button id="wnext">Ph\u1EA7n ti\u1EBFp \u2192</button></div>'));
+      if (done) {
+        bindWC("wtxt", min);
+        $("#wsub").onclick = () => full($("#wtxt").value, $("#wsub"));
+        return;
+      }
+      bindWC("wpart", 0);
+      $("#wnext").onclick = () => {
+        const v = $("#wpart").value.trim();
+        if (!v) {
+          $("#wpart").focus();
+          return;
+        }
+        parts[st] = v;
+        st++;
+        $("#wright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="mute">\u0110\xE3 ghi ph\u1EA7n tr\u01B0\u1EDBc. Vi\u1EBFt ph\u1EA7n ti\u1EBFp r\u1ED3i b\u1EA5m "Ch\u1EA5m ph\u1EA7n n\xE0y".</p>';
+        drawStep();
+      };
+      $("#wchk").onclick = async () => {
+        const v = $("#wpart").value.trim();
+        if (!v) {
+          $("#wpart").focus();
+          return;
+        }
+        const b = $("#wchk");
+        b.disabled = true;
+        $("#wright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="loading">\u0110ang ch\u1EA5m ph\u1EA7n n\xE0y\u2026</p>';
+        try {
+          const g = await askJSON("You are a VSTEP writing tutor. ".concat(W_RULES, "\nThe candidate is building a Task ").concat(task, " response section by section. PROMPT:\n").concat(prompt.replace(/\*/g, ""), "\n\nSECTIONS ALREADY WRITTEN:\n").concat(parts.map((p, i) => steps[i][0] + ": " + p).join("\n") || "(none)", "\n\nCURRENT SECTION: ").concat(steps[st][0], " \u2014 goal: ").concat(steps[st][1], '\nTEXT:\n"""').concat(v, '"""\n\nJudge only the current section (for "D\xE0n \xFD": does it identify the right essay/letter type and cover every part of the prompt?). Return JSON only, Vietnamese feedback:\n{"verdict":"\u0110\u1EA1t" or "C\u1EA7n s\u1EEDa","comment":"2\u20133 c\xE2u ti\u1EBFng Vi\u1EC7t, c\u1EE5 th\u1EC3","errors":[{"wrong":"exact substring","right":"corrected","type":"ng\u1EEF ph\xE1p|ch\xEDnh t\u1EA3|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|m\u1EA1ch l\u1EA1c|\u0111\xE1p \u1EE9ng \u0111\u1EC1","why":"ti\u1EBFng Vi\u1EC7t"}],"improved":"this section rewritten at solid B2 (for an outline: a corrected outline)","next_tip":"1 c\xE2u g\u1EE3i \xFD c\u1EE5 th\u1EC3 cho ph\u1EA7n ti\u1EBFp theo"}'));
+          $("#wright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>" + gradeBlock2(g, false) + '<div class="row" style="margin-top:12px"><button id="wsave">L\u01B0u l\u1ED7i</button><button id="wuse">D\xF9ng b\u1EA3n \u0111\xE3 s\u1EEDa</button></div>';
+          $("#wsave").onclick = () => {
+            const n = addErrors2(g.errors, "W", "T".concat(test, " Task ").concat(task, " \xB7 ").concat(steps[st][0]));
+            $("#wsave").textContent = "\u0110\xE3 l\u01B0u ".concat(n);
+            $("#wsave").disabled = true;
+          };
+          $("#wuse").onclick = () => {
+            if (g.improved) {
+              $("#wpart").value = g.improved;
+              $("#wpart").oninput();
+            }
+          };
+        } catch (e) {
+          $("#wright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>".concat(errBox2(e));
+        }
+        b.disabled = false;
+      };
+    };
+    drawStep();
+  }, Speaking2 = function() {
+    const p = param;
+    speakingView2({ test: +(p.test || 1), part: +(p.part || 1) });
+  }, speakGuide2 = function(test, part) {
+    const g = G && G.s[test];
+    if (!g) return "";
+    if (part === 1) return g.p1.map((t) => '<h3 style="margin-top:14px">Ch\u1EE7 \u0111\u1EC1: '.concat(esc(t.topic), '</h3><div class="chips">').concat(t.vocab.map((v) => '<span class="chip">'.concat(esc(v), "</span>")).join(""), "</div>").concat(t.answers.map(([q, a]) => '<div class="qa"><b>'.concat(esc(q), "</b>").concat(esc(a), " ").concat(sayBtn(a), "</div>")).join(""))).join("") + '<p class="small mute">M\u1ED7i c\xE2u: tr\u1EA3 l\u1EDDi \u2013 l\xFD do \u2013 v\xED d\u1EE5, r\u1ED3i D\u1EEANG. Thay chi ti\u1EBFt b\u1EB1ng chuy\u1EC7n c\u1EE7a anh.</p>';
+    if (part === 2) {
+      const p2 = g.p2;
+      return '<h3 style="margin-top:14px">N\xEAn ch\u1ECDn: '.concat(esc(p2.pick), "</h3><ol>").concat(p2.outline.map((x) => "<li>".concat(esc(x), "</li>")).join(""), '</ol><div class="chips">').concat(p2.vocab.map((v) => '<span class="chip">'.concat(esc(v), "</span>")).join(""), '</div><details><summary style="cursor:pointer;min-height:40px;font-weight:700">B\xE0i n\xF3i m\u1EABu (~').concat(words(p2.model), ' t\u1EEB \u2248 1,5\u20132 ph\xFAt)</summary><div class="prompt">').concat(paras(p2.model), "</div>").concat(sayBtn(p2.model), "</details>");
+    }
+    const p = g.p3;
+    return '<h3 style="margin-top:14px">T\u1EEB v\u1EF1ng ch\u1EE7 \u0111\u1EC1</h3><div class="chips">'.concat(p.vocab.map((v) => '<span class="chip">'.concat(esc(v), "</span>")).join(""), '</div><details><summary style="cursor:pointer;min-height:40px;font-weight:700">B\xE0i n\xF3i m\u1EABu (~').concat(words(p.model), ' t\u1EEB \u2248 2\u20132,5 ph\xFAt)</summary><div class="prompt">').concat(paras(p.model), "</div>").concat(sayBtn(p.model), "</details><h3>C\xE2u h\u1ECFi ph\u1EE5 \u2013 tr\u1EA3 l\u1EDDi 2\u20133 c\xE2u</h3>").concat(p.follow.map(([q, a]) => '<div class="qa"><b>'.concat(esc(q), "</b>").concat(esc(a), " ").concat(sayBtn(a), "</div>")).join(""));
+  }, speakingView2 = function({ test, part, exam, onDone }) {
+    const t = T[test - 1], s = t.speaking;
+    let qText = "", prep = 0, talk = 0;
+    if (part === 1) {
+      qText = s.part1.map((x) => "Let's talk about ".concat(x.topic.replace(/\.$/, ""), ".\n") + x.qs.map((q, i) => "".concat(i + 1, ". ").concat(q)).join("\n")).join("\n\n");
+      prep = 0;
+      talk = 180;
+    }
+    if (part === 2) {
+      qText = s.part2 + "\nWhich do you think is the best choice?";
+      prep = 60;
+      talk = 120;
+    }
+    if (part === 3) {
+      qText = "Topic: ".concat(s.part3.topic, "\n").concat(s.part3.ideas.map((x) => "- " + x).join("\n"), "\n\nFollow-up questions:\n").concat(s.part3.follow.map((x) => "- " + x).join("\n"));
+      prep = 60;
+      talk = 240;
+    }
+    const frame = { 1: "A\u2013R\u2013E: Answer (Yes, I do / Actually, \u2026) \u2192 Reason (because \u2026) \u2192 Example (For example, last week I \u2026). M\u1ED7i c\xE2u h\u1ECFi n\xF3i 3 c\xE2u.", 2: "In my opinion, [A] is the best option because of the following reasons. Firstly, \u2026 Secondly, \u2026 Meanwhile, [B] is not a good choice because \u2026 and [C] \u2026 That's why I would choose [A].", 3: "Nowadays, more and more people are concerned about \u2026 I totally agree that \u2026 for the following reasons. (3 g\u1EE3i \xFD) Apart from that, in my own opinion, \u2026 In short, \u2026 Sau \u0111\xF3 tr\u1EA3 l\u1EDDi 3 c\xE2u h\u1ECFi ph\u1EE5." }[part];
+    $("#app").innerHTML = '<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">N\xF3i \xB7 Test '.concat(test, " \xB7 Part ").concat(part, "</h1>").concat(exam ? "" : '<div class="row">'.concat(linkBtn2()).concat(testSel("st", test), '<select id="sp">').concat([1, 2, 3].map((i) => '<option value="'.concat(i, '" ').concat(i == part ? "selected" : "", ">Part ").concat(i, " \u2013 ").concat(["T\u01B0\u01A1ng t\xE1c x\xE3 h\u1ED9i", "Th\u1EA3o lu\u1EADn gi\u1EA3i ph\xE1p", "Ph\xE1t tri\u1EC3n ch\u1EE7 \u0111\u1EC1"][i - 1], "</option>")).join(""), "</select></div>"), '</div>\n   <div class="prompt" style="margin-top:12px">').concat(paras(qText), '</div><p class="small mute"><b>Khung:</b> ').concat(esc(frame), "</p></div>").concat(exam ? "" : guideBox2("S", speakGuide2(test, part)), '\n   <div class="grid2"><div class="card" style="margin:0"><div class="row" style="justify-content:space-between"><h2 style="margin:0">B\xE0i n\xF3i</h2><span class="timer" id="stm">').concat(fmt(prep || talk), '</span></div>\n     <p class="small mute" id="sstate">').concat(prep ? "B\u1EA5m B\u1EAFt \u0111\u1EA7u: 1 ph\xFAt chu\u1EA9n b\u1ECB (ghi t\u1EEB kh\xF3a), r\u1ED3i n\xF3i." : "B\u1EA5m B\u1EAFt \u0111\u1EA7u: m\xE1y \u0111\u1ECDc c\xE2u h\u1ECFi, anh tr\u1EA3 l\u1EDDi.", '</p>\n     <div class="row"><button class="pri" id="sgo">B\u1EAFt \u0111\u1EA7u</button><button id="smic" class="').concat(cap.dictation ? "" : "hide", '">\u{1F399} Ghi \xE2m \u2192 ch\u1EEF</button><button id="sread">\u{1F50A} Nghe c\xE2u h\u1ECFi</button></div>\n     <textarea id="stxt" spellcheck="false" style="margin-top:10px;min-height:200px" placeholder="').concat(cap.dictation ? "B\u1EA5m Ghi \xE2m v\xE0 n\xF3i; ch\u1EEF s\u1EBD hi\u1EC7n \u1EDF \u0111\xE2y. C\xF3 th\u1EC3 s\u1EEDa tay." : "Tr\xECnh duy\u1EC7t n\xE0y ch\u01B0a ghi \xE2m \u0111\u01B0\u1EE3c (d\xF9ng Chrome \u0111\u1EC3 ghi \xE2m), ho\u1EB7c d\xF9ng micro c\u1EE7a b\xE0n ph\xEDm \u0111i\u1EC7n tho\u1EA1i, ho\u1EB7c g\xF5 l\u1EA1i l\u1EDDi n\xF3i.", '"></textarea>\n     <div class="row small" style="justify-content:space-between"><span>S\u1ED1 t\u1EEB: <b id="swc">0</b> <span class="mute">(m\u1EE5c ti\xEAu ').concat(part === 1 ? "\u2265 150" : part === 2 ? "\u2265 220" : "\u2265 320", ')</span></span></div>\n     <div class="row" style="margin-top:10px"><button class="red" id="ssub">').concat(exam ? "Xong ph\u1EA7n n\xE0y" : "Ch\u1EA5m b\xE0i n\xF3i", '</button></div></div>\n   <div class="card" style="margin:0" id="sright"><h2>B\xFAt \u0111\u1ECF</h2><p class="mute">Claude ch\u1EA5m t\u1EEB v\u0103n b\u1EA3n l\u1EDDi n\xF3i: ng\u1EEF ph\xE1p, t\u1EEB v\u1EF1ng, c\xE1ch ph\xE1t tri\u1EC3n \xFD, \u0111\u1ED9 d\xE0i. Ch\u01B0a ch\u1EA5m \u0111\u01B0\u1EE3c ph\xE1t \xE2m.</p></div></div>');
+    if (!exam) {
+      $("#st").onchange = $("#sp").onchange = () => go2("speaking", { test: $("#st").value, part: $("#sp").value });
+    }
+    const ta = $("#stxt");
+    ta.oninput = () => $("#swc").textContent = words(ta.value);
+    $("#sread").onclick = () => speakLines(qText.split("\n").filter(Boolean).map((x) => ({ sp: "", t: x.replace(/^- /, "") }))).catch(() => {
+    });
+    let listening = false;
+    if (cap.dictation) {
+      DICT.final = (text) => {
+        ta.value = (ta.value + " " + text).trim();
+        ta.oninput();
+      };
+      DICT.state = (state) => {
+        listening = state === "listening";
+        const b = $("#smic");
+        if (b) b.textContent = listening ? "\u25A0 D\u1EEBng ghi" : "\u{1F399} Ghi \xE2m \u2192 ch\u1EEF";
+      };
+      $("#smic").onclick = () => {
+        if (listening) {
+          cap.dictation.stop().catch(() => {
+          });
+          return;
+        }
+        stopSpeak2();
+        cap.dictation.start().catch((e) => {
+          $("#sstate").textContent = e && e.code === "not_granted" ? "Micro ch\u01B0a \u0111\u01B0\u1EE3c cho ph\xE9p \u2013 anh g\xF5 l\u1EA1i l\u1EDDi n\xF3i." : "Kh\xF4ng m\u1EDF \u0111\u01B0\u1EE3c micro.";
+        });
+      };
+    }
+    $("#sgo").onclick = () => {
+      $("#sgo").disabled = true;
+      const startTalk = () => {
+        $("#sstate").textContent = "N\xF3i ngay! H\u1EBFt gi\u1EDD s\u1EBD t\u1EF1 d\u1EEBng.";
+        if (cap.dictation && !listening) {
+          $("#sstate").textContent += " B\u1EA5m \u{1F399} \u0111\u1EC3 ghi.";
+        }
+        timer2($("#stm"), talk, () => {
+          $("#sstate").textContent = "H\u1EBFt gi\u1EDD.";
+          if (listening) cap.dictation.stop().catch(() => {
+          });
+        });
+      };
+      speakLines(qText.split("\n").filter(Boolean).slice(0, part === 1 ? 4 : 6).map((x) => ({ sp: "", t: x.replace(/^- /, "") }))).catch(() => {
+      });
+      if (prep) {
+        $("#sstate").textContent = "Chu\u1EA9n b\u1ECB 1 ph\xFAt: ch\u1EC9 ghi t\u1EEB kh\xF3a.";
+        timer2($("#stm"), prep, startTalk);
+      } else startTalk();
+    };
+    $("#ssub").onclick = async () => {
+      clearTimers();
+      if (listening) await cap.dictation.stop().catch(() => {
+      });
+      const text = ta.value.trim();
+      if (exam) {
+        onDone && onDone({ text, defer: true, qText });
+        return;
+      }
+      if (words(text) < 10) {
+        $("#sright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="bad-note">Ch\u01B0a c\xF3 n\u1ED9i dung \u0111\u1EC3 ch\u1EA5m.</p>';
+        return;
+      }
+      $("#sright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="loading">\u0110ang ch\u1EA5m b\xE0i n\xF3i\u2026</p>';
+      try {
+        const g = await gradeSpeaking(part, qText, text);
+        $("#sright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>" + speakBlock2(g) + '<div class="row" style="margin-top:12px"><button id="ssave">L\u01B0u l\u1ED7i</button></div>';
+        $("#ssave").onclick = () => {
+          const n = addErrors2(g.errors, "S", "T".concat(test, " Part ").concat(part));
+          $("#ssave").textContent = "\u0110\xE3 l\u01B0u ".concat(n);
+          $("#ssave").disabled = true;
+        };
+        addAttempt2({ skill: "Sp", label: "N\xF3i T".concat(test, " Part ").concat(part), score: r05(+g.band) });
+      } catch (e) {
+        $("#sright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>".concat(errBox2(e));
+      }
+    };
+  }, speakBlock2 = function(g) {
+    var _a;
+    return '<div class="row" style="gap:24px;align-items:flex-end"><div><div class="small mute">\u0110i\u1EC3m \u01B0\u1EDBc t\xEDnh</div><div class="score" style="color:'.concat(g.band >= 6 ? "var(--ok)" : "var(--red)", '">').concat((+g.band).toFixed(1), '</div></div><div style="flex:1;min-width:200px">').concat([["Ng\u1EEF ph\xE1p", "gra"], ["T\u1EEB v\u1EF1ng", "voc"], ["Ph\xE1t tri\u1EC3n \xFD", "dis"], ["\u0110\u1ED9 d\xE0i / tr\xF4i ch\u1EA3y", "len"]].map(([l, k]) => {
+      var _a2;
+      return '<div class="crit"><span>'.concat(l, "</span><b>").concat((_a2 = g[k]) != null ? _a2 : "\u2013", "</b></div>");
+    }).join(""), "</div></div>\n <p>").concat(esc(g.summary || ""), "</p>").concat(((_a = g.priorities) == null ? void 0 : _a.length) ? "<h3>\u0110\u1EC3 l\xEAn 6.0</h3><ol>".concat(g.priorities.map((x) => "<li>".concat(esc(x), "</li>")).join(""), "</ol>") : "", "\n ").concat((g.errors || []).map((e) => '<div class="fix"><span class="tag r">'.concat(esc(e.type || "l\u1ED7i"), "</span> <s>").concat(esc(e.wrong), '</s> \u2192 <span class="rt">').concat(esc(e.right), '</span><div class="small mute">').concat(esc(e.why || ""), "</div></div>")).join(""), "\n ").concat(g.better ? '<details style="margin-top:10px"><summary style="cursor:pointer;min-height:40px;font-weight:600">C\xE2u tr\u1EA3 l\u1EDDi m\u1EABu B2 t\u1EEB \xFD c\u1EE7a anh</summary><div class="prompt">'.concat(paras(g.better), '</div><button id="sbetter" style="margin-top:8px">\u{1F50A} Nghe b\u1EA3n m\u1EABu</button></details>') : "");
+  }, Mock2 = function() {
+    const p = param;
+    const sel = +(p.test || 3);
+    $("#app").innerHTML = '<div class="card"><h1>Thi th\u1EED tr\u1ECDn \u0111\u1EC1</h1><p>\u0110\xFAng tr\xECnh t\u1EF1 ph\xF2ng thi: <b>Nghe</b> (m\u1ED7i \u0111o\u1EA1n nghe 1 l\u1EA7n) \u2192 <b>\u0110\u1ECDc 60\'</b> \u2192 <b>Vi\u1EBFt 60\'</b> (Task 2 tr\u01B0\u1EDBc, Task 1 sau) \u2192 <b>N\xF3i</b> 3 ph\u1EA7n. Cu\u1ED1i b\xE0i c\xF3 \u0111i\u1EC3m t\u1ED5ng l\xE0m tr\xF2n 0.5 v\xE0 b\u1EADc.</p>\n  <div class="row">'.concat(testSel("mt", sel), '<button class="red" id="mgo">B\u1EAFt \u0111\u1EA7u thi th\u1EED</button></div><p class="small mute">Kho\u1EA3ng 3 gi\u1EDD 15 ph\xFAt. L\u1ECBch g\u1EE3i \xFD: Test 3 ng\xE0y 28/11, Test 6 ng\xE0y 02/12. Kh\xF4ng r\u1EDDi trang gi\u1EEFa ch\u1EEBng \u2013 \u0111i\u1EC3m t\u1EEBng ph\u1EA7n ch\u1EC9 l\u01B0u khi ho\xE0n th\xE0nh.</p></div>');
+    $("#mgo").onclick = () => runMock(+$("#mt").value);
+  }, gate2 = function(title, next) {
+    return new Promise((r) => {
+      clearTimers();
+      $("#app").innerHTML = '<div class="card"><h1>'.concat(esc(title), "</h1><p>").concat(esc(next), '</p><button class="pri" id="gnext">Ti\u1EBFp t\u1EE5c</button></div>');
+      $("#gnext").onclick = r;
+      scrollTo(0, 0);
+    });
+  }, Errors2 = function() {
+    const E = store.errors, open = E.filter((e) => e.ok < 2);
+    const types = {};
+    E.forEach((e) => types[e.type || "kh\xE1c"] = (types[e.type || "kh\xE1c"] || 0) + 1);
+    $("#app").innerHTML = '<div class="card"><h1>S\u1ED5 l\u1ED7i</h1><p class="mute">'.concat(E.length, " l\u1ED7i \u0111\xE3 l\u01B0u \xB7 ").concat(open.length, ' l\u1ED7i ch\u01B0a thu\u1ED9c (g\xF5 \u0111\xFAng 2 l\u1EA7n l\xE0 thu\u1ED9c).</p>\n  <div class="row">').concat(Object.entries(types).sort((a, b) => b[1] - a[1]).map(([k, v]) => '<span class="tag r">'.concat(esc(k), ": ").concat(v, "</span>")).join(""), '</div>\n  <div class="row" style="margin-top:12px"><button class="red" id="edrill" ').concat(open.length ? "" : "disabled", ">Drill s\u1EEDa c\xE2u (").concat(Math.min(open.length, 5), ' c\xE2u)</button><button class="pri" id="sdrill">Drill ch\xEDnh t\u1EA3 (10 t\u1EEB)</button></div></div>\n  <div class="card" id="drill" style="display:none"></div>\n  <div class="card"><h2>T\u1EA5t c\u1EA3 l\u1ED7i</h2>').concat(E.length ? '<table class="stack"><thead><tr><th>Sai</th><th>\u0110\xFAng</th><th>Lo\u1EA1i</th><th>Ngu\u1ED3n</th></tr></thead><tbody>'.concat(E.slice().reverse().map((e) => '<tr><td><s style="color:var(--red)">'.concat(esc(e.wrong), "</s></td><td><b>").concat(esc(e.right), '</b><div class="small mute">').concat(esc(e.why), "</div></td><td>").concat(esc(e.type)).concat(e.ok >= 2 ? ' <span class="tag g">thu\u1ED9c</span>' : "", '</td><td class="small mute">').concat(esc(e.src), "</td></tr>")).join(""), "</tbody></table>") : '<p class="mute">Ch\u01B0a c\xF3 l\u1ED7i n\xE0o. Sau m\u1ED7i l\u1EA7n ch\u1EA5m Vi\u1EBFt/N\xF3i, b\u1EA5m "L\u01B0u l\u1ED7i".</p>', "</div>");
+    $("#edrill").onclick = () => drillSent2(open.sort(() => Math.random() - 0.5).slice(0, 5), 0, 0);
+    $("#sdrill").onclick = () => {
+      const own = E.filter((e) => e.type === "ch\xEDnh t\u1EA3" && /^[A-Za-z'-]+$/.test(e.right)).map((e) => e.right);
+      drillSpell2([.../* @__PURE__ */ new Set([...own, ...SPELL])].sort(() => Math.random() - 0.5).slice(0, 10), 0, 0);
+    };
+  }, drillSent2 = function(list, i, score) {
+    const d = $("#drill");
+    d.style.display = "block";
+    if (i >= list.length) {
+      d.innerHTML = "<h2>Xong: ".concat(score, "/").concat(list.length, ' c\xE2u \u0111\xFAng</h2><button id="dend">\u0110\xF3ng</button>');
+      $("#dend").onclick = Errors2;
+      persist2();
+      return;
+    }
+    const e = list[i];
+    d.innerHTML = "<h2>C\xE2u ".concat(i + 1, "/").concat(list.length, '</h2><p>G\xF5 l\u1EA1i cho \u0111\xFAng:</p><p class="prompt" style="color:var(--red)">').concat(esc(e.wrong), '</p><p class="small mute">G\u1EE3i \xFD: l\u1ED7i ').concat(esc(e.type), '</p><input type="text" id="din" style="width:100%" spellcheck="false" autocomplete="off" autocapitalize="off"><div class="row" style="margin-top:10px"><button class="pri" id="dchk">Ki\u1EC3m tra</button></div><div id="dres"></div>');
+    $("#din").focus();
+    const chk = () => {
+      const ok = norm($("#din").value) === norm(e.right);
+      const rec = store.errors.find((x) => x.id === e.id);
+      if (rec) {
+        rec.ok = ok ? rec.ok + 1 : 0;
+        persist2();
+      }
+      $("#dres").innerHTML = '<p class="'.concat(ok ? "note" : "bad-note", '">').concat(ok ? "\u0110\xFAng!" : "Ch\u01B0a \u0111\xFAng.", " \u0110\xE1p \xE1n: <b>").concat(esc(e.right), '</b><br><span class="small">').concat(esc(e.why), '</span></p><button id="dnext" class="pri">Ti\u1EBFp \u2192</button>');
+      $("#dchk").disabled = true;
+      $("#dnext").onclick = () => drillSent2(list, i + 1, score + (ok ? 1 : 0));
+      $("#dnext").focus();
+    };
+    $("#dchk").onclick = chk;
+    $("#din").onkeydown = (ev) => {
+      if (ev.key === "Enter") chk();
+    };
+  }, drillSpell2 = function(list, i, score) {
+    const d = $("#drill");
+    d.style.display = "block";
+    if (i >= list.length) {
+      d.innerHTML = "<h2>Ch\xEDnh t\u1EA3: ".concat(score, "/").concat(list.length, '</h2><button id="dend">\u0110\xF3ng</button>');
+      $("#dend").onclick = Errors2;
+      return;
+    }
+    const w = list[i];
+    d.innerHTML = "<h2>T\u1EEB ".concat(i + 1, "/").concat(list.length, "</h2><p>B\u1EA5m nghe r\u1ED3i g\xF5 t\u1EEB. ").concat(cap.tts || "speechSynthesis" in window ? "" : "(Tr\xECnh duy\u1EC7t kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c \u2013 t\u1EEB hi\u1EC7n m\u1EDD 1 gi\xE2y.)", '</p><div class="row"><button id="dsay">\u{1F50A} Nghe t\u1EEB</button><span id="dpeek" class="mute"></span></div><input type="text" id="din" style="width:100%;margin-top:10px" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"><div class="row" style="margin-top:10px"><button class="pri" id="dchk">Ki\u1EC3m tra</button></div><div id="dres"></div>');
+    const say = () => speakLines([{ sp: "", t: w }], 0.8).catch(() => {
+      $("#dpeek").textContent = w;
+      setTimeout(() => $("#dpeek").textContent = "", 1e3);
+    });
+    $("#dsay").onclick = say;
+    say();
+    $("#din").focus();
+    const chk = () => {
+      const ok = $("#din").value.trim().toLowerCase() === w.toLowerCase();
+      $("#dres").innerHTML = '<p class="'.concat(ok ? "note" : "bad-note", '">').concat(ok ? "\u0110\xFAng!" : "Sai.", ' <b style="font-size:20px;letter-spacing:.04em">').concat(esc(w), '</b></p><button id="dnext" class="pri">Ti\u1EBFp \u2192</button>');
+      $("#dchk").disabled = true;
+      $("#dnext").onclick = () => drillSpell2(list, i + 1, score + (ok ? 1 : 0));
+      $("#dnext").focus();
+    };
+    $("#dchk").onclick = chk;
+    $("#din").onkeydown = (ev) => {
+      if (ev.key === "Enter") chk();
+    };
+  };
+  var timer = timer2, lsLoad = lsLoad2, persist = persist2, addAttempt = addAttempt2, addErrors = addErrors2, errBox = errBox2, makeDictation = makeDictation2, voiceFor = voiceFor2, stopSpeak = stopSpeak2, go = go2, linkBtn = linkBtn2, render = render2, Home = Home2, mcqHTML = mcqHTML2, readAns = readAns2, bindWhy = bindWhy2, guideBox = guideBox2, rqType = rqType2, lqType = lqType2, topicSent = topicSent2, vocabFor = vocabFor2, Listening = Listening2, listeningView = listeningView2, Reading = Reading2, readingView = readingView2, Writing = Writing2, gradeBlock = gradeBlock2, writeGuide = writeGuide2, writingView = writingView2, Speaking = Speaking2, speakGuide = speakGuide2, speakingView = speakingView2, speakBlock = speakBlock2, Mock = Mock2, gate = gate2, Errors = Errors2, drillSent = drillSent2, drillSpell = drillSpell2;
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s != null ? s : "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const md = (s) => esc(s).replace(/\*\*\s*\*\*/g, "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(?!\s)(.+?)\*/g, "<i>$1</i>");
+  const paras = (s) => String(s || "").split(/\n\s*\n|\n/).filter((x) => x.trim()).map((p) => "<p>".concat(md(p), "</p>")).join("");
+  const words = (s) => (String(s).trim().match(/[A-Za-zÀ-ỹ0-9'’-]+/g) || []).length;
+  const r05 = (x) => Math.round(x * 2) / 2;
+  const level = (x) => x >= 8.5 ? "C1 \u2013 B\u1EADc 5" : x >= 6 ? "B2 \u2013 B\u1EADc 4" : x >= 4 ? "B1 \u2013 B\u1EADc 3" : "Ch\u01B0a \u0111\u1EA1t b\u1EADc";
+  const fmt = (s) => "".concat(String(Math.floor(s / 60)).padStart(2, "0"), ":").concat(String(s % 60).padStart(2, "0"));
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const EXAM = /* @__PURE__ */ new Date("2026-12-04T07:00:00+07:00");
+  let T = [];
+  let cap = {};
+  let store = { attempts: [], errors: [], drafts: {}, hist: {} };
+  let stopTimers = [];
+  const DICT = { final: null, state: null };
+  const clearTimers = () => {
+    stopTimers.forEach((f) => f());
+    stopTimers = [];
+  };
+  let dbRef = null, saving = Promise.resolve();
+  const KEY_LS = "vstep4_key", MODEL_LS = "vstep4_model";
+  const getKey = () => {
+    try {
+      return localStorage.getItem(KEY_LS) || "";
+    } catch (e) {
+      return "";
+    }
+  };
+  const getModel = () => {
+    try {
+      return localStorage.getItem(MODEL_LS) || "claude-sonnet-5-5";
+    } catch (e) {
+      return "claude-sonnet-5-5";
+    }
+  };
+  async function callClaude(prompt, max) {
+    const key = getKey();
+    window.__lastPrompt = 'H\xE3y ch\u1EA5m b\xE0i d\u01B0\u1EDBi \u0111\xE2y nh\u01B0 gi\xE1m kh\u1EA3o VSTEP. B\u1ECE QUA y\xEAu c\u1EA7u tr\u1EA3 JSON: tr\u1EA3 l\u1EDDi b\u1EB1ng ti\u1EBFng Vi\u1EC7t d\u1EC5 \u0111\u1ECDc g\u1ED3m \u0111i\u1EC3m t\u1EEBng ti\xEAu ch\xED, danh s\xE1ch l\u1ED7i d\u1EA1ng "sai \u2192 \u0111\xFAng (gi\u1EA3i th\xEDch)", 3 vi\u1EC7c c\u1EA7n s\u1EEDa ngay v\xE0 b\u1EA3n vi\u1EBFt l\u1EA1i B2.\n\n' + prompt;
+    if (!key) throw { nokey: true, message: "Ch\u01B0a nh\u1EADp API key n\xEAn trang ch\u01B0a t\u1EF1 ch\u1EA5m \u0111\u01B0\u1EE3c. Anh c\xF3 th\u1EC3 copy b\xE0i sang Claude \u0111\u1EC3 ch\u1EA5m, ho\u1EB7c nh\u1EADp key \u1EDF trang T\u1ED5ng quan." };
+    let r;
+    try {
+      r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" }, body: JSON.stringify({ model: getModel(), max_tokens: max, messages: [{ role: "user", content: prompt }] }) });
+    } catch (e) {
+      throw { message: "Kh\xF4ng k\u1EBFt n\u1ED1i \u0111\u01B0\u1EE3c t\u1EDBi Claude. Ki\u1EC3m tra m\u1EA1ng r\u1ED3i b\u1EA5m l\u1EA1i." };
+    }
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      const m = d.error && d.error.message || String(r.status);
+      throw { nokey: r.status === 401, message: r.status === 401 ? "API key kh\xF4ng \u0111\xFAng ho\u1EB7c \u0111\xE3 b\u1ECB x\xF3a. V\xE0o T\u1ED5ng quan nh\u1EADp l\u1EA1i." : r.status === 429 ? "\u0110ang b\u1ECB gi\u1EDBi h\u1EA1n l\u01B0\u1EE3t, \u0111\u1EE3i 1 ph\xFAt r\u1ED3i b\u1EA5m l\u1EA1i." : /credit|billing/i.test(m) ? "T\xE0i kho\u1EA3n API \u0111\xE3 h\u1EBFt credit \u2013 n\u1EA1p th\xEAm t\u1EA1i console.anthropic.com." : "L\u1ED7i t\u1EEB Claude: " + m };
+    }
+    return (d.content || []).filter((c) => c.type === "text").map((c) => c.text).join("");
+  }
+  async function askJSON(prompt) {
+    const t = await callClaude(prompt + "\n\nRespond with the JSON object only, no markdown fences.", 6e3);
+    try {
+      return JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1));
+    } catch (e) {
+      throw { message: "K\u1EBFt qu\u1EA3 ch\u1EA5m b\u1ECB l\u1ED7i \u0111\u1ECBnh d\u1EA1ng, anh b\u1EA5m ch\u1EA5m l\u1EA1i." };
+    }
+  }
+  async function askText(prompt) {
+    return callClaude(prompt, 700);
+  }
+  document.addEventListener("click", (e) => {
+    if (e.target.id !== "cpprompt") return;
+    const b = e.target;
+    (navigator.clipboard ? navigator.clipboard.writeText(window.__lastPrompt || "") : Promise.reject()).then(() => {
+      b.textContent = "\u0110\xE3 copy \u2713 \u2013 d\xE1n v\xE0o Claude";
+    }, () => {
+      b.textContent = "Kh\xF4ng copy \u0111\u01B0\u1EE3c";
+    });
+  });
+  const VOICE = { A: "buttery", B: "airy" };
+  async function speakLines(lines, rate = 1) {
+    if (!lines || !lines.length) return;
+    if (cap.tts) {
+      return cap.tts.speak(lines.map((l) => ({ text: l.t.slice(0, 1900), voice: voiceFor2(l.sp), language: "en", rate })));
+    }
+    if ("speechSynthesis" in window) {
+      const vs = await bestVoices();
+      return new Promise((res) => {
+        speechSynthesis.cancel();
+        lines.forEach((l, i) => {
+          const u = new SpeechSynthesisUtterance(l.t);
+          u.lang = "en-GB";
+          u.rate = rate * 0.9;
+          if (vs.length) u.voice = vs[(l.sp === "B" ? 1 : 0) % vs.length];
+          if (i === lines.length - 1) {
+            u.onend = res;
+            u.onerror = res;
+          }
+          speechSynthesis.speak(u);
+        });
+      });
+    }
+    throw { message: "Tr\xECnh duy\u1EC7t n\xE0y kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c \xE2m thanh." };
+  }
+  let curAudio = null, AUDIO = /* @__PURE__ */ new Set();
+  async function bestVoices() {
+    let v = speechSynthesis.getVoices();
+    if (!v.length) {
+      await new Promise((r) => {
+        speechSynthesis.onvoiceschanged = r;
+        setTimeout(r, 1500);
+      });
+      v = speechSynthesis.getVoices();
+    }
+    const en = v.filter((x) => /^en[-_]/i.test(x.lang));
+    const score = (x) => (/natural|neural|premium|enhanced|google/i.test(x.name) ? 10 : 0) + (/en[-_]GB/i.test(x.lang) ? 3 : /en[-_]US/i.test(x.lang) ? 2 : 0) + (x.localService ? 0 : 1);
+    return en.sort((a, b) => score(b) - score(a)).slice(0, 2);
+  }
+  const playMp3 = (src, rate = 1) => new Promise((res, rej) => {
+    stopSpeak2();
+    const a = new Audio(src);
+    curAudio = a;
+    a.playbackRate = rate;
+    a.onended = res;
+    a.onerror = () => rej({ message: "Kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c file nghe, ki\u1EC3m tra m\u1EA1ng." });
+    a.play().catch(() => rej({ message: "Tr\xECnh duy\u1EC7t ch\u1EB7n ph\xE1t \xE2m thanh, b\u1EA5m l\u1EA1i." }));
+  });
+  document.addEventListener("play", (e) => {
+    document.querySelectorAll("audio").forEach((a) => {
+      if (a !== e.target) a.pause();
+    });
+  }, true);
+  const PLAN = [
+    ["2026-11-23", "H\u1ECDc khung lu\u1EADn 5 \u0111o\u1EA1n. Vi\u1EBFt Task 2 Test 7 (40')", "N\xF3i Part 1: 6 ch\u1EE7 \u0111\u1EC1 quen", [["writing", "7", "2"], ["speaking", "1", "1"]]],
+    ["2026-11-24", "Khung th\u01B0 th\xE2n m\u1EADt. Task 1 Test 2 + Test 7", "N\xF3i Part 2 Test 2 + 7; Nghe Part 1", [["writing", "2", "1"], ["speaking", "2", "2"], ["listening", "1", "1"]]],
+    ["2026-11-25", "D\u1EA1ng \xFD ki\u1EBFn. Task 2 Test 2", "N\xF3i Part 3 Test 2 + 7; \u0110\u1ECDc 2 b\xE0i", [["writing", "2", "2"], ["speaking", "2", "3"], ["reading", "1", "1"]]],
+    ["2026-11-26", "Th\u01B0 trang tr\u1ECDng + D\u1EA1ng 4. Vi\u1EBFt 1 th\u01B0 20'", "N\xF3i Part 1 th\xEAm ch\u1EE7 \u0111\u1EC1; Nghe Part 2", [["writing", "10", "1"], ["listening", "2", "2"]]],
+    ["2026-11-27", "Vi\u1EBFt tr\u1ECDn 60' Test 1", "N\xF3i tr\u1ECDn Test 1", [["writing", "1", "2"], ["speaking", "1", "1"]]],
+    ["2026-11-28", "THI TH\u1EEC tr\u1ECDn 4 k\u1EF9 n\u0103ng Test 3", "19:00\u201322:15", [["mock", "3"]]],
+    ["2026-11-29", "S\u1EEDa \u0111\u1EC1 thi th\u1EED, vi\u1EBFt l\u1EA1i Task 2 Test 3", "Ki\u1EC3m email ca thi", [["writing", "3", "2"], ["errors"]]],
+    ["2026-11-30", "Vi\u1EBFt tr\u1ECDn 60' Test 4", "N\xF3i Test 4; Nghe Part 3", [["writing", "4", "2"], ["speaking", "4", "1"], ["listening", "4", "3"]]],
+    ["2026-12-01", "Vi\u1EBFt tr\u1ECDn 60' Test 5", "N\xF3i Test 5; \u0110\u1ECDc 1 b\xE0i", [["writing", "5", "2"], ["speaking", "5", "1"], ["reading", "5", "1"]]],
+    ["2026-12-02", "THI TH\u1EEC tr\u1ECDn 4 k\u1EF9 n\u0103ng Test 6", "M\u1ED1c: Vi\u1EBFt \u22655.5, N\xF3i \u22656.0", [["mock", "6"]]],
+    ["2026-12-03", "Nh\u1EB9: 1 Task 1 20', N\xF3i Part 2\u20133", "So\u1EA1n CCCD, ng\u1EE7 tr\u01B0\u1EDBc 23:00", [["writing", "8", "1"], ["speaking", "8", "2"]]]
+  ];
+  const todayStr = () => new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+  const ICON = { home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', mock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>', listening: '<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>', reading: '<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>', writing: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>', speaking: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/>', errors: '<path d="M6 3h9l4 4v14H6z"/><path d="M9 12l6 6M15 12l-6 6"/>' };
+  const ROUTES = [["home", "T\u1ED5ng quan"], ["mock", "Thi th\u1EED"], ["listening", "Nghe"], ["reading", "\u0110\u1ECDc"], ["writing", "Vi\u1EBFt"], ["speaking", "N\xF3i"], ["errors", "S\u1ED5 l\u1ED7i"]];
+  let param = {}, lastP = {};
+  const ART = location.href.split("#")[0];
+  const hashOf = (r, p = {}) => r + (p.test ? "-t" + p.test : "") + (p.part ? "-p" + p.part : "") + (p.mode ? "-" + p.mode : "");
+  document.addEventListener("click", (e) => {
+    if (e.target.id !== "cplink") return;
+    const u = ART + location.hash;
+    const b = e.target;
+    (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => {
+      b.textContent = "\u0110\xE3 copy link \u2713";
+    }, () => {
+      b.outerHTML = '<input type="text" readonly value="'.concat(u, '" style="width:100%" onclick="this.select()">');
+    });
+  });
+  window.addEventListener("hashchange", render2);
+  const testSel = (id, v) => '<select id="'.concat(id, '">').concat(T.map((t) => '<option value="'.concat(t.id, '" ').concat(+v === t.id ? "selected" : "", ">Test ").concat(t.id, "</option>")).join(""), "</select>");
+  const LMAP = { L: ["L"], R: ["R"], W: ["W", "W2"], S: ["S", "Sp"] };
+  const latest = (skill) => {
+    const a = store.attempts.filter((x) => (LMAP[skill] || [skill]).includes(x.skill) && x.score != null);
+    return a.length ? a[a.length - 1].score : null;
+  };
+  let G = null;
+  document.addEventListener("toggle", (e) => {
+    const d = e.target;
+    if (d.dataset && d.dataset.gk) {
+      try {
+        localStorage.setItem("vstep4_g_" + d.dataset.gk, d.open ? "1" : "0");
+      } catch (_) {
+      }
+    }
+  }, true);
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-say]");
+    if (!b) return;
+    const t = b.dataset.say;
+    stopSpeak2();
+    speakLines(t.split(/\n+/).filter(Boolean).map((x) => ({ sp: "", t: x })), 0.9).catch(() => {
+    });
+  });
+  const sayBtn = (t) => '<button class="say" data-say="'.concat(esc(t), '">\u{1F50A} Nghe</button>');
+  const tagHTML = ([a, b]) => '<span class="qt">'.concat(esc(a), '</span> <span class="small mute">').concat(esc(b), "</span>");
+  const LSEG = [["Q1", [1]], ["Q2", [2]], ["Q3", [3]], ["Q4", [4]], ["Q5", [5]], ["Q6", [6]], ["Q7", [7]], ["Q8", [8]], ["C1", [9, 10, 11, 12]], ["C2", [13, 14, 15, 16]], ["C3", [17, 18, 19, 20]], ["T1", [21, 22, 23, 24, 25]], ["T2", [26, 27, 28, 29, 30]], ["T3", [31, 32, 33, 34, 35]]];
+  const LPARTS = { 1: LSEG.slice(0, 8), 2: LSEG.slice(8, 11), 3: LSEG.slice(11) };
+  const STEPS = {
+    1: [["D\xE0n \xFD", "Ghi 3\u20135 d\xF2ng: th\u01B0 th\xE2n m\u1EADt hay trang tr\u1ECDng, m\u1ED7i g\u1EA1ch \u0111\u1EA7u d\xF2ng c\u1EE7a \u0111\u1EC1 s\u1EBD tr\u1EA3 l\u1EDDi b\u1EB1ng \xFD g\xEC."], ["Ch\xE0o + m\u1EDF th\u01B0", "Dear \u2026, + 1\u20132 c\xE2u m\u1EDF (Thanks for your email\u2026 / I am writing to\u2026)."], ["Th\xE2n th\u01B0", "M\u1ED7i g\u1EA1ch \u0111\u1EA7u d\xF2ng c\u1EE7a \u0111\u1EC1 = 1 \u0111o\u1EA1n 2\u20134 c\xE2u."], ["K\u1EBFt + k\xFD t\xEAn", "1\u20132 c\xE2u k\u1EBFt + Best wishes / Yours faithfully + t\xEAn ti\u1EBFng Anh."]],
+    2: [["D\xE0n \xFD", "D\u1EA1ng \u0111\u1EC1? 2 \xFD cho th\xE2n b\xE0i 1, 2 \xFD cho th\xE2n b\xE0i 2, l\u1EA5y t\u1EEB 6 \xFD v\u1EA1n n\u0103ng (th\u1EDDi gian, ti\u1EC1n, s\u1EE9c kh\u1ECFe, k\u1EF9 n\u0103ng, quan h\u1EC7, m\xF4i tr\u01B0\u1EDDng)."], ["M\u1EDF b\xE0i", "~40 t\u1EEB: In recent years, \u2026 has become a matter of public concern. + c\xE2u n\xEAu h\u01B0\u1EDBng."], ["Th\xE2n b\xE0i 1", "~95 t\u1EEB: \xDD \u2013 Gi\u1EA3i th\xEDch \u2013 V\xED d\u1EE5 \u2013 K\u1EBFt qu\u1EA3 (The first \u2026 is that \u2026 This is because \u2026 For example, \u2026 As a result, \u2026)."], ["Th\xE2n b\xE0i 2", "~95 t\u1EEB: c\xF9ng khung 4 c\xE2u, m\u1EDF b\u1EB1ng Another \u2026 / On the other hand, \u2026"], ["K\u1EBFt b\xE0i", "~40 t\u1EEB: In conclusion, \u2026 Therefore, I believe that \u2026 Kh\xF4ng th\xEAm \xFD m\u1EDBi."]]
+  };
+  const TEMPL = {
+    1: "Dear Sara,\n\nThanks for your email. It was great to hear from you. You asked me about \u2026, so let me tell you.\n\nFirst of all, \u2026\n\nAs for \u2026, \u2026\n\nBy the way, \u2026\n\nAnyway, I have to go now. Write back soon and tell me your news!\n\nBest wishes,\nAnna",
+    2: "In recent years, \u2026 has become a matter of public concern. This essay will discuss \u2026\n\nThe first \u2026 is that \u2026 This is because \u2026 For example, \u2026 As a result, \u2026\n\nAnother \u2026 is that \u2026 This means that \u2026 For instance, \u2026 Therefore, \u2026\n\nIn conclusion, \u2026 Therefore, I believe that \u2026"
+  };
+  const W_RULES = "VSTEP writing criteria (each 0\u201310): Task fulfilment (answers every bullet/part of the prompt, right format and tone, enough length), Organization (paragraphing, logical order, linking), Vocabulary (range, accuracy, spelling), Grammar (range, accuracy, sentence structure). Calibrate like a real VSTEP examiner: typical B1 = 4.0\u20135.5, B2 = 6.0\u20138.0, C1 = 8.5+. This candidate scored 3.5 before; known weaknesses: sentence structure, spelling, messy organization; ideas are fine. Goal: 5.5+.";
+  async function gradeSpeaking(part, qText, text) {
+    return askJSON("You are a VSTEP speaking examiner. Criteria (0\u201310 each): Grammar, Vocabulary, Discourse management (answering fully, developing ideas with reasons and examples, organization), plus a Length/fluency estimate from the amount said (Part 1 \u22483 min, Part 2 \u22482 min, Part 3 \u22484 min incl. follow-ups). Pronunciation cannot be judged from text: ignore it. Calibrate: B1 4.0\u20135.5, B2 6.0\u20138.0. The candidate scored 5.5 before and aims for 6.0. This is an automatic speech-to-text transcript: ignore punctuation and obvious recognition slips.\nPART ".concat(part, " QUESTIONS:\n").concat(qText, "\n\nTRANSCRIPT (").concat(words(text), ' words):\n"""').concat(text, '"""\n\nReturn JSON only, Vietnamese feedback: {"gra":n,"voc":n,"dis":n,"len":n,"band":n (mean rounded to 0.5),"summary":"2\u20133 c\xE2u","priorities":["3 vi\u1EC7c c\u1EE5 th\u1EC3 \u0111\u1EC3 l\xEAn 6.0"],"errors":[{"wrong":"exact words","right":"corrected","type":"ng\u1EEF ph\xE1p|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|ph\xE1t tri\u1EC3n \xFD","why":"ti\u1EBFng Vi\u1EC7t"}] (up to 10),"better":"a model answer in English at solid B2 using the candidate\'s own ideas, about 30% longer"}'));
+  }
+  document.addEventListener("click", (e) => {
+    if (e.target.id === "sbetter") {
+      const p = e.target.previousElementSibling.innerText;
+      speakLines(p.split(/\n+/).filter(Boolean).map((t) => ({ sp: "", t }))).catch(() => {
+      });
+    }
+  });
+  async function runMock(test) {
+    const res = { test };
+    const step = (fn, opts) => new Promise((r) => fn(__spreadProps(__spreadValues({}, opts), { test, exam: true, onDone: r })));
+    res.L = await step(listeningView2, { part: "all" });
+    await gate2("Xong ph\u1EA7n Nghe", "Ti\u1EBFp: \u0110\u1ECDc 60 ph\xFAt.");
+    res.R = await step(readingView2, { pass: "all" });
+    await gate2("Xong ph\u1EA7n \u0110\u1ECDc", "Ti\u1EBFp: Vi\u1EBFt 60 ph\xFAt \u2013 Task 2 (40') tr\u01B0\u1EDBc, r\u1ED3i Task 1 (20').");
+    const wEnd = Date.now() + 60 * 6e4;
+    const wbar = () => {
+      clearTimers();
+      const el = document.createElement("div");
+      el.className = "card row";
+      el.style.justifyContent = "space-between";
+      el.innerHTML = '<b>Th\u1EDDi gian Vi\u1EBFt c\xF2n l\u1EA1i (c\u1EA3 2 task)</b><span class="timer" id="mwt"></span>';
+      $("#app").prepend(el);
+      timer2($("#mwt"), Math.max(0, Math.round((wEnd - Date.now()) / 1e3)), () => {
+        $("#wsub") && $("#wsub").click();
+      });
+    };
+    res.W2 = await new Promise((r) => {
+      writingView2({ test, task: 2, mode: "full", exam: true, onDone: r });
+      wbar();
+    });
+    res.W1 = await new Promise((r) => {
+      writingView2({ test, task: 1, mode: "full", exam: true, onDone: r });
+      wbar();
+    });
+    clearTimers();
+    await gate2("Xong ph\u1EA7n Vi\u1EBFt", "Ti\u1EBFp: N\xF3i \u2013 Part 1 (3'), Part 2 (1' chu\u1EA9n b\u1ECB + 2'), Part 3 (1' + 4').");
+    res.S = [];
+    for (const part of [1, 2, 3]) {
+      res.S.push(__spreadValues({ part }, await step(speakingView2, { part })));
+    }
+    mockReport(res);
+  }
+  async function mockReport(res) {
+    var _a;
+    const t = T[res.test - 1];
+    $("#app").innerHTML = '<div class="card"><h1>K\u1EBFt qu\u1EA3 thi th\u1EED \xB7 Test '.concat(res.test, '</h1><p class="loading" id="mload">Claude \u0111ang ch\u1EA5m Vi\u1EBFt v\xE0 N\xF3i (kho\u1EA3ng 1\u20132 ph\xFAt)\u2026</p><div id="mout"></div></div>');
+    const gw = async (task, text) => {
+      if (words(text) < 20) return { band: 0, summary: "Kh\xF4ng c\xF3 b\xE0i l\xE0m.", errors: [] };
+      return askJSON("You are a strict, experienced VSTEP writing examiner. ".concat(W_RULES, "\nTASK ").concat(task, " PROMPT:\n").concat((task === 1 ? t.writing.task1 : t.writing.task2).replace(/\*/g, ""), "\n\nRESPONSE (").concat(words(text), " words; minimum ").concat(task === 1 ? 120 : 250, '):\n"""').concat(text, '"""\nReturn JSON only, Vietnamese feedback: {"tf":n,"org":n,"voc":n,"gra":n,"band":n,"summary":"2 c\xE2u","priorities":["3 vi\u1EC7c"],"errors":[{"wrong":"exact substring","right":"corrected","type":"ng\u1EEF ph\xE1p|ch\xEDnh t\u1EA3|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|m\u1EA1ch l\u1EA1c|\u0111\xE1p \u1EE9ng \u0111\u1EC1","why":"ti\u1EBFng Vi\u1EC7t"}] (up to 12),"improved":"corrected B2 version of their text"}'), "complex");
+    };
+    let g1, g2, gs = [];
+    const errs = [];
+    try {
+      [g2, g1] = await Promise.all([gw(2, res.W2.text || ""), gw(1, res.W1.text || "")]);
+      gs = await Promise.all(res.S.map((s) => words(s.text) < 10 ? { band: 0, summary: "Kh\xF4ng c\xF3 n\u1ED9i dung.", errors: [] } : gradeSpeaking(s.part, s.qText, s.text)));
+    } catch (e) {
+      $("#mload").outerHTML = errBox2(e);
+    }
+    const W = g1 && g2 ? r05((+g1.band + 2 * +g2.band) / 3) : null, S = gs.length === 3 ? r05(gs.reduce((a, g) => a + +g.band, 0) / 3) : null;
+    const L = res.L.score, R = res.R.score, sum = [L, R, W, S].every((x) => x != null) ? L + R + W + S : null, ov = sum != null ? r05(sum / 4) : null;
+    (_a = $("#mload")) == null ? void 0 : _a.remove();
+    $("#mout").innerHTML = '<div class="grid4" style="margin:12px 0">'.concat([["Nghe", L, "".concat(res.L.right, "/35")], ["\u0110\u1ECDc", R, "".concat(res.R.right, "/40")], ["Vi\u1EBFt", W, "Task 1 \xD71, Task 2 \xD72"], ["N\xF3i", S, "TB 3 ph\u1EA7n"]].map(([n, v, s]) => '<div class="card" style="margin:0;padding:12px"><div class="small mute">'.concat(n, '</div><div style="font-size:30px;font-weight:800">').concat(v != null ? v.toFixed(1) : "\u2013", '</div><div class="small mute">').concat(s, "</div></div>")).join(""), "</div>\n   ").concat(ov != null ? '<div class="'.concat(ov >= 6 ? "note" : "bad-note", '" style="font-size:18px"><b>T\u1ED5ng ').concat(sum.toFixed(1), " \u2192 trung b\xECnh ").concat((sum / 4).toFixed(2), " \u2192 ").concat(ov.toFixed(1), " \xB7 ").concat(level(ov), "</b>").concat(ov < 6 ? " \xB7 c\xF2n thi\u1EBFu ".concat((23 - sum).toFixed(1), " \u0111i\u1EC3m t\u1ED5ng") : "", "</div>") : "", "\n   ").concat(g2 ? '<h2 style="margin-top:20px">Vi\u1EBFt Task 2</h2>'.concat(gradeBlock2(g2, true)) : "").concat(g1 ? '<h2 style="margin-top:20px">Vi\u1EBFt Task 1</h2>'.concat(gradeBlock2(g1, true)) : "", "\n   ").concat(gs.map((g, i) => '<h2 style="margin-top:20px">N\xF3i Part '.concat(i + 1, "</h2>").concat(speakBlock2(g))).join(""), '\n   <div class="row" style="margin-top:16px"><button class="pri" id="msave">L\u01B0u t\u1EA5t c\u1EA3 l\u1ED7i v\xE0o S\u1ED5 l\u1ED7i</button><a class="btn" href="#home" style="display:inline-flex;align-items:center;text-decoration:none">V\u1EC1 T\u1ED5ng quan</a></div>');
+    $("#msave").onclick = () => {
+      let n = 0;
+      if (g2) n += addErrors2(g2.errors, "W", "Thi th\u1EED T".concat(res.test, " Task 2"));
+      if (g1) n += addErrors2(g1.errors, "W", "Thi th\u1EED T".concat(res.test, " Task 1"));
+      gs.forEach((g, i) => n += addErrors2(g.errors, "S", "Thi th\u1EED T".concat(res.test, " Part ").concat(i + 1)));
+      $("#msave").textContent = "\u0110\xE3 l\u01B0u ".concat(n, " l\u1ED7i");
+      $("#msave").disabled = true;
+    };
+    if (W != null) addAttempt2({ skill: "W", label: "Thi th\u1EED T".concat(res.test, " \u2013 Vi\u1EBFt"), score: W });
+    if (S != null) addAttempt2({ skill: "S", label: "Thi th\u1EED T".concat(res.test, " \u2013 N\xF3i"), score: S });
+    addAttempt2({ skill: "MOCK", label: "Thi th\u1EED T".concat(res.test, " \u2013 T\u1ED5ng"), score: ov, detail: { L, R, W, S } });
+  }
+  const SPELL = ["environment", "government", "necessary", "advantage", "disadvantage", "beneficial", "convenient", "technology", "opportunity", "development", "knowledge", "achieve", "believe", "receive", "recommend", "accommodation", "responsible", "successful", "communicate", "especially", "definitely", "separate", "business", "interesting", "pollution", "transportation", "traditional", "experience", "their", "which"];
+  const norm = (s) => String(s).toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9' ]/g, " ").replace(/\s+/g, " ").trim();
+  async function boot() {
+    lsLoad2();
+    cap = { sample: true, tts: null, dictation: makeDictation2() };
+    if (cap.dictation) {
+      cap.dictation.onFinal(({ text }) => DICT.final && DICT.final(text));
+      cap.dictation.onState(({ state }) => DICT.state && DICT.state(state));
+    }
+    try {
+      const am = await fetch("audio/index.json");
+      if (am.ok) AUDIO = new Set(await am.json());
+    } catch (e) {
+    }
+    try {
+      G = await (await fetch("data/guides.json")).json();
+    } catch (e) {
+    }
+    try {
+      T = await (await fetch("data/tests.json")).json();
+    } catch (e) {
+      $("#app").innerHTML = '<p class="bad-note">Kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c b\u1ED9 \u0111\u1EC1.</p>';
+      return;
+    }
+    render2();
+  }
+  boot();
 }
 </script>
 </body>
