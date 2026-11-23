@@ -131,10 +131,16 @@ function voiceFor(sp){if(!sp)return 'rounded';if(VOICE[sp])return VOICE[sp];retu
 async function speakLines(lines,rate=1){
   if(!lines||!lines.length)return;
   if(cap.tts){return cap.tts.speak(lines.map(l=>({text:l.t.slice(0,1900),voice:voiceFor(l.sp),language:'en',rate})))}
-  if('speechSynthesis' in window){return new Promise(res=>{speechSynthesis.cancel();lines.forEach((l,i)=>{const u=new SpeechSynthesisUtterance(l.t);u.lang='en-GB';u.rate=rate*.95;const vs=speechSynthesis.getVoices().filter(v=>/^en/.test(v.lang));if(vs.length)u.voice=vs[(l.sp==='B'?1:0)%vs.length];if(i===lines.length-1)u.onend=res;speechSynthesis.speak(u)})})}
+  if('speechSynthesis' in window){const vs=await bestVoices();return new Promise(res=>{speechSynthesis.cancel();lines.forEach((l,i)=>{const u=new SpeechSynthesisUtterance(l.t);u.lang='en-GB';u.rate=rate*.9;if(vs.length)u.voice=vs[(l.sp==='B'?1:0)%vs.length];if(i===lines.length-1){u.onend=res;u.onerror=res}speechSynthesis.speak(u)})})}
   throw {message:'Trình duyệt này không đọc được âm thanh.'}
 }
-function stopSpeak(){try{cap.tts&&cap.tts.stop()}catch(e){}try{speechSynthesis.cancel()}catch(e){}}
+function stopSpeak(){try{cap.tts&&cap.tts.stop()}catch(e){}try{speechSynthesis.cancel()}catch(e){}try{curAudio&&curAudio.pause()}catch(e){}document.querySelectorAll('audio').forEach(a=>a.pause())}
+let curAudio=null,AUDIO=new Set();
+async function bestVoices(){let v=speechSynthesis.getVoices();if(!v.length){await new Promise(r=>{speechSynthesis.onvoiceschanged=r;setTimeout(r,1500)});v=speechSynthesis.getVoices()}
+  const en=v.filter(x=>/^en[-_]/i.test(x.lang));const score=x=>(/natural|neural|premium|enhanced|google/i.test(x.name)?10:0)+(/en[-_]GB/i.test(x.lang)?3:/en[-_]US/i.test(x.lang)?2:0)+(x.localService?0:1);
+  return en.sort((a,b)=>score(b)-score(a)).slice(0,2)}
+const playMp3=(src,rate=1)=>new Promise((res,rej)=>{stopSpeak();const a=new Audio(src);curAudio=a;a.playbackRate=rate;a.onended=res;a.onerror=()=>rej({message:'Không tải được file nghe, kiểm tra mạng.'});a.play().catch(()=>rej({message:'Trình duyệt chặn phát âm thanh, bấm lại.'}))});
+document.addEventListener('play',e=>{document.querySelectorAll('audio').forEach(a=>{if(a!==e.target)a.pause()})},true);
 
 /* ---------- plan (11 tối) ---------- */
 const PLAN=[
@@ -221,13 +227,13 @@ function listeningView({test,part,exam,onDone}){
   const t=T[test-1],segs=part==='all'?LSEG:LPARTS[part];const played={};
   const qset=n=>t.listening.filter(q=>n.includes(q.n));
   $('#app').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">Nghe · Test ${test}</h1>${exam?'<span class="tag r">Thi thử: mỗi đoạn nghe 1 lần</span>':`<div class="row">${testSel('lt',test)}<select id="lp">${[['1','Part 1 (câu 1–8)'],['2','Part 2 (9–20)'],['3','Part 3 (21–35)'],['all','Cả bài (35 câu)']].map(([v,l])=>`<option value="${v}" ${v==part?'selected':''}>${l}</option>`).join('')}</select><label class="small row" style="gap:4px">Tốc độ <select id="rate"><option value="0.85">chậm</option><option value="1" selected>chuẩn</option></select></label></div>`}</div>
-  <p class="small mute">Âm thanh là giọng đọc máy của transcript gốc (giọng khác nhau cho người A/B). Dùng Chrome hoặc Edge để có giọng đọc tốt nhất. Đọc câu hỏi trước khi bấm Phát.</p></div>
-  ${segs.map(([k,ns])=>{const qs=qset(ns);return `<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${k[0]==='Q'?'Part 1 · Câu '+ns[0]:k[0]==='C'?'Part 2 · Hội thoại '+k[1]:'Part 3 · Bài nói '+k[1]}</h3><button class="pri" data-play="${k}">▶ Phát</button></div>${qs[0]&&qs[0].ctx&&k[0]!=='Q'?`<p class="small mute">${md(qs[0].ctx)}</p>`:''}${mcqHTML(qs,'L')}<div class="tx hide" data-tx="${k}"></div></div>`}).join('')}
+  <p class="small mute">${AUDIO.has('t'+test+'/Q1')?'File nghe MP3 giọng đọc tự nhiên (giọng Anh–Anh, nam/nữ khác nhau), dựng từ transcript gốc. '+(exam?'Mỗi đoạn chỉ phát 1 lần.':'Dùng thanh phát để tạm dừng, tua lại.'):'Đề này đang dùng giọng đọc của máy (file MP3 sẽ có sau). Trên điện thoại nên dùng Chrome.'} Đọc câu hỏi trước khi nghe.</p></div>
+  ${segs.map(([k,ns])=>{const qs=qset(ns);return `<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${k[0]==='Q'?'Part 1 · Câu '+ns[0]:k[0]==='C'?'Part 2 · Hội thoại '+k[1]:'Part 3 · Bài nói '+k[1]}</h3>${AUDIO.has(`t${test}/${k}`)&&!exam?'':`<button class="pri" data-play="${k}">▶ Phát</button>`}</div>${AUDIO.has(`t${test}/${k}`)&&!exam?`<audio controls preload="none" data-au src="audio/t${test}/${k}.mp3" style="width:100%;margin-top:10px"></audio>`:''}${qs[0]&&qs[0].ctx&&k[0]!=='Q'?`<p class="small mute">${md(qs[0].ctx)}</p>`:''}${mcqHTML(qs,'L')}<div class="tx hide" data-tx="${k}"></div></div>`}).join('')}
   <div class="row"><button class="red" id="lsub">Nộp bài Nghe</button><span id="lres"></span></div>`;
-  if(!exam){$('#lt').onchange=$('#lp').onchange=()=>go('listening',{test:$('#lt').value,part:$('#lp').value})}
+  if(!exam){$('#lt').onchange=$('#lp').onchange=()=>go('listening',{test:$('#lt').value,part:$('#lp').value});$('#rate').onchange=()=>document.querySelectorAll('[data-au]').forEach(a=>a.playbackRate=+$('#rate').value);document.querySelectorAll('[data-au]').forEach(a=>a.onplay=()=>{a.playbackRate=+$('#rate').value})}
   document.querySelectorAll('[data-play]').forEach(b=>b.onclick=async()=>{const k=b.dataset.play;if(exam&&played[k])return;played[k]=1;
     document.querySelectorAll('[data-play]').forEach(x=>x.disabled=true);b.textContent='… đang phát';
-    try{await speakLines(t.transcript[k]||[],exam?1:+($('#rate')?.value||1))}catch(e){b.insertAdjacentHTML('afterend',`<span class="small bad-note">${esc(e.message||'Không phát được')}</span>`)}
+    try{await (AUDIO.has(`t${test}/${k}`)?playMp3(`audio/t${test}/${k}.mp3`,exam?1:+($('#rate')?.value||1)):speakLines(t.transcript[k]||[],exam?1:+($('#rate')?.value||1)))}catch(e){b.insertAdjacentHTML('afterend',`<span class="small bad-note">${esc(e.message||'Không phát được')}</span>`)}
     document.querySelectorAll('[data-play]').forEach(x=>x.disabled=exam&&played[x.dataset.play]);b.textContent=exam?'Đã phát':'▶ Phát lại'});
   $('#lsub').onclick=()=>{stopSpeak();const allQ=segs.flatMap(([k,ns])=>qset(ns)),ans=readAns('L',allQ);const right=allQ.filter(q=>ans[q.n]===t.keyL[q.n]).length;
     const score=part==='all'?r05(right/35*10):null;
@@ -429,6 +435,7 @@ function drillSpell(list,i,score){const d=$('#drill');d.style.display='block';if
 async function boot(){lsLoad();
   cap={sample:true,tts:null,dictation:makeDictation()};
   if(cap.dictation){cap.dictation.onFinal(({text})=>DICT.final&&DICT.final(text));cap.dictation.onState(({state})=>DICT.state&&DICT.state(state))}
+  try{const am=await fetch('audio/index.json');if(am.ok)AUDIO=new Set(await am.json())}catch(e){}
   try{T=await (await fetch('data/tests.json')).json()}catch(e){$('#app').innerHTML='<p class="bad-note">Không tải được bộ đề.</p>';return}
   render();
 }
