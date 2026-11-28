@@ -543,6 +543,140 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     else rows = o.slice(1, o.length - 1);
     const sents = g.sentences.slice(0, 6);
     return '<div class="note small" style="margin:6px 0"><b>Theo s\u01B0\u1EDDn:</b>'.concat(rows.filter(Boolean).map(([a, b]) => "<div><b>".concat(esc(a), ":</b> ").concat(esc(b), "</div>")).join(""), '<div style="margin-top:6px"><b>T\u1EEB n\xEAn d\xF9ng:</b> ').concat(g.vocab.map((v) => esc(v[0])).join(" \xB7 "), '</div><details style="margin-top:4px"><summary style="cursor:pointer">C\xE2u khung</summary><ol>').concat(sents.map((x) => "<li>".concat(esc(x), "</li>")).join(""), "</ol></details></div>");
+  }, loadDict2 = function() {
+    if (WDICT) return Promise.resolve(WDICT);
+    if (!dictP) dictP = fetch("data/words.txt").then((r) => r.text()).then((t) => {
+      const m = /* @__PURE__ */ new Map();
+      t.split("\n").forEach((w, i) => {
+        if (w) m.set(w, i);
+      });
+      WDICT = m;
+      return m;
+    }).catch(() => {
+      dictP = null;
+      return null;
+    });
+    return dictP;
+  }, edits12 = function(w) {
+    const out = /* @__PURE__ */ new Set();
+    for (let i = 0; i <= w.length; i++) {
+      const a = w.slice(0, i), b = w.slice(i);
+      if (b) out.add(a + b.slice(1));
+      if (b.length > 1) out.add(a + b[1] + b[0] + b.slice(2));
+      for (const c of AB) {
+        if (b) out.add(a + c + b.slice(1));
+        out.add(a + c + b);
+      }
+    }
+    return out;
+  }, tierOf2 = function(w, x) {
+    if (x.length > w.length) return 0;
+    const sw = w.split("").sort().join(""), sx = x.split("").sort().join("");
+    if (sw === sx) return 0;
+    if (x.length < w.length) {
+      for (let i = 0; i < w.length; i++) if (w.slice(0, i) + w.slice(i + 1) === x && (w[i] === w[i - 1] || w[i] === w[i + 1])) return 0;
+      return 2;
+    }
+    return 1;
+  }, suggest2 = function(w) {
+    const r = (x) => tierOf2(w, x) * 1e7 + (WDICT.has(x) ? WDICT.get(x) : 1e6) + (x[0] === w[0] ? 0 : 5e6);
+    let c = [...edits12(w)].filter((x) => WDICT.has(x));
+    if (!c.length && w.length <= 12) {
+      const s2 = /* @__PURE__ */ new Set();
+      for (const e of edits12(w)) for (const e2 of edits12(e)) if (WDICT.has(e2)) s2.add(e2);
+      c = [...s2];
+    }
+    return c.sort((a, b) => r(a) - r(b)).slice(0, 3);
+  }, spellErrors2 = function(text) {
+    if (!WDICT) return [];
+    const seen = /* @__PURE__ */ new Map();
+    const toks = String(text).match(/[A-Za-z]+(?:['’][A-Za-z]+)?/g) || [];
+    for (const t of toks) {
+      const lw = t.toLowerCase().replace("\u2019", "'");
+      if (WDICT.has(lw)) continue;
+      const base = lw.replace(/'s$/, "");
+      if (WDICT.has(base)) continue;
+      if (seen.has(t)) continue;
+      const sug = suggest2(base);
+      if (/^[A-Z]/.test(t)) {
+        if (!sug.length) continue;
+        for (let i = 0; i < sug.length; i++) sug[i] = sug[i][0].toUpperCase() + sug[i].slice(1);
+      }
+      seen.set(t, { w: t, sug });
+    }
+    return [...seen.values()];
+  }, applyFixes2 = function(text, errs) {
+    let out = text;
+    for (const e of errs) if (e.sug[0]) out = out.replace(new RegExp("\\b" + reEsc(e.w) + "\\b", "g"), e.sug[0]);
+    return out;
+  }, spellLive2 = function(taId, boxId) {
+    const a = $("#" + taId), box = $("#" + boxId);
+    if (!a || !box) return;
+    let tm;
+    const run = async () => {
+      await loadDict2();
+      if (!WDICT) {
+        box.innerHTML = "";
+        return;
+      }
+      const errs = spellErrors2(a.value);
+      box.innerHTML = errs.length ? '<div class="bad-note small" style="margin-top:8px"><b>G\xF5 sai ch\xEDnh t\u1EA3 ('.concat(errs.length, ") \u2013 ch\u1EA1m t\u1EEB \u0111\xFAng \u0111\u1EC3 s\u1EEDa:</b> ").concat(errs.map((e, i) => '<span style="display:inline-block;margin:3px 6px 3px 0"><s>'.concat(esc(e.w), "</s> \u2192 ").concat(e.sug.length ? e.sug.map((sg) => '<button class="say" data-fx="'.concat(i, '" data-to="').concat(esc(sg), '">').concat(esc(sg), "</button>")).join(" ") : "<i>?</i>", "</span>")).join("")).concat(errs.some((e) => e.sug.length) ? ' <button class="say" data-fxall="1">S\u1EEDa t\u1EA5t c\u1EA3</button>' : "", "</div>") : "";
+      box.querySelectorAll("[data-fx]").forEach((b) => b.onclick = () => {
+        const e = errs[+b.dataset.fx];
+        a.value = a.value.replace(new RegExp("\\b" + reEsc(e.w) + "\\b", "g"), b.dataset.to);
+        a.dispatchEvent(new Event("input"));
+      });
+      const fa = box.querySelector("[data-fxall]");
+      if (fa) fa.onclick = () => {
+        a.value = applyFixes2(a.value, errs);
+        a.dispatchEvent(new Event("input"));
+      };
+    };
+    a.addEventListener("input", () => {
+      clearTimeout(tm);
+      tm = setTimeout(run, 600);
+    });
+    if (a.value) run();
+  }, modelPart2 = function(g, task, sn) {
+    if (!g) return "";
+    const P = g.model.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
+    const n = sn.toLowerCase();
+    if (n.includes("d\xE0n \xFD")) return g.outline.map(([a, b]) => a + ": " + b).join("\n");
+    if (task === 1) {
+      if (n.includes("ch\xE0o")) return P.slice(0, 2).join("\n\n");
+      if (n.includes("k\u1EBFt")) return P.slice(-2).join("\n\n");
+      return P.slice(2, -2).join("\n\n");
+    }
+    if (n.includes("m\u1EDF")) return P[0];
+    if (n.includes("k\u1EBFt")) return P[P.length - 1];
+    if (n.includes("th\xE2n b\xE0i 1")) return P[1] || "";
+    return P.slice(2, -1).join("\n\n");
+  }, stemOf2 = function(w) {
+    w = w.toLowerCase().split(/[ /]/)[0];
+    return w.length > 6 ? w.slice(0, w.length - 2) : w;
+  }, hasWord2 = function(text, w) {
+    return String(text).toLowerCase().includes(stemOf2(w));
+  }, partVocab2 = function(g, mp) {
+    if (!g) return [];
+    const m = g.vocab.filter((v) => hasWord2(mp, v[0]));
+    return m.length ? m : g.vocab.slice(0, 4);
+  }, starters2 = function(mp) {
+    return (mp.match(/[^.!?\n]+[.!?,]*/g) || []).map((x) => x.trim()).filter(Boolean).map((x) => {
+      const w = x.split(/\s+/);
+      return w.length > 7 ? w.slice(0, 4).join(" ") + " \u2026" : x;
+    });
+  }, partPanel2 = function(g, task, sn, mp) {
+    if (!g) return "";
+    const o = g.outline, n = sn.toLowerCase();
+    let rows = [];
+    if (n.includes("d\xE0n \xFD")) return '<div class="note small" style="margin:6px 0"><b>D\u1EA1ng \u0111\u1EC1:</b> '.concat(esc(g.type), '<div style="margin-top:6px"><b>Ghi ng\u1EAFn \xFD cho t\u1EEBng \u0111o\u1EA1n theo khung:</b></div>').concat(o.map(([a, b]) => "<div>\u2022 <b>".concat(esc(a), "</b> \u2013 g\u1EE3i \xFD: ").concat(esc(b), "</div>")).join(""), "</div>");
+    if (n.includes("m\u1EDF") || n.includes("ch\xE0o")) rows = [o[0]];
+    else if (n.includes("k\u1EBFt")) rows = [o[o.length - 1]];
+    else if (n.includes("th\xE2n b\xE0i 1")) rows = [o[1]];
+    else if (n.includes("th\xE2n b\xE0i 2")) rows = o.slice(2, o.length - 1);
+    else rows = o.slice(1, o.length - 1);
+    const vs = partVocab2(g, mp);
+    return '<div class="note small" style="margin:6px 0"><div><b>\xDD c\u1EA7n vi\u1EBFt:</b> '.concat(rows.filter(Boolean).map(([a, b]) => esc(b)).join(" \xB7 "), '</div>\n   <div style="margin-top:8px"><b>T\u1EEB d\xF9ng cho \u0111o\u1EA1n n\xE0y:</b></div><div class="chips">').concat(vs.map((v) => '<span class="chip">'.concat(esc(v[0]), ' <span style="font-weight:400">= ').concat(esc(v[2]), "</span></span>")).join(""), '</div>\n   <div style="margin-top:6px"><b>\u0110\u1EA7u c\xE2u khung (vi\u1EBFt ti\u1EBFp b\u1EB1ng \xFD c\u1EE7a anh):</b></div><ol style="margin:4px 0 0">').concat(starters2(mp).map((x) => "<li>".concat(esc(x), "</li>")).join(""), "</ol></div>");
   }, writingView2 = function({ test, task, mode, exam, onDone, draft }) {
     const t = T[test - 1], prompt = task === 1 ? t.writing.task1 : t.writing.task2, min = task === 1 ? 120 : 250, steps = STEPS[task];
     let st = 0;
@@ -628,6 +762,10 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       $("#wleft").innerHTML = '<div class="row" style="justify-content:space-between"><h2 style="margin:0">'.concat(exam ? "B\xE0i l\xE0m" : "\u2461 Vi\u1EBFt theo s\u01B0\u1EDDn", "</h2>").concat(exam ? "" : '<span class="timer" id="wtm"></span>', "</div>").concat(exam ? "" : outlineChecklist2(test, task)).concat(ta("wtxt", task === 1 ? "Dear \u2026," : "In recent years, \u2026", draft || ""), '<div class="row" style="margin-top:10px"><button class="red" id="wsub">').concat(exam ? "Xong Task n\xE0y" : "N\u1ED9p & ch\u1EA5m", "</button>").concat(exam ? "" : '<button id="wnew">L\xE0m l\u1EA1i t\u1EEB \u0111\u1EA7u</button>', "</div>");
       bindWC("wtxt", min);
       if (!exam) {
+        $("#wtxt").parentElement.querySelector(".row").insertAdjacentHTML("afterend", '<div id="wspell"></div>');
+        spellLive2("wtxt", "wspell");
+      }
+      if (!exam) {
         const dk = "W-t".concat(test, "-p").concat(task);
         store.drafts = store.drafts || {};
         const a = $("#wtxt");
@@ -677,15 +815,27 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       };
       return;
     }
+    const g0 = G && G.w[test] && G.w[test]["w" + task];
     const drawStep = () => {
       const done = st >= steps.length;
-      $("#wleft").innerHTML = '<div class="steps">'.concat(steps.map(([n], i) => '<span class="'.concat(i === st ? "on" : i < st ? "done" : "", '">').concat(i + 1, ". ").concat(n, "</span>")).join(""), '<span class="').concat(done ? "on" : "", '">Gh\xE9p & ch\u1EA5m</span></div>\n    ').concat(parts.length ? '<div class="prompt small" style="margin-top:12px">'.concat(parts.map((p, i) => "<p><b>".concat(steps[i][0], ":</b> ").concat(esc(p), "</p>")).join(""), "</div>") : "", "\n    ").concat(done ? '<h3 style="margin-top:14px">B\xE0i gh\xE9p (s\u1EEDa l\u1EA7n cu\u1ED1i r\u1ED3i ch\u1EA5m)</h3>'.concat(ta("wtxt", "", parts.slice(1).join("\n\n")), '<div class="row" style="margin-top:10px"><button class="red" id="wsub">Ch\u1EA5m c\u1EA3 b\xE0i</button></div>') : '<h3 style="margin-top:14px">'.concat(steps[st][0], '</h3><p class="small mute">').concat(esc(steps[st][1]), "</p>").concat(stepHint2(test, task, steps[st][0])).concat(ta("wpart", ""), '<div class="row" style="margin-top:10px"><button class="pri" id="wchk">Ch\u1EA5m ph\u1EA7n n\xE0y</button><button id="wnext">Ph\u1EA7n ti\u1EBFp \u2192</button></div>'));
+      const sn = done ? "" : steps[st][0];
+      const mp = done ? "" : modelPart2(g0, task, sn);
+      $("#wleft").innerHTML = '<div class="steps">'.concat(steps.map(([n], i) => '<span class="'.concat(i === st ? "on" : i < st ? "done" : "", '" data-st="').concat(i, '" style="cursor:pointer">').concat(i + 1, ". ").concat(n, "</span>")).join(""), '<span class="').concat(done ? "on" : "", '">Gh\xE9p & ch\u1EA5m</span></div>\n    ').concat(done ? '<h3 style="margin-top:14px">B\xE0i ho\xE0n ch\u1EC9nh (gh\xE9p t\u1EEB c\xE1c \u0111o\u1EA1n) \u2013 s\u1EEDa l\u1EA7n cu\u1ED1i r\u1ED3i ch\u1EA5m</h3>'.concat(ta("wtxt", "", parts.slice(1).filter(Boolean).join("\n\n")), '<div id="wspell"></div><div class="row" style="margin-top:10px"><button class="red" id="wsub">Ch\u1EA5m c\u1EA3 b\xE0i</button></div>') : '<h3 style="margin-top:14px">'.concat(st + 1, ". ").concat(sn, "</h3>").concat(partPanel2(g0, task, sn, mp)).concat(ta("wpart", sn === "D\xE0n \xFD" ? "Ghi \xFD b\u1EB1ng ti\u1EBFng Anh ho\u1EB7c ti\u1EBFng Vi\u1EC7t\u2026" : "Vi\u1EBFt \u0111o\u1EA1n c\u1EE7a anh \u1EDF \u0111\xE2y\u2026", parts[st] || ""), '<div id="wspell"></div>\n      <div class="row" style="margin-top:10px"><button class="pri" id="wcmp">\u2714 Ki\u1EC3m tra & \u0111\u1ED1i chi\u1EBFu m\u1EABu</button><button id="wchk">\u2728 Claude s\u1EEDa ng\u1EEF ph\xE1p</button><button id="wnext">').concat(st === steps.length - 1 ? "Gh\xE9p b\xE0i \u2192" : "Tab ti\u1EBFp \u2192", "</button></div>"));
+      document.querySelectorAll("[data-st]").forEach((x) => x.onclick = () => {
+        const a = $("#wpart");
+        if (a) parts[st] = a.value.trim();
+        st = +x.dataset.st;
+        drawStep();
+      });
       if (done) {
         bindWC("wtxt", min);
+        spellLive2("wtxt", "wspell");
         $("#wsub").onclick = () => full($("#wtxt").value, $("#wsub"));
         return;
       }
       bindWC("wpart", 0);
+      spellLive2("wpart", "wspell");
+      $("#wright").innerHTML = '<h2>\u0110\u1ED1i chi\u1EBFu</h2><p class="mute">Vi\u1EBFt xong tab <b>'.concat(esc(sn), "</b>, b\u1EA5m <b>\u2714 Ki\u1EC3m tra & \u0111\u1ED1i chi\u1EBFu m\u1EABu</b>: s\u1EEDa ch\xEDnh t\u1EA3, xem \u0111\xE3 d\xF9ng \u0111\u1EE7 t\u1EEB ch\u01B0a, so v\u1EDBi \u0111o\u1EA1n m\u1EABu chu\u1EA9n v\xE0 nh\u1EADn \u0111o\u1EA1n ho\xE0n thi\u1EC7n.</p>");
       $("#wnext").onclick = () => {
         const v = $("#wpart").value.trim();
         if (!v) {
@@ -694,8 +844,32 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         }
         parts[st] = v;
         st++;
-        $("#wright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="mute">\u0110\xE3 ghi ph\u1EA7n tr\u01B0\u1EDBc. Vi\u1EBFt ph\u1EA7n ti\u1EBFp r\u1ED3i b\u1EA5m "Ch\u1EA5m ph\u1EA7n n\xE0y".</p>';
         drawStep();
+        scrollTo(0, $("#wleft").offsetTop - 80);
+      };
+      $("#wcmp").onclick = async () => {
+        const v = $("#wpart").value.trim();
+        if (!v) {
+          $("#wpart").focus();
+          return;
+        }
+        await loadDict2();
+        const errs = spellErrors2(v), fixed = applyFixes2(v, errs);
+        const vs = partVocab2(g0, mp);
+        const used = vs.filter((x) => hasWord2(fixed, x[0])), miss = vs.filter((x) => !hasWord2(fixed, x[0]));
+        const wn = words(fixed), mn = words(mp), isO = sn === "D\xE0n \xFD";
+        $("#wright").innerHTML = "<h2>\u0110\u1ED1i chi\u1EBFu: ".concat(esc(sn), "</h2>\n       <h3>1. Ch\xEDnh t\u1EA3</h3>").concat(errs.length ? errs.map((e) => '<div class="fix"><s>'.concat(esc(e.w), '</s> \u2192 <span class="rt">').concat(esc(e.sug[0] || "?"), "</span>").concat(e.sug.length > 1 ? ' <span class="small mute">(ho\u1EB7c '.concat(e.sug.slice(1, 3).map(esc).join(", "), ")</span>") : "", "</div>")).join("") : '<p><span class="tag g">Kh\xF4ng c\xF3 l\u1ED7i ch\xEDnh t\u1EA3</span></p>', "\n       ").concat(isO ? "" : "<h3>2. T\u1EEB v\u1EF1ng c\u1EE7a \u0111o\u1EA1n n\xE0y</h3><p>".concat(used.map((x) => '<span class="tag g" style="margin:2px">\u2713 '.concat(esc(x[0]), "</span>")).join("")).concat(miss.map((x) => '<span class="tag r" style="margin:2px">\u2717 '.concat(esc(x[0]), ' <span style="font-weight:400">(').concat(esc(x[2]), ")</span></span>")).join(""), "</p>").concat(miss.length ? '<p class="small mute">Th\u1EED \u0111\u01B0a 1\u20132 t\u1EEB \u2717 v\xE0o \u0111o\u1EA1n \u0111\u1EC3 ghi \u0111i\u1EC3m t\u1EEB v\u1EF1ng.</p>' : "", "\n       <h3>3. \u0110\u1ED9 d\xE0i</h3><p>").concat(wn, " t\u1EEB / \u0111o\u1EA1n m\u1EABu ").concat(mn, " t\u1EEB ").concat(wn < mn * 0.7 ? '<span class="tag r">h\u01A1i ng\u1EAFn \u2013 th\xEAm 1 c\xE2u v\xED d\u1EE5 ho\u1EB7c k\u1EBFt qu\u1EA3</span>' : '<span class="tag g">\u0111\u1EE7</span>', "</p>"), "\n       <h3>").concat(isO ? "2. D\xE0n \xFD m\u1EABu" : "4. \u0110o\u1EA1n m\u1EABu chu\u1EA9n", '</h3><div class="prompt">').concat(paras(mp), "</div>\n       <h3>").concat(isO ? "3" : "5", '. \u0110o\u1EA1n ho\xE0n thi\u1EC7n c\u1EE7a anh</h3><div class="prompt">').concat(paras(fixed), '</div><p class="small mute">\u0110\xE3 s\u1EEDa ch\xEDnh t\u1EA3. B\u1EA5m \u2728 Claude s\u1EEDa ng\u1EEF ph\xE1p \u0111\u1EC3 s\u1EEDa c\u1EA3 ng\u1EEF ph\xE1p v\xE0 c\xE1ch di\u1EC5n \u0111\u1EA1t.</p>\n       <div class="row" style="margin-top:10px"><button class="pri" id="wusefix">D\xF9ng \u0111o\u1EA1n ho\xE0n thi\u1EC7n</button>').concat(errs.length ? '<button id="wsavesp">L\u01B0u l\u1ED7i ch\xEDnh t\u1EA3 v\xE0o S\u1ED5 l\u1ED7i</button>' : "", "</div>");
+        $("#wusefix").onclick = () => {
+          $("#wpart").value = fixed;
+          $("#wpart").dispatchEvent(new Event("input"));
+          $("#wusefix").textContent = "\u0110\xE3 d\xF9ng \u2713";
+        };
+        const sv = $("#wsavesp");
+        if (sv) sv.onclick = () => {
+          const n = addErrors2(errs.map((e) => ({ wrong: e.w, right: e.sug[0] || "", type: "ch\xEDnh t\u1EA3", why: "G\xF5 sai ch\xEDnh t\u1EA3" })), "W", "T".concat(test, " Task ").concat(task, " \xB7 ").concat(sn));
+          sv.textContent = "\u0110\xE3 l\u01B0u ".concat(n);
+          sv.disabled = true;
+        };
       };
       $("#wchk").onclick = async () => {
         const v = $("#wpart").value.trim();
@@ -705,19 +879,20 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         }
         const b = $("#wchk");
         b.disabled = true;
-        $("#wright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="loading">\u0110ang ch\u1EA5m ph\u1EA7n n\xE0y\u2026</p>';
+        $("#wright").innerHTML = '<h2>B\xFAt \u0111\u1ECF</h2><p class="loading">Claude \u0111ang s\u1EEDa \u0111o\u1EA1n n\xE0y\u2026</p>';
         try {
-          const g = await askJSON("You are a VSTEP writing tutor. ".concat(W_RULES, "\nThe candidate is building a Task ").concat(task, " response section by section. PROMPT:\n").concat(prompt.replace(/\*/g, ""), "\n\nSECTIONS ALREADY WRITTEN:\n").concat(parts.map((p, i) => steps[i][0] + ": " + p).join("\n") || "(none)", "\n\nCURRENT SECTION: ").concat(steps[st][0], " \u2014 goal: ").concat(steps[st][1], '\nTEXT:\n"""').concat(v, '"""\n\nJudge only the current section (for "D\xE0n \xFD": does it identify the right essay/letter type and cover every part of the prompt?). Return JSON only, Vietnamese feedback:\n{"verdict":"\u0110\u1EA1t" or "C\u1EA7n s\u1EEDa","comment":"2\u20133 c\xE2u ti\u1EBFng Vi\u1EC7t, c\u1EE5 th\u1EC3","errors":[{"wrong":"exact substring","right":"corrected","type":"ng\u1EEF ph\xE1p|ch\xEDnh t\u1EA3|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|m\u1EA1ch l\u1EA1c|\u0111\xE1p \u1EE9ng \u0111\u1EC1","why":"ti\u1EBFng Vi\u1EC7t"}],"improved":"this section rewritten at solid B2 (for an outline: a corrected outline)","next_tip":"1 c\xE2u g\u1EE3i \xFD c\u1EE5 th\u1EC3 cho ph\u1EA7n ti\u1EBFp theo"}'));
-          $("#wright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>" + gradeBlock2(g, false) + '<div class="row" style="margin-top:12px"><button id="wsave">L\u01B0u l\u1ED7i</button><button id="wuse">D\xF9ng b\u1EA3n \u0111\xE3 s\u1EEDa</button></div>';
+          const g = await askJSON("You are a VSTEP writing tutor. ".concat(W_RULES, "\nThe candidate is building a Task ").concat(task, " response section by section. PROMPT:\n").concat(prompt.replace(/\*/g, ""), "\n\nSECTIONS ALREADY WRITTEN:\n").concat(parts.slice(0, st).map((p, i) => steps[i][0] + ": " + p).join("\n") || "(none)", "\n\nCURRENT SECTION: ").concat(sn, " \u2014 goal: ").concat(steps[st][1], "\nREFERENCE MODEL FOR THIS SECTION (simple B2):\n").concat(mp, "\n\nCANDIDATE TEXT:\n<<<").concat(v, '>>>\n\nJudge only the current section against the goal and the reference. Keep the candidate\'s own ideas. Return JSON only, Vietnamese feedback:\n{"verdict":"\u0110\u1EA1t" or "C\u1EA7n s\u1EEDa","comment":"2\u20133 c\xE2u ti\u1EBFng Vi\u1EC7t, c\u1EE5 th\u1EC3","errors":[{"wrong":"exact substring","right":"corrected","type":"ng\u1EEF ph\xE1p|ch\xEDnh t\u1EA3|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|m\u1EA1ch l\u1EA1c|\u0111\xE1p \u1EE9ng \u0111\u1EC1","why":"ti\u1EBFng Vi\u1EC7t"}],"improved":"the candidate\'s section corrected and completed at solid B2, same ideas, similar length to the reference","next_tip":"1 c\xE2u g\u1EE3i \xFD cho tab ti\u1EBFp theo"}'));
+          $("#wright").innerHTML = "<h2>B\xFAt \u0111\u1ECF</h2>" + gradeBlock2(g, false) + (g.improved ? '<h3>\u0110o\u1EA1n ho\xE0n thi\u1EC7n</h3><div class="prompt">'.concat(paras(g.improved), "</div>") : "") + '<div class="row" style="margin-top:12px"><button class="pri" id="wuse">D\xF9ng \u0111o\u1EA1n ho\xE0n thi\u1EC7n</button><button id="wsave">L\u01B0u l\u1ED7i</button></div>';
           $("#wsave").onclick = () => {
-            const n = addErrors2(g.errors, "W", "T".concat(test, " Task ").concat(task, " \xB7 ").concat(steps[st][0]));
+            const n = addErrors2(g.errors, "W", "T".concat(test, " Task ").concat(task, " \xB7 ").concat(sn));
             $("#wsave").textContent = "\u0110\xE3 l\u01B0u ".concat(n);
             $("#wsave").disabled = true;
           };
           $("#wuse").onclick = () => {
             if (g.improved) {
               $("#wpart").value = g.improved;
-              $("#wpart").oninput();
+              $("#wpart").dispatchEvent(new Event("input"));
+              $("#wuse").textContent = "\u0110\xE3 d\xF9ng \u2713";
             }
           };
         } catch (e) {
@@ -928,7 +1103,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       if (ev.key === "Enter") chk();
     };
   };
-  var timer = timer2, lsLoad = lsLoad2, persist = persist2, addAttempt = addAttempt2, addErrors = addErrors2, errBox = errBox2, makeDictation = makeDictation2, voiceFor = voiceFor2, stopSpeak = stopSpeak2, go = go2, linkBtn = linkBtn2, render = render2, Home = Home2, mcqHTML = mcqHTML2, readAns = readAns2, bindWhy = bindWhy2, guideBox = guideBox2, rqType = rqType2, lqType = lqType2, topicSent = topicSent2, vocabFor = vocabFor2, topicLinks = topicLinks2, Topics = Topics2, Listening = Listening2, listeningView = listeningView2, Reading = Reading2, readingView = readingView2, Writing = Writing2, gradeBlock = gradeBlock2, writeGuide = writeGuide2, outlineChecklist = outlineChecklist2, stepHint = stepHint2, writingView = writingView2, Speaking = Speaking2, speakGuide = speakGuide2, speakingView = speakingView2, speakBlock = speakBlock2, Mock = Mock2, gate = gate2, Errors = Errors2, drillSent = drillSent2, drillSpell = drillSpell2;
+  var timer = timer2, lsLoad = lsLoad2, persist = persist2, addAttempt = addAttempt2, addErrors = addErrors2, errBox = errBox2, makeDictation = makeDictation2, voiceFor = voiceFor2, stopSpeak = stopSpeak2, go = go2, linkBtn = linkBtn2, render = render2, Home = Home2, mcqHTML = mcqHTML2, readAns = readAns2, bindWhy = bindWhy2, guideBox = guideBox2, rqType = rqType2, lqType = lqType2, topicSent = topicSent2, vocabFor = vocabFor2, topicLinks = topicLinks2, Topics = Topics2, Listening = Listening2, listeningView = listeningView2, Reading = Reading2, readingView = readingView2, Writing = Writing2, gradeBlock = gradeBlock2, writeGuide = writeGuide2, outlineChecklist = outlineChecklist2, stepHint = stepHint2, loadDict = loadDict2, edits1 = edits12, tierOf = tierOf2, suggest = suggest2, spellErrors = spellErrors2, applyFixes = applyFixes2, spellLive = spellLive2, modelPart = modelPart2, stemOf = stemOf2, hasWord = hasWord2, partVocab = partVocab2, starters = starters2, partPanel = partPanel2, writingView = writingView2, Speaking = Speaking2, speakGuide = speakGuide2, speakingView = speakingView2, speakBlock = speakBlock2, Mock = Mock2, gate = gate2, Errors = Errors2, drillSent = drillSent2, drillSpell = drillSpell2;
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s != null ? s : "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const md = (s) => esc(s).replace(/\*\*\s*\*\*/g, "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(?!\s)(.+?)\*/g, "<i>$1</i>");
@@ -1128,6 +1303,9 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     e.target.textContent = h ? "\u{1F440} Hi\u1EC7n ngh\u0129a" : "\u{1F648} Che ngh\u0129a \u0111\u1EC3 t\u1EF1 ki\u1EC3m tra";
     t.querySelectorAll(".vm").forEach((c) => c.style.filter = h ? "blur(6px)" : "");
   });
+  let WDICT = null, dictP = null;
+  const AB = "abcdefghijklmnopqrstuvwxyz";
+  const reEsc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   async function gradeSpeaking(part, qText, text) {
     return askJSON("You are a VSTEP speaking examiner. Criteria (0\u201310 each): Grammar, Vocabulary, Discourse management (answering fully, developing ideas with reasons and examples, organization), plus a Length/fluency estimate from the amount said (Part 1 \u22483 min, Part 2 \u22482 min, Part 3 \u22484 min incl. follow-ups). Pronunciation cannot be judged from text: ignore it. Calibrate: B1 4.0\u20135.5, B2 6.0\u20138.0. The candidate scored 5.5 before and aims for 6.0. This is an automatic speech-to-text transcript: ignore punctuation and obvious recognition slips.\nPART ".concat(part, " QUESTIONS:\n").concat(qText, "\n\nTRANSCRIPT (").concat(words(text), ' words):\n"""').concat(text, '"""\n\nReturn JSON only, Vietnamese feedback: {"gra":n,"voc":n,"dis":n,"len":n,"band":n (mean rounded to 0.5),"summary":"2\u20133 c\xE2u","priorities":["3 vi\u1EC7c c\u1EE5 th\u1EC3 \u0111\u1EC3 l\xEAn 6.0"],"errors":[{"wrong":"exact words","right":"corrected","type":"ng\u1EEF ph\xE1p|t\u1EEB v\u1EF1ng|c\u1EA5u tr\xFAc c\xE2u|ph\xE1t tri\u1EC3n \xFD","why":"ti\u1EBFng Vi\u1EC7t"}] (up to 10),"better":"a model answer in English at solid B2 using the candidate\'s own ideas, about 30% longer"}'));
   }
