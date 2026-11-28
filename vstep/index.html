@@ -8,6 +8,10 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="VSTEP B4">
 <link rel="manifest" href="manifest.json">
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 <title>VSTEP Bậc 4 – Phòng luyện</title>
@@ -101,6 +105,8 @@ textarea{width:100%;min-height:220px;font:17px/1.7 "Be Vietnam Pro",sans-serif;p
 table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{font-size:14px;color:var(--mute)}
 td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .hide{display:none!important}
+#login{position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px}
+#login .lbox{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 22px;box-shadow:0 10px 40px rgba(0,0,0,.08)}
 .guide{border:2px solid var(--blue);background:var(--card)}.guide>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;font-weight:700;font-size:18px}
 .guide>summary::-webkit-details-marker{display:none}.guide>summary:after{content:"Thu gọn ▲";font-size:13px;color:var(--blue);font-weight:600;flex:none}.guide:not([open])>summary:after{content:"Mở hướng dẫn ▼"}
 .gsteps{counter-reset:g;list-style:none;padding:0;margin:10px 0}.gsteps li{counter-increment:g;position:relative;padding:8px 0 8px 40px;border-top:1px solid var(--line)}
@@ -525,11 +531,15 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   }, writeGuide2 = function(test, task) {
     const g = G && G.w[test] && G.w[test]["w" + task];
     if (!g) return "";
-    return '<div class="card learn" style="border:2px solid var(--red)"><h2 style="margin-bottom:4px">\u2460 H\u1ECDc thu\u1ED9c tr\u01B0\u1EDBc khi vi\u1EBFt <span class="small mute" style="font-weight:500">(5\u201310 ph\xFAt)</span></h2><p class="mute" style="margin-top:0">D\u1EA1ng \u0111\u1EC1: <b>'.concat(esc(g.type), '</b>. H\u1ECDc xong 3 kh\u1ED1i d\u01B0\u1EDBi, r\u1ED3i vi\u1EBFt theo s\u01B0\u1EDDn \u1EDF \xF4 \u2461 \u2013 m\u1ED7i \u0111o\u1EA1n \u0111\xFAng 1 d\xF2ng s\u01B0\u1EDDn.</p>\n  <h3>A. S\u01B0\u1EDDn b\xE0i</h3><table class="stack"><thead><tr><th>\u0110o\u1EA1n</th><th>Vi\u1EBFt \xFD g\xEC</th></tr></thead><tbody>').concat(g.outline.map(([a, b]) => "<tr><td><b>".concat(esc(a), "</b></td><td>").concat(esc(b), "</td></tr>")).join(""), '</tbody></table>\n  <div class="row" style="justify-content:space-between;margin-top:16px"><h3 style="margin:0">B. T\u1EEB v\u1EF1ng ph\u1EA3i thu\u1ED9c</h3><button class="small" id="vhide" style="min-height:38px">\u{1F648} Che ngh\u0129a \u0111\u1EC3 t\u1EF1 ki\u1EC3m tra</button></div>\n  <table class="stack" id="vtab"><thead><tr><th>T\u1EEB</th><th>Lo\u1EA1i</th><th>Ngh\u0129a</th><th>H\u1ECD t\u1EEB (\u0111\u1ED5i lo\u1EA1i t\u1EEB)</th></tr></thead><tbody>').concat(g.vocab.map(([w, pos, vi, f]) => "<tr><td><b>".concat(esc(w), "</b> ").concat(sayBtn(w), "</td><td>").concat(esc(pos), '</td><td class="vm">').concat(esc(vi), '</td><td class="mute">').concat(esc(f), "</td></tr>")).join(""), '</tbody></table>\n  <h3 style="margin-top:16px">C. C\xE2u khung \u2013 thu\u1ED9c l\xF2ng, ch\u1EC9 thay \xFD</h3><ol>').concat(g.sentences.map((x) => '<li style="margin:6px 0">'.concat(esc(x), " ").concat(sayBtn(x), "</li>")).join(""), '</ol>\n  <details style="margin:12px 0 0"><summary style="cursor:pointer;min-height:40px;font-weight:700">Xem b\xE0i m\u1EABu \u0111\u01A1n gi\u1EA3n \u0111\u1EC3 c\xF3 \u0111i\u1EC3m (').concat(words(g.model), ' t\u1EEB)</summary><div class="prompt">').concat(paras(g.model), '</div><p class="small mute">\u0110\u1ECDc 1 l\u1EA7n, g\u1EA5p l\u1EA1i, r\u1ED3i t\u1EF1 vi\u1EBFt. B\xE0i m\u1EABu n\xE2ng cao c\u1EE7a b\u1ED9 \u0111\u1EC1 \u1EDF c\u1ED9t "B\xFAt \u0111\u1ECF".</p></details></div>');
+    return '<div class="card learn" style="border:2px solid var(--red)"><h2 style="margin-bottom:4px">\u2460 H\u1ECDc thu\u1ED9c tr\u01B0\u1EDBc khi vi\u1EBFt <span class="small mute" style="font-weight:500">(5\u201310 ph\xFAt)</span></h2><p class="mute" style="margin-top:0">D\u1EA1ng \u0111\u1EC1: <b>'.concat(esc(g.type), '</b>. H\u1ECDc xong 3 kh\u1ED1i d\u01B0\u1EDBi, r\u1ED3i vi\u1EBFt theo s\u01B0\u1EDDn \u1EDF \xF4 \u2461 \u2013 m\u1ED7i \u0111o\u1EA1n \u0111\xFAng 1 d\xF2ng s\u01B0\u1EDDn.</p>\n  <h3>A. S\u01B0\u1EDDn b\xE0i <span class="small mute" style="font-weight:500">(ch\u1EEF \u0111\u1EADm = t\u1EEB v\u1EF1ng ph\u1EA3i d\xF9ng)</span></h3><table class="stack"><thead><tr><th>Paragraph</th><th>Write this</th></tr></thead><tbody>').concat(g.outline.map(([a, b]) => "<tr><td><b>".concat(esc(a), "</b></td><td>").concat(md(b), "</td></tr>")).join(""), "</tbody></table>").concat(viErrBox2("vi\u1EBFt"), '\n  <div class="row" style="justify-content:space-between;margin-top:16px"><h3 style="margin:0">B. T\u1EEB v\u1EF1ng ph\u1EA3i thu\u1ED9c</h3><button class="small" id="vhide" style="min-height:38px">\u{1F648} Che ngh\u0129a \u0111\u1EC3 t\u1EF1 ki\u1EC3m tra</button></div>\n  <table class="stack" id="vtab"><thead><tr><th>T\u1EEB</th><th>Lo\u1EA1i</th><th>Ngh\u0129a</th><th>H\u1ECD t\u1EEB (\u0111\u1ED5i lo\u1EA1i t\u1EEB)</th></tr></thead><tbody>').concat(g.vocab.map(([w, pos, vi, f]) => "<tr><td><b>".concat(esc(w), "</b> ").concat(sayBtn(w), "</td><td>").concat(esc(pos), '</td><td class="vm">').concat(esc(vi), '</td><td class="mute">').concat(esc(f), "</td></tr>")).join(""), '</tbody></table>\n  <h3 style="margin-top:16px">C. C\xE2u khung \u2013 thu\u1ED9c l\xF2ng, ch\u1EC9 thay \xFD</h3><ol>').concat(g.sentences.map((x) => '<li style="margin:6px 0">'.concat(esc(x), " ").concat(sayBtn(x), "</li>")).join(""), '</ol>\n  <details style="margin:12px 0 0"><summary style="cursor:pointer;min-height:40px;font-weight:700">Xem b\xE0i m\u1EABu \u0111\u01A1n gi\u1EA3n \u0111\u1EC3 c\xF3 \u0111i\u1EC3m (').concat(words(g.model), ' t\u1EEB)</summary><div class="prompt">').concat(paras(g.model), '</div><p class="small mute">\u0110\u1ECDc 1 l\u1EA7n, g\u1EA5p l\u1EA1i, r\u1ED3i t\u1EF1 vi\u1EBFt. B\xE0i m\u1EABu n\xE2ng cao c\u1EE7a b\u1ED9 \u0111\u1EC1 \u1EDF c\u1ED9t "B\xFAt \u0111\u1ECF".</p></details></div>');
+  }, viErrBox2 = function(what) {
+    const E = G && G.viErrors;
+    if (!E) return "";
+    return '<details style="margin:12px 0"><summary style="cursor:pointer;min-height:40px;font-weight:700">\u26A0\uFE0F '.concat(E.length, " l\u1ED7i ng\u01B0\u1EDDi Vi\u1EC7t hay m\u1EAFc khi ").concat(what, ' \u2013 \u0111\u1ECDc 1 l\u1EA7n tr\u01B0\u1EDBc</summary><table class="stack"><thead><tr><th>Sai (d\u1ECBch ki\u1EC3u Vi\u1EC7t)</th><th>\u0110\xFAng (ng\u01B0\u1EDDi M\u1EF9 n\xF3i)</th></tr></thead><tbody>').concat(E.map(([a, b]) => '<tr><td><s style="color:var(--red)">'.concat(esc(a), "</s></td><td><b>").concat(esc(b), "</b> ").concat(sayBtn(b), "</td></tr>")).join(""), "</tbody></table></details>");
   }, outlineChecklist2 = function(test, task) {
     const g = G && G.w[test] && G.w[test]["w" + task];
     if (!g) return "";
-    return '<div class="note small" style="margin:8px 0"><b>S\u01B0\u1EDDn \u2013 vi\u1EBFt l\u1EA7n l\u01B0\u1EE3t, xong \u0111o\u1EA1n n\xE0o t\xEDch \u0111o\u1EA1n \u0111\xF3:</b>'.concat(g.outline.map(([a, b], i) => '<label style="display:flex;gap:8px;align-items:flex-start;margin-top:6px;cursor:pointer"><input type="checkbox" style="margin-top:4px;flex:none;width:18px;height:18px"><span><b>'.concat(esc(a), ":</b> ").concat(esc(b), "</span></label>")).join(""), "</div>");
+    return '<div class="note small" style="margin:8px 0"><b>S\u01B0\u1EDDn \u2013 vi\u1EBFt l\u1EA7n l\u01B0\u1EE3t, xong \u0111o\u1EA1n n\xE0o t\xEDch \u0111o\u1EA1n \u0111\xF3:</b>'.concat(g.outline.map(([a, b], i) => '<label style="display:flex;gap:8px;align-items:flex-start;margin-top:6px;cursor:pointer"><input type="checkbox" style="margin-top:4px;flex:none;width:18px;height:18px"><span><b>'.concat(esc(a), ":</b> ").concat(md(b), "</span></label>")).join(""), "</div>");
   }, stepHint2 = function(test, task, stepName) {
     const g = G && G.w[test] && G.w[test]["w" + task];
     if (!g) return "";
@@ -641,7 +651,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (!g) return "";
     const P = g.model.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
     const n = sn.toLowerCase();
-    if (n.includes("d\xE0n \xFD")) return g.outline.map(([a, b]) => a + ": " + b).join("\n");
+    if (n.includes("d\xE0n \xFD")) return g.outline.map(([a, b]) => a + ": " + b.replace(/\*\*/g, "")).join("\n");
     if (task === 1) {
       if (n.includes("ch\xE0o")) return P.slice(0, 2).join("\n\n");
       if (n.includes("k\u1EBFt")) return P.slice(-2).join("\n\n");
@@ -669,14 +679,14 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (!g) return "";
     const o = g.outline, n = sn.toLowerCase();
     let rows = [];
-    if (n.includes("d\xE0n \xFD")) return '<div class="note small" style="margin:6px 0"><b>D\u1EA1ng \u0111\u1EC1:</b> '.concat(esc(g.type), '<div style="margin-top:6px"><b>Ghi ng\u1EAFn \xFD cho t\u1EEBng \u0111o\u1EA1n theo khung:</b></div>').concat(o.map(([a, b]) => "<div>\u2022 <b>".concat(esc(a), "</b> \u2013 g\u1EE3i \xFD: ").concat(esc(b), "</div>")).join(""), "</div>");
+    if (n.includes("d\xE0n \xFD")) return '<div class="note small" style="margin:6px 0"><b>D\u1EA1ng \u0111\u1EC1:</b> '.concat(esc(g.type), '<div style="margin-top:6px"><b>Ghi ng\u1EAFn \xFD cho t\u1EEBng \u0111o\u1EA1n theo khung:</b></div>').concat(o.map(([a, b]) => "<div>\u2022 <b>".concat(esc(a), "</b>: ").concat(md(b), "</div>")).join(""), "</div>");
     if (n.includes("m\u1EDF") || n.includes("ch\xE0o")) rows = [o[0]];
     else if (n.includes("k\u1EBFt")) rows = [o[o.length - 1]];
     else if (n.includes("th\xE2n b\xE0i 1")) rows = [o[1]];
     else if (n.includes("th\xE2n b\xE0i 2")) rows = o.slice(2, o.length - 1);
     else rows = o.slice(1, o.length - 1);
     const vs = partVocab2(g, mp);
-    return '<div class="note small" style="margin:6px 0"><div><b>\xDD c\u1EA7n vi\u1EBFt:</b> '.concat(rows.filter(Boolean).map(([a, b]) => esc(b)).join(" \xB7 "), '</div>\n   <div style="margin-top:8px"><b>T\u1EEB d\xF9ng cho \u0111o\u1EA1n n\xE0y:</b></div><div class="chips">').concat(vs.map((v) => '<span class="chip">'.concat(esc(v[0]), ' <span style="font-weight:400">= ').concat(esc(v[2]), "</span></span>")).join(""), '</div>\n   <div style="margin-top:6px"><b>\u0110\u1EA7u c\xE2u khung (vi\u1EBFt ti\u1EBFp b\u1EB1ng \xFD c\u1EE7a anh):</b></div><ol style="margin:4px 0 0">').concat(starters2(mp).map((x) => "<li>".concat(esc(x), "</li>")).join(""), "</ol></div>");
+    return '<div class="note small" style="margin:6px 0"><div><b>Write this:</b> '.concat(rows.filter(Boolean).map(([a, b]) => md(b)).join("<br>"), '</div>\n   <div style="margin-top:8px"><b>T\u1EEB d\xF9ng cho \u0111o\u1EA1n n\xE0y:</b></div><div class="chips">').concat(vs.map((v) => '<span class="chip">'.concat(esc(v[0]), ' <span style="font-weight:400">= ').concat(esc(v[2]), "</span></span>")).join(""), '</div>\n   <div style="margin-top:6px"><b>\u0110\u1EA7u c\xE2u khung (vi\u1EBFt ti\u1EBFp b\u1EB1ng \xFD c\u1EE7a anh):</b></div><ol style="margin:4px 0 0">').concat(starters2(mp).map((x) => "<li>".concat(esc(x), "</li>")).join(""), "</ol></div>");
   }, writingView2 = function({ test, task, mode, exam, onDone, draft }) {
     const t = T[test - 1], prompt = task === 1 ? t.writing.task1 : t.writing.task2, min = task === 1 ? 120 : 250, steps = STEPS[task];
     let st = 0;
@@ -913,14 +923,12 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const head = '<h2 style="margin-bottom:4px">\u2460 Nghe m\u1EABu \u2013 nh\u1EA1i \u2013 r\u1ED3i n\xF3i theo</h2><p class="mute" style="margin-top:0">C\xE2u ng\u1EAFn, gi\u1ECDng n\xF3i chuy\u1EC7n. B\u1EA5m \u{1F50A}, nh\u1EA1i l\u1EA1i 2 l\u1EA7n, che \u0111i r\u1ED3i n\xF3i b\u1EB1ng chuy\u1EC7n c\u1EE7a anh. N\xF3i xong \xFD l\xE0 d\u1EEBng.</p>';
     let body = "";
     if (part === 1) body = g.p1.map((t) => '<h3 style="margin-top:14px">Ch\u1EE7 \u0111\u1EC1: '.concat(esc(t.topic), '</h3><div class="chips">').concat(t.vocab.map((v) => '<span class="chip">'.concat(esc(v), "</span>")).join(""), "</div>").concat(t.answers.map(([q, a]) => '<div class="qa"><span class="mute">Q: '.concat(esc(q), "</span><b>").concat(esc(a), "</b> ").concat(sayBtn(a), "</div>")).join(""))).join("");
-    else if (part === 2) {
-      const p = g.p2;
-      body = '<h3 style="margin-top:14px">N\xEAn ch\u1ECDn: '.concat(esc(p.pick), "</h3><ol>").concat(p.outline.map((x) => "<li>".concat(esc(x), "</li>")).join(""), '</ol><div class="chips">').concat(p.vocab.map((v) => '<span class="chip">'.concat(esc(v), "</span>")).join(""), "</div><h3>B\xE0i n\xF3i m\u1EABu (~").concat(words(p.model), ' t\u1EEB \u2248 1,5 ph\xFAt)</h3><div class="prompt">').concat(paras(p.model), "</div>").concat(sayBtn(p.model));
-    } else {
-      const p = g.p3;
-      body = '<div class="chips" style="margin-top:12px">'.concat(p.vocab.map((v) => '<span class="chip">'.concat(esc(v), "</span>")).join(""), "</div><h3>B\xE0i n\xF3i m\u1EABu (~").concat(words(p.model), ' t\u1EEB \u2248 2 ph\xFAt)</h3><div class="prompt">').concat(paras(p.model), "</div>").concat(sayBtn(p.model), '<h3 style="margin-top:14px">C\xE2u h\u1ECFi ph\u1EE5 \u2013 tr\u1EA3 l\u1EDDi 2\u20133 c\xE2u</h3>').concat(p.follow.map(([q, a]) => '<div class="qa"><span class="mute">Q: '.concat(esc(q), "</span><b>").concat(esc(a), "</b> ").concat(sayBtn(a), "</div>")).join(""));
+    else {
+      const p = part === 2 ? g.p2 : g.p3;
+      const lab = part === 2 ? "\xDD c\u1EE7a b\xE0i n\xF3i" : "G\u1EE3i \xFD c\u1EE7a \u0111\u1EC1";
+      body = '<h3 style="margin-top:14px">1 ph\xFAt chu\u1EA9n b\u1ECB \u2013 ch\u1EC9 ghi t\u1EEB kh\xF3a</h3><ul style="margin:4px 0">'.concat((p.prep || []).map((x) => "<li>".concat(esc(x), "</li>")).join(""), '</ul>\n    <h3>N\xF3i theo \u0111\xFAng khung \u2013 m\u1ED7i d\xF2ng 1\u20132 c\xE2u ng\u1EAFn</h3><table class="stack"><thead><tr><th>').concat(lab, "</th><th>C\xE2u n\xF3i</th></tr></thead><tbody>").concat((p.lines || []).map(([a, b]) => "<tr><td><b>".concat(esc(a), "</b></td><td>").concat(esc(b), " ").concat(sayBtn(b), "</td></tr>")).join(""), '</tbody></table>\n    <div class="row" style="margin-top:8px"><span class="small mute">Khung m\u1EABu ~').concat(words(p.model), " t\u1EEB \u2248 ").concat(Math.max(1, Math.round(words(p.model) / 110)), " ph\xFAt. Thi c\u1EA7n ").concat(part === 2 ? "\u2248 2" : "2\u20133", " ph\xFAt \u2192 <b>m\u1ED7i d\xF2ng th\xEAm 1 c\xE2u v\xED d\u1EE5 c\u1EE7a ch\xEDnh anh</b> (For example, I \u2026 / In my company, \u2026) l\xE0 \u0111\u1EE7, kh\xF4ng k\u1EC3 th\xEAm chuy\u1EC7n ngo\xE0i khung.</span> ").concat(sayBtn(p.model).replace("\u{1F50A} Nghe", "\u{1F50A} Nghe c\u1EA3 b\xE0i"), "</div>\n    ").concat(part === 3 ? '<h3 style="margin-top:14px">C\xE2u h\u1ECFi ph\u1EE5 \u2013 tr\u1EA3 l\u1EDDi 2\u20133 c\xE2u</h3>'.concat(p.follow.map(([q, a]) => '<div class="qa"><span class="mute">Q: '.concat(esc(q), "</span><b>").concat(esc(a), "</b> ").concat(sayBtn(a), "</div>")).join("")) : "");
     }
-    return '<div class="card learn" style="border:2px solid var(--red)">'.concat(head).concat(body).concat(chunks, "</div>");
+    return '<div class="card learn" style="border:2px solid var(--red)">'.concat(head).concat(viErrBox2("n\xF3i")).concat(body).concat(chunks, "</div>");
   }, speakingView2 = function({ test, part, exam, onDone }) {
     const t = T[test - 1], s = t.speaking;
     let qText = "", prep = 0, talk = 0;
@@ -939,7 +947,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       prep = 60;
       talk = 240;
     }
-    const frame = { 1: "Tr\u1EA3 l\u1EDDi th\u1EB3ng \u2192 1 l\xFD do \u2192 1 v\xED d\u1EE5 nh\u1ECF, r\u1ED3i d\u1EEBng. Yeah, I do. / Not really. / To be honest, \u2026 because \u2026 Like last weekend, I \u2026", 2: "I'd go for [A]. Mainly because \u2026 Plus, \u2026 [B] is OK, but \u2026 As for [C], \u2026 So yeah, [A] is my pick.", 3: "Well, I think \u2026, for a few reasons. First off, \u2026 On top of that, \u2026 And \u2026 Personally, I'd add \u2026 So overall, \u2026 (c\xE2u h\u1ECFi ph\u1EE5: 2\u20133 c\xE2u)" }[part];
+    const frame = { 1: "Tr\u1EA3 l\u1EDDi th\u1EB3ng \u2192 1 l\xFD do \u2192 1 v\xED d\u1EE5 nh\u1ECF, r\u1ED3i d\u1EEBng. Yes, I do. / Not really. / I usually \u2026 because \u2026 For example, \u2026", 2: "In my opinion, [A] is the best choice for the following reasons. Firstly, \u2026 Secondly, \u2026 [B] is not a good choice because \u2026 [C] is \u2026, but \u2026 That's why I think [A] is the best choice.", 3: "I totally agree that [ch\u1EE7 \u0111\u1EC1], for the following reasons. Firstly, [g\u1EE3i \xFD 1] \u2026 Secondly, [g\u1EE3i \xFD 2] \u2026 Finally, [g\u1EE3i \xFD 3] \u2026 In my opinion, [\xFD ri\xEAng]. In short, \u2026 \u2192 tr\u1EA3 l\u1EDDi 3 c\xE2u h\u1ECFi ph\u1EE5, m\u1ED7i c\xE2u 2\u20133 c\xE2u." }[part];
     $("#app").innerHTML = '<div class="card"><div class="row" style="justify-content:space-between"><h1 style="margin:0">N\xF3i \xB7 Test '.concat(test, " \xB7 Part ").concat(part, "</h1>").concat(exam ? "" : '<div class="row">'.concat(linkBtn2()).concat(testSel("st", test), '<select id="sp">').concat([1, 2, 3].map((i) => '<option value="'.concat(i, '" ').concat(i == part ? "selected" : "", ">Part ").concat(i, " \u2013 ").concat(["T\u01B0\u01A1ng t\xE1c x\xE3 h\u1ED9i", "Th\u1EA3o lu\u1EADn gi\u1EA3i ph\xE1p", "Ph\xE1t tri\u1EC3n ch\u1EE7 \u0111\u1EC1"][i - 1], "</option>")).join(""), "</select></div>"), '</div>\n   <div class="prompt" style="margin-top:12px">').concat(paras(qText), '</div><p class="small mute"><b>Khung:</b> ').concat(esc(frame), "</p></div>").concat(exam ? "" : guideBox2("S", topicLinks2(test))).concat(exam ? "" : speakGuide2(test, part), '\n   <div class="grid2"><div class="card" style="margin:0"><div class="row" style="justify-content:space-between"><h2 style="margin:0">B\xE0i n\xF3i</h2><span class="timer" id="stm">').concat(fmt(prep || talk), '</span></div>\n     <p class="small mute" id="sstate">').concat(prep ? "B\u1EA5m B\u1EAFt \u0111\u1EA7u: 1 ph\xFAt chu\u1EA9n b\u1ECB (ghi t\u1EEB kh\xF3a), r\u1ED3i n\xF3i." : "B\u1EA5m B\u1EAFt \u0111\u1EA7u: m\xE1y \u0111\u1ECDc c\xE2u h\u1ECFi, anh tr\u1EA3 l\u1EDDi.", '</p>\n     <div class="row"><button class="pri" id="sgo">B\u1EAFt \u0111\u1EA7u</button><button id="smic" class="').concat(cap.dictation ? "" : "hide", '">\u{1F399} Ghi \xE2m \u2192 ch\u1EEF</button><button id="sread">\u{1F50A} Nghe c\xE2u h\u1ECFi</button></div>\n     <textarea id="stxt" spellcheck="false" style="margin-top:10px;min-height:200px" placeholder="').concat(cap.dictation ? "B\u1EA5m Ghi \xE2m v\xE0 n\xF3i; ch\u1EEF s\u1EBD hi\u1EC7n \u1EDF \u0111\xE2y. C\xF3 th\u1EC3 s\u1EEDa tay." : "Tr\xECnh duy\u1EC7t n\xE0y ch\u01B0a ghi \xE2m \u0111\u01B0\u1EE3c (d\xF9ng Chrome \u0111\u1EC3 ghi \xE2m), ho\u1EB7c d\xF9ng micro c\u1EE7a b\xE0n ph\xEDm \u0111i\u1EC7n tho\u1EA1i, ho\u1EB7c g\xF5 l\u1EA1i l\u1EDDi n\xF3i.", '"></textarea>\n     <div class="row small" style="justify-content:space-between"><span>S\u1ED1 t\u1EEB: <b id="swc">0</b> <span class="mute">(m\u1EE5c ti\xEAu ').concat(part === 1 ? "\u2265 150" : part === 2 ? "\u2265 220" : "\u2265 320", ')</span></span></div>\n     <div class="row" style="margin-top:10px"><button class="red" id="ssub">').concat(exam ? "Xong ph\u1EA7n n\xE0y" : "Ch\u1EA5m b\xE0i n\xF3i", '</button></div></div>\n   <div class="card" style="margin:0" id="sright"><h2>B\xFAt \u0111\u1ECF</h2><p class="mute">Claude ch\u1EA5m t\u1EEB v\u0103n b\u1EA3n l\u1EDDi n\xF3i: ng\u1EEF ph\xE1p, t\u1EEB v\u1EF1ng, c\xE1ch ph\xE1t tri\u1EC3n \xFD, \u0111\u1ED9 d\xE0i. Ch\u01B0a ch\u1EA5m \u0111\u01B0\u1EE3c ph\xE1t \xE2m.</p></div></div>');
     if (!exam) {
       $("#st").onchange = $("#sp").onchange = () => go2("speaking", { test: $("#st").value, part: $("#sp").value });
@@ -1102,8 +1110,52 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     $("#din").onkeydown = (ev) => {
       if (ev.key === "Enter") chk();
     };
+  }, loginOverlay2 = function(msg) {
+    let o = document.getElementById("login");
+    if (!o) {
+      o = document.createElement("div");
+      o.id = "login";
+      document.body.appendChild(o);
+    }
+    o.innerHTML = '<div class="lbox"><div class="brand" style="justify-content:center;margin-bottom:14px"><i>B4</i>VSTEP B\u1EADc 4</div><h2 style="text-align:center">\u0110\u0103ng nh\u1EADp \u0111\u1EC3 luy\u1EC7n thi</h2><p class="mute small" style="text-align:center">B\xE0i l\xE0m, \u0111i\u1EC3m v\xE0 s\u1ED5 l\u1ED7i \u0111\u01B0\u1EE3c \u0111\u1ED3ng b\u1ED9 gi\u1EEFa \u0111i\u1EC7n tho\u1EA1i v\xE0 m\xE1y t\xEDnh.</p>\n  <button class="pri" id="gsign" style="width:100%;margin-top:8px">\u0110\u0103ng nh\u1EADp b\u1EB1ng Google</button>'.concat(msg ? '<p class="bad-note small" style="margin-top:12px">'.concat(esc(msg), "</p>") : "", "</div>");
+    o.style.display = "flex";
+    document.getElementById("gsign").onclick = signIn2;
+  }, hideLogin2 = function() {
+    const o = document.getElementById("login");
+    if (o) o.style.display = "none";
+  }, signIn2 = function() {
+    const prov = new firebase.auth.GoogleAuthProvider();
+    prov.setCustomParameters({ prompt: "select_account", login_hint: ALLOWED[0] });
+    const standalone = window.navigator.standalone || matchMedia("(display-mode: standalone)").matches;
+    (standalone ? FB.auth.signInWithRedirect(prov) : FB.auth.signInWithPopup(prov)).catch((e) => {
+      if (e && /popup/i.test(e.code || "")) return FB.auth.signInWithRedirect(prov);
+      loginOverlay2("Kh\xF4ng \u0111\u0103ng nh\u1EADp \u0111\u01B0\u1EE3c: " + (e && e.message || e));
+    });
+  }, signOutApp2 = function() {
+    if (FB) FB.auth.signOut();
+  }, accountBar2 = function() {
+    const t = fbUser ? '<div class="small" style="margin-top:8px">\u{1F464} '.concat(esc(fbUser.email), '</div><button class="say" id="gout" style="margin-top:6px">\u0110\u0103ng xu\u1EA5t</button>') : "";
+    const s = document.querySelector(".side-foot");
+    if (s) {
+      let a = document.getElementById("acct");
+      if (!a) {
+        a = document.createElement("div");
+        a.id = "acct";
+        s.appendChild(a);
+      }
+      a.innerHTML = t;
+    }
+    const m = document.getElementById("mcount");
+    if (m && fbUser && !document.getElementById("gout2")) {
+      m.insertAdjacentHTML("afterend", '<button class="say mob" id="gout2" title="' + esc(fbUser.email) + '">Tho\xE1t</button>');
+    }
+    document.querySelectorAll("#gout,#gout2").forEach((b) => b.onclick = () => {
+      if (confirmOut2()) signOutApp2();
+    });
+  }, confirmOut2 = function() {
+    return true;
   };
-  var timer = timer2, lsLoad = lsLoad2, persist = persist2, addAttempt = addAttempt2, addErrors = addErrors2, errBox = errBox2, makeDictation = makeDictation2, voiceFor = voiceFor2, stopSpeak = stopSpeak2, go = go2, linkBtn = linkBtn2, render = render2, Home = Home2, mcqHTML = mcqHTML2, readAns = readAns2, bindWhy = bindWhy2, guideBox = guideBox2, rqType = rqType2, lqType = lqType2, topicSent = topicSent2, vocabFor = vocabFor2, topicLinks = topicLinks2, Topics = Topics2, Listening = Listening2, listeningView = listeningView2, Reading = Reading2, readingView = readingView2, Writing = Writing2, gradeBlock = gradeBlock2, writeGuide = writeGuide2, outlineChecklist = outlineChecklist2, stepHint = stepHint2, loadDict = loadDict2, edits1 = edits12, tierOf = tierOf2, suggest = suggest2, spellErrors = spellErrors2, applyFixes = applyFixes2, spellLive = spellLive2, modelPart = modelPart2, stemOf = stemOf2, hasWord = hasWord2, partVocab = partVocab2, starters = starters2, partPanel = partPanel2, writingView = writingView2, Speaking = Speaking2, speakGuide = speakGuide2, speakingView = speakingView2, speakBlock = speakBlock2, Mock = Mock2, gate = gate2, Errors = Errors2, drillSent = drillSent2, drillSpell = drillSpell2;
+  var timer = timer2, lsLoad = lsLoad2, persist = persist2, addAttempt = addAttempt2, addErrors = addErrors2, errBox = errBox2, makeDictation = makeDictation2, voiceFor = voiceFor2, stopSpeak = stopSpeak2, go = go2, linkBtn = linkBtn2, render = render2, Home = Home2, mcqHTML = mcqHTML2, readAns = readAns2, bindWhy = bindWhy2, guideBox = guideBox2, rqType = rqType2, lqType = lqType2, topicSent = topicSent2, vocabFor = vocabFor2, topicLinks = topicLinks2, Topics = Topics2, Listening = Listening2, listeningView = listeningView2, Reading = Reading2, readingView = readingView2, Writing = Writing2, gradeBlock = gradeBlock2, writeGuide = writeGuide2, viErrBox = viErrBox2, outlineChecklist = outlineChecklist2, stepHint = stepHint2, loadDict = loadDict2, edits1 = edits12, tierOf = tierOf2, suggest = suggest2, spellErrors = spellErrors2, applyFixes = applyFixes2, spellLive = spellLive2, modelPart = modelPart2, stemOf = stemOf2, hasWord = hasWord2, partVocab = partVocab2, starters = starters2, partPanel = partPanel2, writingView = writingView2, Speaking = Speaking2, speakGuide = speakGuide2, speakingView = speakingView2, speakBlock = speakBlock2, Mock = Mock2, gate = gate2, Errors = Errors2, drillSent = drillSent2, drillSpell = drillSpell2, loginOverlay = loginOverlay2, hideLogin = hideLogin2, signIn = signIn2, signOutApp = signOutApp2, accountBar = accountBar2, confirmOut = confirmOut2;
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s != null ? s : "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const md = (s) => esc(s).replace(/\*\*\s*\*\*/g, "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(?!\s)(.+?)\*/g, "<i>$1</i>");
@@ -1385,6 +1437,68 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   }
   const SPELL = ["environment", "government", "necessary", "advantage", "disadvantage", "beneficial", "convenient", "technology", "opportunity", "development", "knowledge", "achieve", "believe", "receive", "recommend", "accommodation", "responsible", "successful", "communicate", "especially", "definitely", "separate", "business", "interesting", "pollution", "transportation", "traditional", "experience", "their", "which"];
   const norm = (s) => String(s).toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9' ]/g, " ").replace(/\s+/g, " ").trim();
+  const ALLOWED = ["huy2908@gmail.com"];
+  let FB = null, fbUser = null;
+  async function initFirebase() {
+    const cfg = window.FIREBASE_CONFIG;
+    if (!cfg || !window.firebase) return false;
+    try {
+      const app = firebase.initializeApp(cfg);
+      FB = { auth: firebase.auth(), db: firebase.firestore() };
+      try {
+        await FB.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      } catch (e) {
+      }
+      loginOverlay2("");
+      FB.auth.getRedirectResult().catch((e) => loginOverlay2("Kh\xF4ng \u0111\u0103ng nh\u1EADp \u0111\u01B0\u1EE3c: " + (e && e.message || e)));
+      FB.auth.onAuthStateChanged(async (u) => {
+        if (!u) {
+          fbUser = null;
+          dbRef = null;
+          loginOverlay2("");
+          accountBar2();
+          return;
+        }
+        if (!ALLOWED.includes((u.email || "").toLowerCase())) {
+          await FB.auth.signOut();
+          loginOverlay2("T\xE0i kho\u1EA3n " + u.email + " kh\xF4ng c\xF3 quy\u1EC1n v\xE0o. H\xE3y \u0111\u0103ng nh\u1EADp b\u1EB1ng " + ALLOWED[0] + ".");
+          return;
+        }
+        fbUser = u;
+        hideLogin2();
+        accountBar2();
+        const ref = FB.db.collection("users").doc(u.uid);
+        try {
+          const snap = await ref.get();
+          if (snap.exists) {
+            const d = snap.data() || {};
+            const merged = { attempts: [...d.attempts || []], errors: [...d.errors || []], drafts: __spreadValues(__spreadValues({}, d.drafts || {}), store.drafts || {}), hist: __spreadValues(__spreadValues({}, d.hist || {}), store.hist || {}) };
+            for (const a of store.attempts || []) if (!merged.attempts.some((x) => x.ts === a.ts)) merged.attempts.push(a);
+            for (const e of store.errors || []) if (!merged.errors.some((x) => x.id === e.id)) merged.errors.push(e);
+            merged.attempts.sort((a, b) => a.ts - b.ts);
+            store = merged;
+            try {
+              localStorage.setItem("vstep4", JSON.stringify(store));
+            } catch (e) {
+            }
+          }
+          dbRef = { set: (data) => ref.set(JSON.parse(JSON.stringify(data))) };
+          persist2();
+          const r = (location.hash || "#home").slice(1);
+          if (/^(home|errors)/.test(r)) {
+            param = lastP;
+            render2();
+          }
+        } catch (e) {
+          console.warn("sync", e);
+        }
+      });
+      return true;
+    } catch (e) {
+      console.warn(e);
+      return false;
+    }
+  }
   async function boot() {
     lsLoad2();
     cap = { sample: true, tts: null, dictation: makeDictation2() };
@@ -1392,6 +1506,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       cap.dictation.onFinal(({ text }) => DICT.final && DICT.final(text));
       cap.dictation.onState(({ state }) => DICT.state && DICT.state(state));
     }
+    await initFirebase();
     try {
       const am = await fetch("audio/index.json");
       if (am.ok) AUDIO = new Set(await am.json());
