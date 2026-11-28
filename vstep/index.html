@@ -1460,8 +1460,15 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     o.innerHTML = '<div class="lbox"><div class="brand" style="justify-content:center;margin-bottom:14px"><i>B4</i>VSTEP B\u1EADc 4</div>'.concat(html, "</div>");
     o.style.display = "flex";
   }, loginOverlay2 = function(msg) {
-    overlay2('<h2 style="text-align:center">\u0110\u0103ng nh\u1EADp \u0111\u1EC3 luy\u1EC7n thi</h2><p class="mute small" style="text-align:center">M\u1ED7i ng\u01B0\u1EDDi d\xF9ng t\xE0i kho\u1EA3n Google c\u1EE7a m\xECnh. L\u1EA7n \u0111\u1EA7u c\u1EA7n g\u1EEDi y\xEAu c\u1EA7u v\xE0 ch\u1EDD duy\u1EC7t.</p>\n  <button class="pri" id="gsign" style="width:100%;margin-top:8px">\u0110\u0103ng nh\u1EADp b\u1EB1ng Google</button>'.concat(msg ? '<p class="bad-note small" style="margin-top:12px">'.concat(esc(msg), "</p>") : ""));
+    overlay2('<h2 style="text-align:center">\u0110\u0103ng nh\u1EADp \u0111\u1EC3 luy\u1EC7n thi</h2><p class="mute small" style="text-align:center">M\u1ED7i ng\u01B0\u1EDDi d\xF9ng t\xE0i kho\u1EA3n Google c\u1EE7a m\xECnh. L\u1EA7n \u0111\u1EA7u c\u1EA7n g\u1EEDi y\xEAu c\u1EA7u v\xE0 ch\u1EDD duy\u1EC7t.</p>\n  <button class="pri" id="gsign" style="width:100%;margin-top:8px">\u0110\u0103ng nh\u1EADp b\u1EB1ng Google</button>\n  '.concat(INAPP || IOS && STANDALONE ? '<p class="note small" style="margin-top:12px">\u{1F4F1} '.concat(INAPP ? "Anh/ch\u1ECB \u0111ang m\u1EDF link trong Zalo/Messenger \u2013 Google kh\xF4ng cho \u0111\u0103ng nh\u1EADp \u1EDF \u0111\xE2y. B\u1EA5m <b>\u22EF \u2192 M\u1EDF b\u1EB1ng Safari</b> (ho\u1EB7c tr\xECnh duy\u1EC7t)." : "\u0110ang m\u1EDF t\u1EEB icon m\xE0n h\xECnh ch\xEDnh. N\u1EBFu \u0111\u0103ng nh\u1EADp b\u1ECB tr\u1EAFng trang: m\u1EDF link b\u1EB1ng <b>Safari</b>, \u0111\u0103ng nh\u1EADp \u1EDF Safari.", '</p><button id="cpurl" style="width:100%">Copy link \u0111\u1EC3 d\xE1n v\xE0o Safari</button>') : "").concat(msg ? '<p class="bad-note small" style="margin-top:12px">'.concat(esc(msg), "</p>") : ""));
     document.getElementById("gsign").onclick = signIn2;
+    const cu = document.getElementById("cpurl");
+    if (cu) cu.onclick = () => {
+      const u = location.href.split("#")[0];
+      (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => cu.textContent = "\u0110\xE3 copy \u2713 \u2013 m\u1EDF Safari v\xE0 d\xE1n", () => {
+        cu.outerHTML = '<input readonly value="' + u + '" style="width:100%" onclick="this.select()">';
+      });
+    };
   }, requestForm2 = function(u, msg) {
     overlay2('<h2>G\u1EEDi y\xEAu c\u1EA7u s\u1EED d\u1EE5ng</h2><p class="small mute">T\xE0i kho\u1EA3n <b>'.concat(esc(u.email), '</b> ch\u01B0a \u0111\u01B0\u1EE3c c\u1EA5p quy\u1EC1n. \u0110i\u1EC1n th\xF4ng tin, qu\u1EA3n tr\u1ECB vi\xEAn s\u1EBD duy\u1EC7t.</p>\n  <label class="small">H\u1ECD v\xE0 t\xEAn<input id="rq_name" value="').concat(esc(u.displayName || ""), '" style="width:100%"></label>\n  <label class="small">Ng\xE0y sinh<input id="rq_dob" type="date" style="width:100%"></label>\n  <label class="small">Email<input value="').concat(esc(u.email), '" readonly style="width:100%"></label>\n  <label class="small">Tr\xECnh \u0111\u1ED9 hi\u1EC7n t\u1EA1i<select id="rq_level" style="width:100%">').concat(LEVELS.map((v) => "<option>".concat(v, "</option>")).join(""), '</select></label>\n  <button class="pri" id="rq_send" style="width:100%;margin-top:12px">G\u1EEDi y\xEAu c\u1EA7u</button><button id="rq_out" style="width:100%;margin-top:8px">D\xF9ng t\xE0i kho\u1EA3n kh\xE1c</button>').concat(msg ? '<p class="bad-note small">'.concat(esc(msg), "</p>") : ""));
     document.getElementById("rq_out").onclick = signOutApp2;
@@ -1485,9 +1492,10 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   }, signIn2 = function() {
     const prov = new firebase.auth.GoogleAuthProvider();
     prov.setCustomParameters({ prompt: "select_account" });
-    const standalone = window.navigator.standalone || matchMedia("(display-mode: standalone)").matches;
-    (standalone ? FB.auth.signInWithRedirect(prov) : FB.auth.signInWithPopup(prov)).catch((e) => {
-      if (e && /popup/i.test(e.code || "")) return FB.auth.signInWithRedirect(prov);
+    FB.auth.signInWithPopup(prov).catch((e) => {
+      const c = e && e.code || "";
+      if (/popup-blocked|operation-not-supported/.test(c)) return FB.auth.signInWithRedirect(prov);
+      if (/popup-closed|cancelled-popup/.test(c)) return loginOverlay2(IOS ? "C\u1EEDa s\u1ED5 \u0111\u0103ng nh\u1EADp b\u1ECB \u0111\xF3ng. Tr\xEAn iPhone, h\xE3y m\u1EDF link b\u1EB1ng Safari r\u1ED3i \u0111\u0103ng nh\u1EADp l\u1EA1i." : "");
       loginOverlay2("Kh\xF4ng \u0111\u0103ng nh\u1EADp \u0111\u01B0\u1EE3c: " + (e && e.message || e));
     });
   }, signOutApp2 = function() {
@@ -1871,6 +1879,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   const norm = (s) => String(s).toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9' ]/g, " ").replace(/\s+/g, " ").trim();
   let FB = null, fbUser = null, MEMBER = null;
   const isAdmin = () => fbUser && (fbUser.email || "").toLowerCase() === ADMIN;
+  const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent), INAPP = /Zalo|FBAN|FBAV|Instagram|Line\/|Messenger|MicroMessenger|GSA\//i.test(navigator.userAgent), STANDALONE = window.navigator.standalone || matchMedia("(display-mode: standalone)").matches;
   async function Admin() {
     if (!isAdmin()) {
       $("#app").innerHTML = '<p class="mute">Ch\u1EC9 qu\u1EA3n tr\u1ECB vi\xEAn m\u1EDBi xem \u0111\u01B0\u1EE3c trang n\xE0y.</p>';
