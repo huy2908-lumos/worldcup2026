@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null && request.auth.token.email_verified == true; }
+    function myEmail() { return request.auth.token.email.lower(); }
+    function isAdmin() { return signedIn() && myEmail() == 'huy2908@gmail.com'; }
+    function approved() {
+      return isAdmin() || (exists(/databases/$(database)/documents/members/$(myEmail())) &&
+        get(/databases/$(database)/documents/members/$(myEmail())).data.status == 'approved');
+    }
+    // Yêu cầu đăng ký: tự tạo (trạng thái chờ), chỉ admin duyệt/từ chối
+    match /members/{email} {
+      allow get: if isAdmin() || (signedIn() && myEmail() == email);
+      allow list: if isAdmin();
+      allow create: if signedIn() && myEmail() == email && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+    // Dữ liệu học của từng người: chỉ chính chủ đã được duyệt
+    match /users/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid && approved();
+    }
+  }
+}
